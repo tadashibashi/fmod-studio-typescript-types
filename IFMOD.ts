@@ -762,8 +762,7 @@ export namespace IFMOD {
     }
 //#region  FMOD LOW LEVEL DEFINES //////////////////////////////////////////////////////////////////////////////////////////////
 
-    /** These are bitfields to describe for a certain number of channels in a signal, which
-     * channels are being represented.
+    /** These are bitfields to describe for a certain number of channels in a signal, which channels are being represented.
      * @description For example, a signal could be 1 channel, but contain the LFE channel only. */
     export enum CHANNELMASK {
         CHANNELMASK_FRONT_LEFT = 0x00000001,
@@ -863,11 +862,9 @@ export namespace IFMOD {
          * having their positions updated virtually. Use System::setAdvancedSettings to
          * adjust what volume besides zero to switch to virtual at. */
         VOL0_BECOMES_VIRTUAL = 131072,
-        /** With the geometry engine, only process the closest polygon rather than
-         *  accumulating all polygons the sound to listener line intersects. (Feature removed in HTML5) */
+        /** With the geometry engine, only process the closest polygon rather than accumulating all polygons the sound to listener line intersects. (Feature removed in HTML5) */
         GEOMETRY_USECLOSEST = 262144,
-        /** When using FMOD_SPEAKERMODE_5POINT1 with a stereo output device, use the
-         * Dolby Pro Logic II downmix algorithm instead of the SRS Circle Surround algorithm.  */
+        /** When using FMOD_SPEAKERMODE_5POINT1 with a stereo output device, use the Dolby Pro Logic II downmix algorithm instead of the SRS Circle Surround algorithm.  */
         PREFER_DOLBY_DOWNMIX = 524288,
         /** Disables thread safety for API calls. Only use this if FMOD low level is
          * being called from a single thread, and if Studio API is not being used! */
