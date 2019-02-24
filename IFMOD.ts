@@ -12,7 +12,7 @@ export namespace IFMOD {
          * @param attributes writes the value to attributes.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
         */
-        getEventAttributes(attributes): RESULT;
+        get3DAttributes(attributes:Outval<_3D_ATTRIBUTES>): RESULT;
     
         /** Retrives the Low level ChannelGroup for the event instance 
          * @description Remarks: The retrieved ChannelGroup corresponds to the master track of the event instance.
@@ -31,7 +31,7 @@ export namespace IFMOD {
          * @param mask Address of a variable to receive the mask. Writes value to mask.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
         */
-        getListenerMask(mask): RESULT;
+        getListenerMask(mask:number): RESULT;
     
         /** Retrieves a parameter instance by name 
          * @param name Name of the parameter (case-insensitive).
@@ -52,7 +52,7 @@ export namespace IFMOD {
          * @param count Address of a variable to receive the parameter count. Writes value to count.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getParameterCount(count): RESULT;
+        getParameterCount(count:Outval<number>): RESULT;
 
         /** Gets a parameter instance value by name.
          * @param name Name of the parameter (case-insensitive)
@@ -87,7 +87,7 @@ export namespace IFMOD {
          * @param stateOut Address of a variable to receive the current playback state of the event instance. See FMOD_STUDIO_PLAYBACK_STATE. Writes value to state.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getPlaybackState(stateOut): RESULT;
+        getPlaybackState(stateOut:Outval<STUDIO_PLAYBACK_STATE>): RESULT;
 
         /** Retrieves the value of a built-in event instance property.
          * @param index The index of the property to retrieve. 
@@ -113,7 +113,7 @@ export namespace IFMOD {
          * @param userdata Address of a variable to receive the user data. Writes value to userdata.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getUserData(userdata:any): RESULT;
+        getUserData(userdata:Outval<any>): RESULT;
 
         /** Retrieves the volume level of the event instance.
          * @param volumeOut Address of a variable to receive the volume as set from the public API. Specify 0 or NULL to ignore. Writes to volume.val 
@@ -138,7 +138,7 @@ export namespace IFMOD {
          * @param attributes The 3D attributes to set. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        set3DAttributes(attributes): RESULT;
+        set3DAttributes(attributes:_3D_ATTRIBUTES): RESULT;
 
         /** Sets a user callback for the event instance.
          * @param callback Pointer to a callback function
@@ -231,7 +231,7 @@ export namespace IFMOD {
          * @param mode The desired stop mode. See FMOD_STUDIO_STOP_MODE.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        stop(mode): RESULT;
+        stop(mode:STUDIO_STOP_MODE): RESULT;
 
         /** Triggers a cue on the event, which allows the timeline cursor to move 
          * past sustain points.
@@ -288,7 +288,7 @@ export namespace IFMOD {
          * @param bankOut Address of a variable to receive the Bank object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBankByID(id, bankOut): RESULT;
+        getBankByID(id:GUID, bankOut:Outval<any>): RESULT;
 
         /** 
          * @param countOut Address of a variable to receive the number of loaded Banks.
@@ -309,7 +309,7 @@ export namespace IFMOD {
          * Struct passed out is of FMOD_STUDIO_BUFFER_USAGE type.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBufferUsage(usageOut:Outval<any>): RESULT;
+        getBufferUsage(usageOut:Outval<STUDIO_BUFFER_USAGE>): RESULT;
 
         /** 
          * @param path The bus path or the ID string that identifies the bus. 
@@ -323,7 +323,7 @@ export namespace IFMOD {
          * @param busOut Address of a variable to receive the bus object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBusByID(id, busOut:Outval<any>): RESULT;
+        getBusByID(id:GUID, busOut:Outval<any>): RESULT;
 
         /** Retrieves performance information for FMOD Studio and low level systems  
          * @param usageOut Address of a variable to receive the performance info. 
@@ -403,7 +403,7 @@ export namespace IFMOD {
          * @param vcaOut Address of a variable to receive the VCA object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getVCAByID(id:number, vcaOut:Outval<any>): RESULT;
+        getVCAByID(id:GUID, vcaOut:Outval<any>): RESULT;
 
         /** Initializes the Studio System, the Low Level System, and the sound device.
          * @param maxchannels
@@ -458,7 +458,7 @@ export namespace IFMOD {
          * data for the requested object is loaded (by loading the "Master Bank.strings.bank" file).
          * e.g. "event:/UI/Cancel", "snapshot:/IngamePause", "bus:/SFX/Ambience", "vca:/Mega Strip", "bank:/Vehicles" 
          */
-        lookupID(path:string, id:Outval<any>): RESULT;
+        lookupID(path:string, id:Outval<GUID>): RESULT;
 
         /** Retrieves the path for a bank, event, snapshot, bus or VCA.
          * @param id The 128-bit GUID which identifies the bank, event, snapshot, bus or VCA. 
@@ -497,7 +497,7 @@ export namespace IFMOD {
          * @param callbackmask
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        setCallback(callback:STUDIO_SYSTEM_CALLBACK, callbackmask): RESULT;
+        setCallback(callback:STUDIO_SYSTEM_CALLBACK, callbackmask:STUDIO_SYSTEM_CALLBACK_TYPE): RESULT;
 
         /** Sets the position, velocity and orientation of the 3D sound listener.
          * @param listener index. Specify 0 if there is only 1 listener.
@@ -525,11 +525,11 @@ export namespace IFMOD {
         setUserData(userdata:any): RESULT;
 
         /** Start recording all Studio commands to a file with the given path.
-         * @param filename
-         * @param flags
+         * @param filename The filename where the write the command replay file.
+         * @param flags Flags that control command capturing. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        startCommandCapture(filename:string, flags): RESULT;
+        startCommandCapture(filename:string, flags:STUDIO_COMMANDCAPTURE_FLAGS): RESULT;
 
         /** Stop recording Studio commands.
          * @returns an integer value defined in the FMOD_RESULT enumeration */
@@ -1403,6 +1403,18 @@ export namespace IFMOD {
     export interface DSP_PARAMETER_3DATTRIBUTES {
         relative:_3D_ATTRIBUTES,
         absolute:_3D_ATTRIBUTES
+    }
+
+    export interface GUID {
+        /** Specifies the first 8 hexadecimal digits of the GUID  */
+        Data1:number,
+        /** Specifies the first group of 4 hexadecimal digits.  */
+        Data2:number,
+        /** Specifies the second group of 4 hexadecimal digits. */
+        Data3:number,
+        /** Array of 8 bytes. The first 2 bytes contain the third group of 4 hexadecimal digits. 
+         * The remaining 6 bytes contain the final 12 hexadecimal digits.  */
+        Data4:number[]
     }
 
 
@@ -2537,67 +2549,211 @@ export namespace IFMOD {
     // #endregion Studio Structures ///////////////////////////////////////////////////
 
     // #region Studio Defines /////////////////////////////////////////////////////////
-    
-    // #endregion Studio Defines //////////////////////////////////////////////////////
-    // CONSTANTS
-    export enum STUDIO_EVENT_CALLBACK_TYPE {
-        CREATED = 1,
-        DESTROYED = 2,
-        STARTING = 4,
-        STARTED = 8,
-        RESTARTED = 16,
-        STOPPED = 32,
-        START_FAILED = 64,
-        CREATE_PROGRAMMER_SOUND = 128,
-        DESTROY_PROGRAMMER_SOUND = 256,
-        PLUGIN_CREATED = 512,
-        PLUGIN_DESTROYED = 1024,
-        TIMELINE_MARKER = 2048,
-        TIMELINE_BEAT = 4096,
-        SOUND_PLAYED = 8192,
-        SOUND_STOPPED = 16384,
-        CALLBACK_ALL = 4294967295
+
+    /* Flags passed into Studio::System::startCommandCapture. */
+    export enum STUDIO_COMMANDCAPTURE_FLAGS {
+        NORMAL = 0x00000000,
+        FILEFLUSH = 0x00000001,
+        SKIP_INITIAL_STATE = 0x00000002
     }
 
+    /** Flags passed into Studio.System.loadCommandReplay */
+    export enum STUDIO_COMMANDREPLAY_FLAGS {
+        /** Standard behavior. */
+        NORMAL = 0x00000000,
+        /** Normally the playback will release any created resources when it stops, unless this flag is set. */
+        SKIP_CLEANUP = 0x00000001,
+        /** Play back at maximum speed, ignoring the timing of the original replay */
+        FAST_FORWARD = 0x00000002,
+        /** Skips commands related to bank loading. */
+        SKIP_BANK_LOAD = 0x00000004
+    }
+   
+    export enum STUDIO_EVENT_CALLBACK_TYPE {
+        /** Called when an instance is fully created. Parameters = unused.  */
+        CREATED = 0x00000001,
+        /** Called when an instance is just about to be destroyed. Parameters = unused.  */
+        DESTROYED = 0x00000002,
+        /** Called when an instance is preparing to start. Parameters = unused */
+        STARTING = 0x00000004,
+        /** Called when an instance starts playing. Parameters = unused. */
+        STARTED = 0x00000008,
+        /** Called when an instance is restarted. Parameters = unused. */
+        RESTARTED = 0x00000010,
+        /** Called when an instance stops. Parameters = unused.  */
+        STOPPED = 0x00000020,
+        /** Called when an instance did not start, e.g. due to polyphony. Parameters = unused.  */
+        START_FAILED = 0x00000040,
+        /** Called when a programmer sound needs to be created in order to play a programmer instrument. 
+         * Parameters = FMOD_STUDIO_PROGRAMMER_SOUND_PROPERTIES.  */
+        CREATE_PROGRAMMER_SOUND = 0x00000080,
+        /** FMOD_STUDIO_EVENT_CALLBACK_DESTROY_PROGRAMMER_SOUND Called when a programmer sound needs to be destroyed. 
+         * Parameters = FMOD_STUDIO_PROGRAMMER_SOUND_PROPERTIES. */
+        DESTROY_PROGRAMMER_SOUND = 0x00000100,
+        /** Called when a DSP plugin instance has just been created. Parameters = FMOD_STUDIO_PLUGIN_INSTANCE_PROPERTIES.  */
+        PLUGIN_CREATED = 0x00000200,
+        /** Called when a DSP plugin instance is about to be destroyed. Parameters = FMOD_STUDIO_PLUGIN_INSTANCE_PROPERTIES.  */
+        PLUGIN_DESTROYED = 0x00000400,
+        /** Called when the timeline passes a named marker. Parameters = FMOD_STUDIO_TIMELINE_MARKER_PROPERTIES.  */
+        TIMELINE_MARKER = 0x00000800,
+        /** Called when the timeline hits a beat in a tempo section. Parameters = FMOD_STUDIO_TIMELINE_BEAT_PROPERTIES.  */
+        TIMELINE_BEAT = 0x00001000,
+        /** Called when the event plays a sound. Parameters = FMOD::Sound.  */
+        SOUND_PLAYED = 0x00002000,
+        /** Called when the event finishes playing a sound. Parameters = FMOD::Sound.  */
+        SOUND_STOPPED = 0x00004000,
+        /** Pass this mask to Studio::EventDescription::setCallback or Studio::EventInstance::setCallback to 
+         * receive all callback types. */
+        CALLBACK_ALL = 0xFFFFFFFF
+    }
 
     export enum STUDIO_INITFLAGS {
-        NORMAL = 0,
-        LIVEUPDATE = 1,
-        ALLOW_MISSING_PLUGINS = 2,
-        SYNCHRONOUS_UPDATE = 4,
-        DEFERRED_CALLBACKS = 8,
-        LOAD_FROM_UPDATE = 16
+        /** Initialize normally.  */
+        NORMAL = 0x00000000,
+        /** Enable live update */
+        LIVEUPDATE = 0x00000001,
+        /** Load banks even if they reference plugins that have not been loaded */
+        ALLOW_MISSING_PLUGINS = 0x00000002,
+        /** Disable asynchronous processing and perform all processing on the calling thread instead. */
+        SYNCHRONOUS_UPDATE = 0x00000004,
+        /** Defer timeline callbacks until the main update. See Studio::EventInstance::SetCallback for more information */
+        DEFERRED_CALLBACKS = 0x00000008,
+        /** No additional threads are created for bank and resource loading. Loading is driven from Studio::System::update. 
+         * Mainly used in non-realtime situations.  */
+        LOAD_FROM_UPDATE = 0x00000010
     }
 
     /** Flags passed into Studio loadBank commands to control bank load behaviour.
      * Normal JavaScript: FMOD.STUDIO_BANK_ + the enum value */
     export enum STUDIO_LOAD_BANK_FLAGS {
         /** Standard behavior */
-        NORMAL = 0,
+        NORMAL = 0x00000000,
         /** Loading occurs asynchronously (not in HTML5) */
-        NONBLOCKING = 1,
+        NONBLOCKING = 0x00000001,
         /** Force samples to decompress into memory when they are loaded, rather than staying compressed */
-        DECOMPRESS_SAMPLES = 2
+        DECOMPRESS_SAMPLES = 0x00000002
     }
 
+    export const STUDIO_LOAD_MEMORY_ALIGNMENT = 32;
+
+    /** These callback types are used with Studio::System::setCallback. */
+    export enum STUDIO_SYSTEM_CALLBACK_TYPE {
+        /** Called at the start of the main Studio update. For async mode this will be on its own thread.  */
+        PREUPDATE = 0x00000001,
+        /** Called at the end of the main Studio update. For async mode this will be on its own thread.  */
+        POSTUPDATE = 0x00000002,
+        /** Called when bank has just been unloaded, after all resources are freed. CommandData will be the bank handle. */
+        BANK_UNLOAD = 0x00000004,
+        /** Pass this mask to Studio::System::setCallback to receive all callback types. */
+        ALL = 0xFFFFFFFF
+
+    }
+    // #endregion Studio Defines //////////////////////////////////////////////////////
+
+    // #region Studio Enumerations //////////////////////////////////////////////////////
+    
+    export enum STUDIO_EVENT_PROPERTY {
+        CHANNELPRIORITY,
+        /** Priority to set on low-level channels created by this event instance (-1 to 256).  */
+        SCHEDULE_DELAY,
+        /** Schedule look-ahead on the timeline in DSP clocks, or -1 for default. */
+        SCHEDULE_LOOKAHEAD,
+        /** Override the event's 3D minimum distance, or -1 for default.  */
+        MINIMUM_DISTANCE,
+        /**  Override the event's 3D maximum distance, or -1 for default. */
+        MAXIMUM_DISTANCE,
+        /** Maximum number of event properties supported. */
+        MAX   
+    }
+
+    /**  */
+    export enum STUDIO_INSTANCETYPE {
+        NONE,
+        SYSTEM,
+        EVENTDESCRIPTION,
+        EVENTINSTANCE,
+        PARAMETERINSTANCE,
+        BUS,
+        VCA,
+        BANK,
+        COMMANDREPLAY     
+    }
+
+    /** These values describe the loading status of various objects.  */
+    export enum STUDIO_LOADING_STATE{
+        /** Currently unloading */
+        UNLOADING,
+        /** Not loaded */
+        UNLOADED,
+        /** Loading in progress */
+        LOADING,
+        /** Loaed and ready to play */
+        LOADED,
+        /** Failed to load and is now in error state */
+        ERROR     
+    }
+
+    /** Specifies how to use the memory buffer passed to Studio::System::loadBankMemory. */
     export enum STUDIO_LOAD_MEMORY_MODE {
+        /** Duplicates the memory into its own buffers, memory can be freed after Studio::System::loadBankMemory returns.  */
         MEMORY,
+        /** Copies the memory pointer without duplicating the memory into its own buffers, 
+         * memory can be freed after receiving a FMOD_STUDIO_SYSTEM_CALLBACK_BANK_UNLOAD callback.  */
         MEMORY_POINT,
-        MEMORY_FORCEINT
+    }
+    /** Describes the type of a parameter. */
+    export enum STUDIO_PARAMETER_TYPE {
+        /** Controlled via the API using Studio::EventInstance::setParameterValue.  */
+        GAME_CONTROLLED,
+        /** Distance between the event and the listener.  */
+        AUTOMATIC_DISTANCE,
+        /** Angle between the event's forward vector and the vector pointing from the event to the listener (0 to 180 degrees).  */
+        AUTOMATIC_EVENT_CONE_ANGLE,
+        /** Horizontal angle between the event's forward vector and listener's forward vector (-180 to 180 degrees).  */
+        AUTOMATIC_EVENT_ORIENTATION,
+        /** Horizontal angle between the listener's forward vector and the vector pointing from the listener to the event (-180 to 180 degrees).  */
+        AUTOMATIC_DIRECTION,
+        /** Angle between the listener's XZ plane and the vector pointing from the listener to the event (-90 to 90 degrees).  */
+        AUTOMATIC_ELEVATION,
+        /** Horizontal angle between the listener's forward vector and the global positive Z axis (-180 to 180 degrees).  */
+        AUTOMATIC_LISTENER_ORIENTATION,
+        /** Maximum number of parameter types supported */
+        MAX    
     }
 
-    /** Flags passed into Studio.System.loadCommandReplay
-     * @value NORMAL --- Standard behavior.
-     * @value SKIP_CLEANUP --- Normally the playback will release any created resources
-     * when it stops, unless this flag is set.
-     * @value FAST_FORWARD --- Play back at maximum speed, ignoring the timing of the original replay
-     * @value SKIP_BANK_LOAD --- Skips commands related to bank loading.
-     */
-    export enum STUDIO_COMMANDREPLAY_FLAGS {
-        NORMAL = 0,
-        SKIP_CLEANUP = 1,
-        FAST_FORWARD = 2,
-        SKIP_BANK_LOAD = 4
+    /** These values describe the playback state of an event instance. */
+    export enum STUDIO_PLAYBACK_STATE {
+        /** Currently playing. */
+        PLAYING,
+        /** The timeline cursor is paused on a sustain point. */
+        SUSTAINING,
+        /** Not playing.  */
+        STOPPED,
+        /** Start has been called but the instance is not fully started yet.  */
+        STARTING,
+        /** Stop has been called but the instance is not fully stopped yet. */
+        STOPPING   
     }
+
+    /** Controls how to stop playback of an event instance. */
+    export enum STUDIO_STOP_MODE {
+        /** Allows AHDSR modulators to complete their release, and DSP effect tails to play out. */
+        ALLOWFADEOUT,
+        /** Stops the event instance immediately.  */
+        IMMEDIATE     
+    }
+
+    /** These definitions describe a user property's type. */
+    export enum STUDIO_USER_PROPERTY_TYPE {
+        INTEGER,
+        BOOLEAN,
+        FLOAT,
+        STRING   
+    }
+    
+
+
+
+
     
 }
