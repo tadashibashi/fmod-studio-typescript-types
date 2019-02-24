@@ -3,253 +3,8 @@ export class Outval<T> {
 	constructor() {}
 }
 
-export namespace IFMOD {
-    export interface EventInstance {
-
-        // Functions
-
-        /** Retrieves the 3D position, velocity and orientation of the event instance 
-         * @param attributes writes the value to attributes.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-        */
-        get3DAttributes(attributes:Outval<_3D_ATTRIBUTES>): RESULT;
+export namespace IFMOD { 
     
-        /** Retrives the Low level ChannelGroup for the event instance 
-         * @description Remarks: The retrieved ChannelGroup corresponds to the master track of the event instance.
-         * @param group Address of a variable to receive the ChannelGroup. Writes value to group.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-        */
-        getChannelGroup(group): RESULT;  
-        
-        /** Retrieves the EventDescription for the event instance 
-         * @param description Address of a variable to receive the EventDescription object. Writes value to description.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-        */
-        getDescription(description): RESULT;
-    
-        /** Get the mask of what listeners apply to this event instance 
-         * @param mask Address of a variable to receive the mask. Writes value to mask.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-        */
-        getListenerMask(mask:number): RESULT;
-    
-        /** Retrieves a parameter instance by name 
-         * @param name Name of the parameter (case-insensitive).
-         * @param parameter Address of a variable to receive the ParameterInstance object. Writes value to parameter.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-        */
-        getParameter(name:string, parameter): RESULT;
-    
-        /** Retrieves a parameter instance by name 
-         * @deprecated Please get and set parameter values using Studio.EventInstance.getParameterValue, setParameterValue, getParameterValueByIndex, setParameterValueByIndex
-         * @param index Index the parameter (case-insensitive).
-         * @param parameter Address of a variable to receive the ParameterInstance object. Writes value to parameter.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-        */
-        getParameterByIndex(index:number, parameter): RESULT;
-
-        /** Retrieves the number of parameters in the event instance.
-         * @param count Address of a variable to receive the parameter count. Writes value to count.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getParameterCount(count:Outval<number>): RESULT;
-
-        /** Gets a parameter instance value by name.
-         * @param name Name of the parameter (case-insensitive)
-         * @param valueOut Address of a variable to receive the value as set from the public API. Specify 0 or NULL to ignore. Writes a number to value.val
-         * @param finalvalueOut Address of a variable to receive the final combined value. Specify 0 or NULL to ignore. Writes a number to finalvalue.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */        
-        getParameterValue(name:string, valueOut:Outval<number>, finalvalueOut:Outval<number>): RESULT;
-
-        /** Gets a parameter instance value by index.
-         * @param index Index of the parameter. 
-         * @param valueOut Address of a variable to receive the value as set from the public API. Specify 0 or NULL to ignore. Writes a number to value.val
-         * @param finalvalueOut Address of a variable to receive the final combined value. Specify 0 or NULL to ignore. Writes a number to finalvalue.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getParameterValueByIndex(index:number, valueOut:Outval<number>, finalvalueOut:Outval<number>): RESULT;
-
-        /** Retrieves the pause state of the event instance.
-         * @param isPausedOut Address of a variable to receive the pause state. Writes a boolean to isPaused.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getPaused(isPausedOut:Outval<boolean>): RESULT;
-
-        /** Retrieves the pitch multiplier set by the API on the event instance.
-         * @param pitchOut Address of a variable to receive the pitch as set from the public API. Specify 0 or NULL to ignore. 
-         * @param finalpitchOut Address of a variable to receive the final combined pitch. Specify 0 or NULL to ignore.
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getPitch(pitchOut:Outval<number>, finalpitchOut:Outval<number>): RESULT;
-
-        /** Retrieves the playback state of the event instance.
-         * @param stateOut Address of a variable to receive the current playback state of the event instance. See FMOD_STUDIO_PLAYBACK_STATE. Writes value to state.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getPlaybackState(stateOut:Outval<STUDIO_PLAYBACK_STATE>): RESULT;
-
-        /** Retrieves the value of a built-in event instance property.
-         * @param index The index of the property to retrieve. 
-         * @param valueOut Address of a variable to receive the property value. Writes value to value.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getProperty(index:number, valueOut:Outval<number>): RESULT;
-
-        /** Retrieves the send level to a Low Level reverb instance.
-         * @param index Index of the Low Level reverb instance to target, from 0 to 3. 
-         * @param levelOut Address of a variable to receive the send level for the signal to the reverb, from 0 (none) to 1 (full). Writes value to level.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getReverbLevel(index:number, levelOut:Outval<number>): RESULT;
-
-        /** Retrieves the position of the event instance's timeline playback cursor.
-         * @param positionOut Address of a variable to receive the timeline position in milliseconds. Writes value to position.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getTimelinePosition(positionOut:Outval<number>): RESULT;
-
-        /** Retrieves the user data that is set on the event instance.
-         * @param userdata Address of a variable to receive the user data. Writes value to userdata.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getUserData(userdata:Outval<any>): RESULT;
-
-        /** Retrieves the volume level of the event instance.
-         * @param volumeOut Address of a variable to receive the volume as set from the public API. Specify 0 or NULL to ignore. Writes to volume.val 
-         * @param finalvolumeOut Address of a variable to receive the final combined volume. Specify 0 or NULL to ignore. Writes to finalvolume.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getVolume(volumeOut:Outval<number>, finalvolumeOut:Outval<number>): RESULT;
-
-        /** Retrieves the virtualization state of the event instance.
-         * @param virtualStateOut Address of a variable to receive the virtualization state. Writes boolean to virtualState.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        isVirtual(virtualStateOut:Outval<boolean>): RESULT;
-
-        /** Schedules the event instance to be destroyed when it stops.
-         * @description Remarks: If the instance is already stopped when release is called, it will be destroyed after the next update.
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        release(): RESULT;
-
-        /** Sets the 3D position, velocity and orientation for the event instance.
-         * @param attributes The 3D attributes to set. 
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        set3DAttributes(attributes:_3D_ATTRIBUTES): RESULT;
-
-        /** Sets a user callback for the event instance.
-         * @param callback Pointer to a callback function
-         * @param callbackmask A bitfield specifying which callback types are required. Masking out some callback types can help avoid a flood of irrelevant callbacks being triggered. Defaults to FMOD_STUDIO_EVENT_CALLBACK_ALL. 
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setCallback(callback: STUDIO_EVENT_CALLBACK, callbackmask:STUDIO_EVENT_CALLBACK_TYPE): RESULT;
-
-        /** Set the mask of what listeners apply to this event instance.
-         * @param mask Mask of listeners that apply to this event instance. 
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setListenerMask(mask:number): RESULT;
-
-        /** Sets a parameter instance value by name.
-         * @param name Name of the parameter (case-insensitive)
-         * @param value Value to set
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setParameterValue(name:string, value:number): RESULT;
-
-        /** Sets a parameter instance value by index.
-         * @param index Index of the parameter
-         * @param value Value to set
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setParameterValueByIndex(index:number, value:number): RESULT;
-
-        /** Sets multiple parameter instance values by index.
-         * @description Remarks: If any index is an automatic parameter an error will return without setting the values of any parameters. If an index is set to -1, then its index and corresponding value will be ignored. Use getParameter to see indices.
-         * @param indices Indices of the parameters. 
-         * @param values Values to set. 
-         * @param count Number of indices and values.
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setParameterValuesByIndices(indices:number[], values:number[], count:number): RESULT;
-
-        /** Sets the pause state of the event instance.
-         * @param paused The desired pause state. true = pause, false = unpause. 
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setPaused(paused:boolean): RESULT;
-
-        /** Sets the pitch multiplier for the event instance.
-         * @param pitch The pitch multiplier. 1 = normal pitch. 
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setPitch(pitch:number): RESULT;
-
-        /** Sets the value of a built-in event instance property.
-         * @param index The index of the property to set. See FMOD_STUDIO_EVENT_PROPERTY
-         * @param value The property value to set.
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setProperty(index:number, value:number): RESULT;
-
-        /** Sets the send level to a Low Level reverb instance.
-         * @param index Index of the Low Level reverb instance to target, from 0 to 3.
-         * @param level Send level for the signal to the reverb, from 0 (none) to 1 (full). Default = 0. 
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setReverbLevel(index:number, level:number): RESULT;
-
-        /** Sets the position of the event instance's timeline playback cursor.
-         * @param position Desired timeline position in milliseconds. 
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setTimelinePosition(position:number): RESULT;
-
-        /** Sets arbitrary user data on the event instance.
-         * @param userdata Address of user data to be stored within the event instance object. 
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setUserData(userdata): RESULT;
-
-        /** Sets the volume level of the event instance.
-         * @param volume The volume as a linear gain. 0 = silent, 1 = full volume. 
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        setVolume(volume:number): RESULT;
-
-        /** Starts replay of the event instance.
-         * @description Remarks: If the instance was already playing it will 
-         * restart the event.
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        start(): RESULT;
-
-        /** Stops playback of the event instance.
-         * @param mode The desired stop mode. See FMOD_STUDIO_STOP_MODE.
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        stop(mode:STUDIO_STOP_MODE): RESULT;
-
-        /** Triggers a cue on the event, which allows the timeline cursor to move 
-         * past sustain points.
-         * @description Triggering cues makes the timeline cursor continue past 
-         * sustain points. The cue can be triggered ahead of time; for each time 
-         * it is triggered, the timeline cursor will continue past one more sustain point.
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        triggerCue(): RESULT;
-
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     export interface StudioSystem {
         // Functions
 
@@ -556,6 +311,455 @@ export namespace IFMOD {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    export interface EventDescription {
+        createInstance(): RESULT;
+
+        getID(): RESULT;
+
+        getInstanceCount(): RESULT;
+
+        getInstanceList(): RESULT;
+
+        getLength(): RESULT;
+
+        getMaximumDistance(): RESULT;
+
+        getMinimumDistance(): RESULT;
+
+        getParameter(): RESULT;
+
+        getParameterByIndex(): RESULT;
+
+        getParameterCount(): RESULT;
+
+        getPath(): RESULT;
+
+        getSampleLoadingState(): RESULT;
+
+        getSoundSize(): RESULT;
+
+        getUserData(): RESULT;
+
+        getUserProperty(): RESULT;
+
+        getUserPropertyByIndex(): RESULT;
+
+        getUserPropertyCount(): RESULT;
+
+        hasCue(): RESULT;
+
+        is3D(): RESULT;
+
+        isOneshot(): RESULT;
+
+        isSnapshot(): RESULT;
+
+        isStream(): RESULT;
+
+        loadSampleData(): RESULT;
+
+        releaseAllInstances(): RESULT;
+
+        setCallback(): RESULT;
+
+        setUserData(): RESULT;
+
+        unloadSampleData(): RESULT;
+    }
+    export interface EventInstance {
+
+        // Functions
+
+        /** Retrieves the 3D position, velocity and orientation of the event instance 
+         * @param attributes writes the value to attributes.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+        */
+        get3DAttributes(attributes:Outval<_3D_ATTRIBUTES>): RESULT;
+    
+        /** Retrives the Low level ChannelGroup for the event instance 
+         * @description Remarks: The retrieved ChannelGroup corresponds to the master track of the event instance.
+         * @param group Address of a variable to receive the ChannelGroup. Writes value to group.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+        */
+        getChannelGroup(group): RESULT;  
+        
+        /** Retrieves the EventDescription for the event instance 
+         * @param description Address of a variable to receive the EventDescription object. Writes value to description.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+        */
+        getDescription(description): RESULT;
+    
+        /** Get the mask of what listeners apply to this event instance 
+         * @param mask Address of a variable to receive the mask. Writes value to mask.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+        */
+        getListenerMask(mask:number): RESULT;
+    
+        /** Retrieves a parameter instance by name 
+         * @param name Name of the parameter (case-insensitive).
+         * @param parameter Address of a variable to receive the ParameterInstance object. Writes value to parameter.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+        */
+        getParameter(name:string, parameter): RESULT;
+    
+        /** Retrieves a parameter instance by name 
+         * @deprecated Please get and set parameter values using Studio.EventInstance.getParameterValue, setParameterValue, getParameterValueByIndex, setParameterValueByIndex
+         * @param index Index the parameter (case-insensitive).
+         * @param parameter Address of a variable to receive the ParameterInstance object. Writes value to parameter.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+        */
+        getParameterByIndex(index:number, parameter): RESULT;
+
+        /** Retrieves the number of parameters in the event instance.
+         * @param count Address of a variable to receive the parameter count. Writes value to count.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getParameterCount(count:Outval<number>): RESULT;
+
+        /** Gets a parameter instance value by name.
+         * @param name Name of the parameter (case-insensitive)
+         * @param valueOut Address of a variable to receive the value as set from the public API. Specify 0 or NULL to ignore. Writes a number to value.val
+         * @param finalvalueOut Address of a variable to receive the final combined value. Specify 0 or NULL to ignore. Writes a number to finalvalue.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */        
+        getParameterValue(name:string, valueOut:Outval<number>, finalvalueOut:Outval<number>): RESULT;
+
+        /** Gets a parameter instance value by index.
+         * @param index Index of the parameter. 
+         * @param valueOut Address of a variable to receive the value as set from the public API. Specify 0 or NULL to ignore. Writes a number to value.val
+         * @param finalvalueOut Address of a variable to receive the final combined value. Specify 0 or NULL to ignore. Writes a number to finalvalue.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getParameterValueByIndex(index:number, valueOut:Outval<number>, finalvalueOut:Outval<number>): RESULT;
+
+        /** Retrieves the pause state of the event instance.
+         * @param isPausedOut Address of a variable to receive the pause state. Writes a boolean to isPaused.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getPaused(isPausedOut:Outval<boolean>): RESULT;
+
+        /** Retrieves the pitch multiplier set by the API on the event instance.
+         * @param pitchOut Address of a variable to receive the pitch as set from the public API. Specify 0 or NULL to ignore. 
+         * @param finalpitchOut Address of a variable to receive the final combined pitch. Specify 0 or NULL to ignore.
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getPitch(pitchOut:Outval<number>, finalpitchOut:Outval<number>): RESULT;
+
+        /** Retrieves the playback state of the event instance.
+         * @param stateOut Address of a variable to receive the current playback state of the event instance. See FMOD_STUDIO_PLAYBACK_STATE. Writes value to state.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getPlaybackState(stateOut:Outval<STUDIO_PLAYBACK_STATE>): RESULT;
+
+        /** Retrieves the value of a built-in event instance property.
+         * @param index The index of the property to retrieve. 
+         * @param valueOut Address of a variable to receive the property value. Writes value to value.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getProperty(index:number, valueOut:Outval<number>): RESULT;
+
+        /** Retrieves the send level to a Low Level reverb instance.
+         * @param index Index of the Low Level reverb instance to target, from 0 to 3. 
+         * @param levelOut Address of a variable to receive the send level for the signal to the reverb, from 0 (none) to 1 (full). Writes value to level.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getReverbLevel(index:number, levelOut:Outval<number>): RESULT;
+
+        /** Retrieves the position of the event instance's timeline playback cursor.
+         * @param positionOut Address of a variable to receive the timeline position in milliseconds. Writes value to position.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getTimelinePosition(positionOut:Outval<number>): RESULT;
+
+        /** Retrieves the user data that is set on the event instance.
+         * @param userdata Address of a variable to receive the user data. Writes value to userdata.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getUserData(userdata:Outval<any>): RESULT;
+
+        /** Retrieves the volume level of the event instance.
+         * @param volumeOut Address of a variable to receive the volume as set from the public API. Specify 0 or NULL to ignore. Writes to volume.val 
+         * @param finalvolumeOut Address of a variable to receive the final combined volume. Specify 0 or NULL to ignore. Writes to finalvolume.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        getVolume(volumeOut:Outval<number>, finalvolumeOut:Outval<number>): RESULT;
+
+        /** Retrieves the virtualization state of the event instance.
+         * @param virtualStateOut Address of a variable to receive the virtualization state. Writes boolean to virtualState.val
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        isVirtual(virtualStateOut:Outval<boolean>): RESULT;
+
+        /** Schedules the event instance to be destroyed when it stops.
+         * @description Remarks: If the instance is already stopped when release is called, it will be destroyed after the next update.
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        release(): RESULT;
+
+        /** Sets the 3D position, velocity and orientation for the event instance.
+         * @param attributes The 3D attributes to set. 
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        set3DAttributes(attributes:_3D_ATTRIBUTES): RESULT;
+
+        /** Sets a user callback for the event instance.
+         * @param callback Pointer to a callback function
+         * @param callbackmask A bitfield specifying which callback types are required. Masking out some callback types can help avoid a flood of irrelevant callbacks being triggered. Defaults to FMOD_STUDIO_EVENT_CALLBACK_ALL. 
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setCallback(callback: STUDIO_EVENT_CALLBACK, callbackmask:STUDIO_EVENT_CALLBACK_TYPE): RESULT;
+
+        /** Set the mask of what listeners apply to this event instance.
+         * @param mask Mask of listeners that apply to this event instance. 
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setListenerMask(mask:number): RESULT;
+
+        /** Sets a parameter instance value by name.
+         * @param name Name of the parameter (case-insensitive)
+         * @param value Value to set
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setParameterValue(name:string, value:number): RESULT;
+
+        /** Sets a parameter instance value by index.
+         * @param index Index of the parameter
+         * @param value Value to set
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setParameterValueByIndex(index:number, value:number): RESULT;
+
+        /** Sets multiple parameter instance values by index.
+         * @description Remarks: If any index is an automatic parameter an error will return without setting the values of any parameters. If an index is set to -1, then its index and corresponding value will be ignored. Use getParameter to see indices.
+         * @param indices Indices of the parameters. 
+         * @param values Values to set. 
+         * @param count Number of indices and values.
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setParameterValuesByIndices(indices:number[], values:number[], count:number): RESULT;
+
+        /** Sets the pause state of the event instance.
+         * @param paused The desired pause state. true = pause, false = unpause. 
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setPaused(paused:boolean): RESULT;
+
+        /** Sets the pitch multiplier for the event instance.
+         * @param pitch The pitch multiplier. 1 = normal pitch. 
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setPitch(pitch:number): RESULT;
+
+        /** Sets the value of a built-in event instance property.
+         * @param index The index of the property to set. See FMOD_STUDIO_EVENT_PROPERTY
+         * @param value The property value to set.
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setProperty(index:number, value:number): RESULT;
+
+        /** Sets the send level to a Low Level reverb instance.
+         * @param index Index of the Low Level reverb instance to target, from 0 to 3.
+         * @param level Send level for the signal to the reverb, from 0 (none) to 1 (full). Default = 0. 
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setReverbLevel(index:number, level:number): RESULT;
+
+        /** Sets the position of the event instance's timeline playback cursor.
+         * @param position Desired timeline position in milliseconds. 
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setTimelinePosition(position:number): RESULT;
+
+        /** Sets arbitrary user data on the event instance.
+         * @param userdata Address of user data to be stored within the event instance object. 
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setUserData(userdata): RESULT;
+
+        /** Sets the volume level of the event instance.
+         * @param volume The volume as a linear gain. 0 = silent, 1 = full volume. 
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        setVolume(volume:number): RESULT;
+
+        /** Starts replay of the event instance.
+         * @description Remarks: If the instance was already playing it will 
+         * restart the event.
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        start(): RESULT;
+
+        /** Stops playback of the event instance.
+         * @param mode The desired stop mode. See FMOD_STUDIO_STOP_MODE.
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        stop(mode:STUDIO_STOP_MODE): RESULT;
+
+        /** Triggers a cue on the event, which allows the timeline cursor to move 
+         * past sustain points.
+         * @description Triggering cues makes the timeline cursor continue past 
+         * sustain points. The cue can be triggered ahead of time; for each time 
+         * it is triggered, the timeline cursor will continue past one more sustain point.
+         * @returns an integer value defined in the FMOD_RESULT enumeration
+         */
+        triggerCue(): RESULT;
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    export interface Bus {
+        getChannelGroup(): RESULT;
+
+        getID(): RESULT;
+
+        getMute(): RESULT;
+
+        getPath(): RESULT;
+
+        getPaused(): RESULT;
+
+        getVolume(): RESULT;
+
+        lockChannelGroup(): RESULT;
+
+        setMute(): RESULT;
+
+        setPaused(): RESULT;
+
+        setVolume(): RESULT;
+
+        stopAllEvents(): RESULT;
+
+        unlockChannelGroup(): RESULT;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    export interface ParameterInstance {
+        /** Retrieves the description for the parameter
+         * @param description Address of a variable to receive the parameter description. 
+         */
+        getDescription(description:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        
+        /** Retrieves the value of the parameter 
+         * @param value Address of a variable to receive the parameter value. 
+        */
+        getValue(value:Outval<number>): RESULT;
+        
+        /** Sets the value of the parameter */
+        setValue(value:number): RESULT;
+    }
+
+    export interface VCA {
+        /** Retrieves the ID of the VCA.
+         * @param id Address of a variable to receive the 128-bit GUID. 
+         */
+        getID (id:Outval<GUID>) : RESULT;
+        /** Retrieves the path of the VCA.
+         * @param path Address of a buffer to receive the path. Specify 0 or NULL to ignore.
+         * @param size Size of the path buffer in bytes. Required if path parameter is not NULL. 
+         * @param retrieved Address of a variable to receive the size of the retrieved path in bytes, 
+         * including the terminating null character. Optional. Specify 0 or NULL to ignore. 
+         */
+        getPath (path:Outval<string>, size:number, retrieved:Outval<number>) : RESULT;
+
+        /** Retrieves the volume level of the VCA 
+         * @param volume Address of a variable to receive the volume as set from the public API. Specify 0 or NULL to ignore. 
+         * @param finalvolume Address of a variable to receive the final combined volume. Specify 0 or NULL to ignore.
+        */
+        getVolume (volume:Outval<number>, finalvolume:Outval<number>) : RESULT;
+        /** Sets the volume level of the VCA.
+         * @param volume The volume level to set as a linear gain. 0 = silent, 1 = full volume.
+         */
+        getsetVolume (volume:number) : RESULT;
+    }
+
+    export interface Bank {
+        getBusCount(): RESULT;
+
+        getBusList(): RESULT;
+
+        getEventCount(): RESULT;
+
+        getEventList(): RESULT;
+
+        getID(): RESULT;
+
+        getLoadingState(): RESULT;
+
+        getPath(): RESULT;
+
+        getSampleLoadingState(): RESULT;
+
+        getStringCount(): RESULT;
+
+        getStringInfo(): RESULT;
+
+        getUserData(): RESULT;
+
+        getVCACount(): RESULT;
+
+        getVCAList(): RESULT;
+
+        loadSampleData(): RESULT;
+
+        setUserData(): RESULT;
+
+        unload(): RESULT;
+
+        unloadSampleData(): RESULT;
+    }
+
+    export interface CommandReplay {
+        getCommandAtTime(): RESULT;
+
+        getCommandCount(): RESULT;
+
+        getCommandInfo(): RESULT;
+
+        getCommandString(): RESULT;
+
+        getCurrentCommand(): RESULT;
+
+        getLength(): RESULT;
+
+        getPaused(): RESULT;
+
+        getPlaybackState(): RESULT;
+
+        getSystem(): RESULT;
+
+        getUserData(): RESULT;
+
+        release(): RESULT;
+
+        seekToCommand(): RESULT;
+
+        seekToTime(): RESULT;
+
+        setBankPath(): RESULT;
+
+        setCreateInstanceCallback(): RESULT;
+
+        setFrameCallback(): RESULT;
+
+        setLoadBankCallback(): RESULT;
+
+        setPaused(): RESULT;
+
+        setUserData(): RESULT;
+
+        start(): RESULT;
+
+        stop(): RESULT;
+    }
+
+    export interface ParseID {
+        (idString:string, id:Outval<GUID>): RESULT;
+    }
 //#region  FMOD LOW LEVEL DEFINES //////////////////////////////////////////////////////////////////////////////////////////////
 
     /** These are bitfields to describe for a certain number of channels in a signal, which
