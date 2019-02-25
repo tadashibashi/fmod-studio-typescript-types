@@ -23,7 +23,6 @@ export function CHECK_RESULT (result: IFMOD.RESULT, string: string)
 export namespace IFMOD { 
 
     // #region Namespace Functions Wrap FMOD functions
-\
     export function Debug_Initialize(flags:DEBUG_FLAGS) {
         let result: RESULT = FMOD.Debug_Initialize(flags);
         return result;
@@ -69,7 +68,7 @@ export namespace IFMOD {
         createReverb3D(): RESULT;
 
         /** Loads a sound into memory, or opens it for streaming. */
-        createSound(name_or_data:string, mode:MODE, exinfo:CREATESOUNDEXINFO, sound:Outval<any<): RESULT;
+        createSound(name_or_data:string, mode:MODE, exinfo:CREATESOUNDEXINFO, sound:Outval<any>): RESULT;
 
         createSoundGroup(): RESULT;
 
@@ -236,6 +235,10 @@ export namespace IFMOD {
         unlockDSP(): RESULT;
 
         update(): RESULT;
+
+    }
+
+    export interface Sound {
 
     }
     //#endregion System Objects
@@ -599,7 +602,7 @@ export namespace IFMOD {
 
         setCallback(callback:STUDIO_EVENT_CALLBACK, callbackmask:STUDIO_EVENT_CALLBACK_TYPE): RESULT;
 
-        setUserData(): RESULT;
+        setUserData(userdata:any): RESULT;
 
         unloadSampleData(): RESULT;
     }
