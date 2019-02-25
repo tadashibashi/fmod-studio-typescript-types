@@ -48,7 +48,198 @@ export namespace IFMOD {
         return result;
     }
     //#endregion Namespace Functions
-    
+    //#region System Objects
+    export interface System {
+        attachChannelGroupToPort(): RESULT;
+
+        attachFileSystem(): RESULT;
+        /** Closes the system object without freeing the object's memory, so the system handle will still be valid. */
+        close(): RESULT;
+
+        createChannelGroup(): RESULT;
+        /** Creates a user defined DSP unit object to be inserted into a DSP network, for the purposes of sound filtering or sound generation. */
+        createDSP(description:DSP_DESCRIPTION, dsp:Outval<any>): RESULT;
+
+        createDSPByPlugin(): RESULT;
+
+        createDSPByType(): RESULT;
+
+        createGeometry(): RESULT;
+
+        createReverb3D(): RESULT;
+
+        /** Loads a sound into memory, or opens it for streaming. */
+        createSound(name_or_data:string, mode:MODE, exinfo:CREATESOUNDEXINFO, sound:Outval<any<): RESULT;
+
+        createSoundGroup(): RESULT;
+
+        createStream(name_or_data:string, mode:MODE, sound:Outval<any>): RESULT;
+
+        detachChannelGroupFromPort(): RESULT;
+
+        get3DListenerAttributes(): RESULT;
+
+        get3DNumListeners(): RESULT;
+        /** Retrieves the global doppler scale, distance factor and rolloff scale for all 3D sound in FMOD. */
+        get3DSettings(doplerscale:Outval<number>, distancefactor:Outval<number>, folloffscale:Outval<number>): RESULT;
+
+        getAdvancedSetting(): RESULT;
+
+        getCPUUsage(): RESULT;
+
+        getChannel(): RESULT;
+
+        getChannelsPlaying(): RESULT;
+
+        getDSPBufferSize(): RESULT;
+
+        getDSPInfoByPlugin(): RESULT;
+
+        getDefaultMixMatrix(): RESULT;
+        /** Returns the currently selected driver number.  */
+        getDriver(driver:Outval<number>): RESULT;
+
+        getDriverInfo(id:number, name:Outval<string>, guid:Outval<GUID>, systemrate:Outval<number>, speakermode:Outval<SPEAKERMODE>, speakermodechannels:Outval<number>): RESULT;
+
+        getFileUsage(): RESULT;
+
+        getGeometryOcclusion(): RESULT;
+
+        getGeometrySettings(): RESULT;
+
+        getMasterChannelGroup(): RESULT;
+
+        getMasterSoundGroup(): RESULT;
+
+        getNestedPlugin(): RESULT;
+
+        getNetworkProxy(): RESULT;
+
+        getNetworkTimeout(): RESULT;
+
+        getNumDrivers(): RESULT;
+
+        getNumNestedPlugins(): RESULT;
+
+        getNumPlugins(): RESULT;
+
+        getOutput(): RESULT;
+
+        getOutputByPlugin(): RESULT;
+
+        getOutputHandle(): RESULT;
+
+        getPluginHandle(): RESULT;
+
+        getPluginInfo(): RESULT;
+
+        getRecordDriverInfo(): RESULT;
+
+        getRecordNumDrivers(): RESULT;
+
+        getRecordPosition(): RESULT;
+
+        getReverbProperties(): RESULT;
+
+        getSoftwareChannels(): RESULT;
+
+        getSoftwareFormat(): RESULT;
+
+        getSoundRAM(): RESULT;
+
+        getSpeakerModeChannels(): RESULT;
+
+        getSpeakerPosition(): RESULT;
+
+        getStreamBufferSize(): RESULT;
+
+        getUserData(): RESULT;
+
+        getVersion(): RESULT;
+
+        /** Initializes the system object, and the sound device. This has to be called at the start of the user's program. 
+         * You must create a system object with FMOD::System_create. */
+        init(maxchannels:number, flags:INITFLAGS, extradriverdata): RESULT;
+
+        isRecording(): RESULT;
+
+        loadGeometry(): RESULT;
+
+        loadPlugin(): RESULT;
+
+        lockDSP(): RESULT;
+
+        mixerResume(): RESULT;
+
+        mixerSuspend(): RESULT;
+
+        playDSP(dsp, channelgroup, paused:boolean, channel:Outval<any>): RESULT;
+
+        playSound(sound, channelgroup, paused:boolean, channel:Outval<any>): RESULT;
+
+        recordStart(id:number, sound, loop:boolean): RESULT;
+
+        recordStop(id:number): RESULT;
+
+        registerCodec(): RESULT;
+
+        registerDSP(): RESULT;
+
+        registerOutput(): RESULT;
+        /** Closes and frees a system object and its resources. */
+        release(): RESULT;
+
+        set3DListenerAttributes(): RESULT;
+
+        set3DNumListeners(): RESULT;
+
+        set3DRolloffCallback(): RESULT;
+
+        set3DSettings(): RESULT;
+
+        setAdvancedSetting(): RESULT;
+
+        setCallback(callback, callbackmask): RESULT;
+
+        setDSPBufferSize(): RESULT;
+
+        setDriver(driver:number): RESULT;
+
+        setFileSystem(): RESULT;
+
+        setGeometrySettings(): RESULT;
+
+        setNetworkProxy(): RESULT;
+
+        setNetworkTimeout(): RESULT;
+
+        setOutput(): RESULT;
+
+        setOutputByPlugin(): RESULT;
+
+        setPluginPath(): RESULT;
+
+        setReverbProperties(): RESULT;
+
+        setSoftwareChannels(): RESULT;
+
+        setSoftwareFormat(): RESULT;
+
+        setSpeakerPosition(): RESULT;
+
+        setStreamBufferSize(): RESULT;
+
+        setUserData(): RESULT;
+
+        unloadPlugin(): RESULT;
+
+        unlockDSP(): RESULT;
+
+        update(): RESULT;
+
+    }
+    //#endregion System Objects
+
     export interface StudioSystem {
         // Functions
 
@@ -410,6 +601,7 @@ export namespace IFMOD {
 
         unloadSampleData(): RESULT;
     }
+
     export interface EventInstance {
 
         // Functions
