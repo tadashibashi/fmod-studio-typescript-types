@@ -59,23 +59,23 @@ export namespace IFMOD {
 
     //#region System Objects
     export interface System {
-        attachChannelGroupToPort(): RESULT;
+        attachChannelGroupToPort(portType, portIndex, channelgroup:Outval<ChannelGroup>): RESULT;
 
-        attachFileSystem(): RESULT;
+        attachFileSystem(useropen, userclose, userread, userseek): RESULT;
         /** Closes the system object without freeing the object's memory, so the system handle will still be valid. */
         close(): RESULT;
 
-        createChannelGroup(): RESULT;
+        createChannelGroup(name:string, channelgroup:ChannelGroup): RESULT;
         /** Creates a user defined DSP unit object to be inserted into a DSP network, for the purposes of sound filtering or sound generation. */
         createDSP(description:DSP_DESCRIPTION, dsp:Outval<any>): RESULT;
 
-        createDSPByPlugin(): RESULT;
+        createDSPByPlugin(handle:number, dsp:Outval<DSP>): RESULT;
 
-        createDSPByType(): RESULT;
+        createDSPByType(type:DSP_TYPE, dsp:Outval<DSP>): RESULT;
 
-        createGeometry(): RESULT;
+        createGeometry(maxpolygons:number, maxvertices:number, geometry:Geometry): RESULT;
 
-        createReverb3D(): RESULT;
+        createReverb3D(reverb:Outval<Reverb3D>): RESULT;
 
         /** Loads a sound into memory, or opens it for streaming. */
         createSound(name_or_data:string, mode:MODE, exinfo:CREATESOUNDEXINFO, sound:Outval<any>): RESULT;
@@ -126,7 +126,7 @@ export namespace IFMOD {
 
         getNetworkTimeout(): RESULT;
 
-        getNumDrivers(): RESULT;
+        getNumDrivers(numdrivers:Outval<number>): RESULT;
 
         getNumNestedPlugins(): RESULT;
 
@@ -138,9 +138,9 @@ export namespace IFMOD {
 
         getOutputHandle(): RESULT;
 
-        getPluginHandle(): RESULT;
+        getPluginHandle(plugintype:PLUGINTYPE, index:number, handle:Outval<number>): RESULT;
 
-        getPluginInfo(): RESULT;
+        getPluginInfo(handle:number, plugintype:Outval<PLUGINTYPE>, name:Outval<string>, version:Outval<number>): RESULT;
 
         getRecordDriverInfo(): RESULT;
 
@@ -170,10 +170,12 @@ export namespace IFMOD {
          * You must create a system object with FMOD::System_create. */
         init(maxchannels:number, flags:INITFLAGS, extradriverdata): RESULT;
 
-        isRecording(): RESULT;
+        isRecording(id:number, recording:Outval<boolean>): RESULT;
 
-        loadGeometry(): RESULT;
-
+        loadGeometry(data, datasize:number, geometry:Outval<Geometry>): RESULT;
+        /**
+         * Currently not supported in JavaScript
+         */
         loadPlugin(): RESULT;
 
         lockDSP(): RESULT;
@@ -182,17 +184,17 @@ export namespace IFMOD {
 
         mixerSuspend(): RESULT;
 
-        playDSP(dsp, channelgroup, paused:boolean, channel:Outval<any>): RESULT;
+        playDSP(dsp:DSP, channelgroup:ChannelGroup, paused:boolean, channel:Outval<any>): RESULT;
 
         playSound(sound, channelgroup, paused:boolean, channel:Outval<any>): RESULT;
 
-        recordStart(id:number, sound, loop:boolean): RESULT;
+        recordStart(id:number, sound:Sound, loop:boolean): RESULT;
 
         recordStop(id:number): RESULT;
 
-        registerCodec(): RESULT;
+        registerCodec(description:CODEC_DESCRIPTION, handle:Outval<number>, priority:number): RESULT;
 
-        registerDSP(): RESULT;
+        registerDSP(description:DSP_DESCRIPTION, handle:Outval<number>): RESULT;
 
         registerOutput(): RESULT;
         /** Closes and frees a system object and its resources. */
@@ -208,7 +210,7 @@ export namespace IFMOD {
 
         setAdvancedSetting(): RESULT;
 
-        setCallback(callback, callbackmask): RESULT;
+        setCallback(callback, callbackmask:SYSTEM_CALLBACK_TYPE): RESULT;
 
         setDSPBufferSize(): RESULT;
 
@@ -225,22 +227,25 @@ export namespace IFMOD {
         setOutput(): RESULT;
 
         setOutputByPlugin(): RESULT;
+        /**
+         * Specify a base search path for plugins so they can be placed somewhere else than the directory of the main executable.
+         * @param path A character string containing a correctly formatted path to load plugins from encoded in a UTF-8 string. 
+         */
+        setPluginPath(path:string): RESULT;
 
-        setPluginPath(): RESULT;
+        setReverbProperties(instance:number, prop:REVERB_PROPERTIES): RESULT;
 
-        setReverbProperties(): RESULT;
+        setSoftwareChannels(numbersoftwarechannels:number): RESULT;
 
-        setSoftwareChannels(): RESULT;
+        setSoftwareFormat(samplerate:number, speakermode:SPEAKERMODE, numrawspeakers:number): RESULT;
 
-        setSoftwareFormat(): RESULT;
+        setSpeakerPosition(speaker:SPEAKER, x:number, y:number, active:boolean): RESULT;
 
-        setSpeakerPosition(): RESULT;
+        setStreamBufferSize(filebuffersize:number, filebuffersizetype:TIMEUNIT): RESULT;
 
-        setStreamBufferSize(): RESULT;
+        setUserData(userdata:any): RESULT;
 
-        setUserData(): RESULT;
-
-        unloadPlugin(): RESULT;
+        unloadPlugin(hangle:number): RESULT;
 
         unlockDSP(): RESULT;
 
