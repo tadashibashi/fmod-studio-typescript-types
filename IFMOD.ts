@@ -24,22 +24,137 @@ export namespace IFMOD {
 
     // #region Namespace Functions Wrap FMOD functions ///////////////////////////////////////////////////////////////////////
     // #region Low Level System Functions ////////////////////////////
+    /**
+     * 
+     * @param flags 
+     */
     export function Debug_Initialize(flags:DEBUG_FLAGS) {
         let result: RESULT = FMOD.Debug_Initialize(flags);
         return result;
     }
-
+    /**
+     * 
+     * @param handle 
+     */
+    export function file_close(handle:object) { 
+        let result: RESULT = FMOD.file_close(handle);
+        return result;
+    }
+    /**
+     * 
+     * @param system 
+     * @param filename 
+     * @param filesize_out 
+     * @param handle_out 
+     */
+    export function file_open(system:System, filename:string, filesize_out:number, handle_out:object) {
+        let result: RESULT = FMOD.file_open(system, filename, filesize_out, handle_out);
+        return result;
+    }
+    /**
+     * 
+     * @param handle 
+     * @param buffer 
+     * @param sizebytes 
+     * @param bytesread_out 
+     */
+    export function file_read(handle:object, buffer:number, sizebytes:number, bytesread_out:number) {
+        let result: RESULT = FMOD.file_read(handle, buffer, sizebytes, bytesread_out);
+        return result;
+    }
+    /**
+     * Helper function to seek a file manually, that is preloaded with FMOD.FS_createPreloadedFile 
+     * @param handle Handle returned by the FMOD.file_open function
+     * @param pos offset in bytes to seek into the file, relatve to the start
+     */
+    export function file_seek(handle:object, pos:number) {
+        let result: RESULT = FMOD.file_seek(handle, pos);
+        return result;
+    }
+    /**
+     * 
+     * @param result 
+     */
     export function ErrorString(result: RESULT) {
         FMOD.ErrorString(result);
     }
 
+    export function File_GetDiskBusy(busy:Outval<number>) {
+        let result: RESULT = FMOD.File_GetDiskBusy(busy);
+        return result;
+    }
+    /**
+     * Mutex function to synchronize user file reads with FMOD's file reads. This function tells fmod that you are using the disk so that it will block until you are finished with it.
+     * @description This function also blocks if FMOD is already using the disk, so that you cannot do a read at the same time FMOD is reading.
+     * @param busy 1 = you are about to perform a disk access. 0 = you are finished with the disk.
+     */
+    export function File_SetDiskBusy(busy:number) {
+        let result: RESULT = FMOD.File_SetDiskBusy(busy);
+        return result;
+    }
+
+    export function Memory_GetStats(currentalloced:Outval<number>, maxalloced:Outval<number>, blocking:boolean) {
+        let result: RESULT = FMOD.Memory_GetStats(currentalloced, maxalloced, blocking);
+        return result;
+    }
+    export function Memory_Initialize(poolmem, poollen:number, useralloc:MEMORY_ALLOC_CALLBACK, userrealloc:MEMORY_REALLOC_CALLBACK, userfree: MEMORY_FREE_CALLBACK, memtypeflags: MEMORY_TYPE) {
+        let result: RESULT = FMOD.Memory_Initialize(poolmem, poollen, useralloc, userrealloc, userfree, memtypeflags);
+        return result;
+    }
+    export function System_Create(system:Outval<System>) {
+        let result: RESULT = FMOD.System_Create(system);
+        return result;
+    }
+
+    /**
+     * 
+     * @param foldername 
+     * @param filename 
+     * @param url 
+     * @param canread 
+     * @param canwrite 
+     */
     export function FS_createPreloadedFile(foldername:string, filename:string, url:string, canread:boolean,canwrite:boolean) {
         let result: RESULT = FMOD.FS_createPreloadedFile(foldername, filename, url, canread, canwrite);
         return result;
     }    
-    // fill in outval generic type with systems
-    export function System_Create(system:Outval<any>) {
-        let result: RESULT = FMOD.System_Create(system);
+
+    export function getblocksize(dsp_state:DSP_STATE, blocksize:number) {
+        let result: RESULT = FMOD.getblocksize(dsp_state, blocksize);
+        return result;
+    }
+    export function getsamplerate(dsp_state:DSP_STATE, samplerate:number) {
+        let result: RESULT = FMOD.getsamplerate(dsp_state, samplerate);
+        return result;
+    }
+    export function getspeakermode(dsp_state:DSP_STATE, clock:number, offset:number, length:number) {
+        let result: RESULT = FMOD.getspeakermode(dsp_state, clock, offset, length);
+        return result;
+    }
+    export function getValue(address, value:number, format:string) {
+        let result: RESULT = FMOD.getValue(address, value, format);
+        return result;
+    }
+    /**
+     * Frees memory that was allocated by FMOD internally.
+     * @param memory Note! Currently FMOD.ReadFile is the only function that returns an object with memory allocated by FMOD
+     */
+    export function Memory_Free(memory:object) {
+        let result: RESULT = FMOD.Memory_Free(memory);
+        return result;
+    }
+    /**
+     * Read the entire contents of a file into memory, as a JS variable that contains nothing but a memory address. 
+     * @param system FMOD::System object handle
+     * @param filename Filename of the file that is to be loaded, that has the path and filename that matches the preloaded path/filename if loaded in that fashion.
+     * @param output The variable with the allocated memory containing the contents of the file.
+     */
+    export function ReadFile(system:System, filename:string, output:object) {
+        let result: RESULT = FMOD.ReadFile(system, filename, output);
+        return result;
+    }
+    export function setValue(address, value:number, format:string) {
+        let result: RESULT = FMOD.setValue(address, value, format);
         return result;
     }
 
