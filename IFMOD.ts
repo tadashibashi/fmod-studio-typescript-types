@@ -547,55 +547,57 @@ export namespace IFMOD {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     export interface EventDescription {
-        createInstance(): RESULT;
+        createInstance(instance:Outval<EventInstance>): RESULT;
 
-        getID(): RESULT;
+        getID(id:Outval<GUID>): RESULT;
 
-        getInstanceCount(): RESULT;
+        getInstanceCount(count:Outval<number>): RESULT;
 
-        getInstanceList(): RESULT;
+        getInstanceList(array:Outval<EventInstance[]>, capacity:number, count:Outval<number>): RESULT;
 
-        getLength(): RESULT;
+        /** Retrieves the length of the event's timeline in milliseconds
+         * @param length Address of a variable to receive the timeline length in milliseconds. */
+        getLength(length:Outval<number>): RESULT;
 
-        getMaximumDistance(): RESULT;
+        getMaximumDistance(distance:Outval<number>): RESULT;
 
-        getMinimumDistance(): RESULT;
+        getMinimumDistance(distance:Outval<number>): RESULT;
 
-        getParameter(): RESULT;
+        getParameter(name:string, parameter:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
 
-        getParameterByIndex(): RESULT;
+        getParameterByIndex(index:number, parameter:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
 
-        getParameterCount(): RESULT;
+        getParameterCount(count:Outval<number>): RESULT;
 
-        getPath(): RESULT;
+        getPath(path:Outval<string>, size:number, retrived:Outval<number>): RESULT;
+        
+        getSampleLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
 
-        getSampleLoadingState(): RESULT;
+        getSoundSize(size:Outval<number>): RESULT;
 
-        getSoundSize(): RESULT;
+        getUserData(userdata:Outval<any>): RESULT;
 
-        getUserData(): RESULT;
+        getUserProperty(name:string, property:Outval<STUDIO_USER_PROPERTY>): RESULT;
 
-        getUserProperty(): RESULT;
+        getUserPropertyByIndex(index:number, property:Outval<STUDIO_USER_PROPERTY>): RESULT;
 
-        getUserPropertyByIndex(): RESULT;
+        getUserPropertyCount(count:Outval<number>): RESULT;
 
-        getUserPropertyCount(): RESULT;
+        hasCue(hasCue:Outval<boolean>): RESULT;
 
-        hasCue(): RESULT;
+        is3D(is3D:Outval<boolean>): RESULT;
 
-        is3D(): RESULT;
+        isOneshot(isOneshot:Outval<boolean>): RESULT;
 
-        isOneshot(): RESULT;
+        isSnapshot(isSnapshot:Outval<boolean>): RESULT;
 
-        isSnapshot(): RESULT;
-
-        isStream(): RESULT;
-
+        isStream(isStream:Outval<boolean>): RESULT;
+        /** You can use this function to preload sample data ahead of time so that events can be played immediately when required. */
         loadSampleData(): RESULT;
 
         releaseAllInstances(): RESULT;
 
-        setCallback(): RESULT;
+        setCallback(callback:STUDIO_EVENT_CALLBACK, callbackmask:STUDIO_EVENT_CALLBACK_TYPE): RESULT;
 
         setUserData(): RESULT;
 
@@ -996,7 +998,8 @@ export namespace IFMOD {
     export interface ParseID {
         (idString:string, id:Outval<GUID>): RESULT;
     }
-//#region  FMOD LOW LEVEL DEFINES //////////////////////////////////////////////////////////////////////////////////////////////
+
+    //#region LOW LEVEL DEFINES //////////////////////////////////////////////////////////////////////////////////////////////
 
     /** These are bitfields to describe for a certain number of channels in a signal, which channels are being represented.
      * @description For example, a signal could be 1 channel, but contain the LFE channel only. */
@@ -1643,7 +1646,7 @@ export namespace IFMOD {
  
 // #endregion LOW LEVEL SYSTEM DEFINES
 
-// #region LOW LEVEL SYSTEM STRUCTURES
+    // #region LOW LEVEL SYSTEM STRUCTURES /////////////////////////////////////////////////////////////////////////////////////////
 
     export interface _3D_ATTRIBUTES {
         position:VECTOR,
@@ -1896,7 +1899,7 @@ export namespace IFMOD {
 
 // #endregion LOW LEVEL SYSTEM STRUCTURES
 
-// #region LOW LEVEL SYSTEM ENUMERATIONS
+    // #region LOW LEVEL SYSTEM ENUMERATIONS ///////////////////////////////////////////////////////////////////////////////////////
     /** These callback types are used with Channel::setCallback. */
     export enum CHANNELCONTROL_CALLBACK_TYPE {
         END,
@@ -2764,9 +2767,7 @@ export namespace IFMOD {
     }
 // #endregion LOW LEVEL SYSTEM ENUMERATIONS
 
-
-// #region Studio Callbacks
-
+    // #region Studio Callbacks ////////////////////////////////////////////////////////////////////////////////////////////////////
     /** Callback for command replay event instance creation 
      * @function STUDIO_COMMANDREPLAY_CREATE_INSTANCE_CALLBACK
      * @param replay Pointer to the command replay object
@@ -2823,7 +2824,7 @@ export namespace IFMOD {
 
 // #endregion
 
-// #region Studio Structures ////////////////////////////////////////////////////////////
+    // #region Studio Structures ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** Settings for advanced features like configuring memory and cpu usage. */
     export interface STUDIO_ADVANCEDSETTINGS {
