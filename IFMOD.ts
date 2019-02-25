@@ -249,7 +249,246 @@ export namespace IFMOD {
     }
 
     export interface Sound {
+        /** 
+         * Currently not supported in JavaScript 
+         */
+        addSyncPoint(offset:number, offsettype:TIMEUNIT, name:string, point): RESULT;
+        /** 
+         * Currently not supported in JavaScript 
+         */
+        deleteSyncPoint(point): RESULT;
+        /**
+         * Retrieves the inside and outside angles of the sound projection cone
+         * @param insideconeangle Address of a variable that receives the inside angle of the sound projection cone, in degrees. This is the angle within which the sound is at its normal volume. Optional. Specify 0 or NULL to ignore. 
+         * @param outsideconeangle Address of a variable that receives the outside angle of the sound projection cone, in degrees. This is the angle outside of which the sound is at its outside volume. Optional. Specify 0 or NULL to ignore. 
+         * @param outsidevolume Address of a variable that receives the cone outside volume for this sound. Optional. Specify 0 or NULL to ignore. 
+         */
+        get3DConeSettings(insideconeangle:Outval<number>, outsideconeangle:Outval<number>, outsidevolume:Outval<number>): RESULT;
+        /**
+         * Retrieves a pointer to the sound's current custom rolloff curve
+         * @param points Address of a variable to receive the pointer to the current custom rolloff point list. Optional. Specify 0 or NULL to ignore. 
+         * @param numpoints Address of a variable to receive the number of points int he current custom rolloff point list. Optional. Specify 0 or NULL to ignore. 
+         */
+        get3DCustomRolloff(points:Outval<VECTOR[]>, numpoints:Outval<number>): RESULT;
+        /**
+         * Retrieve the minimum and maximum audible distance for a sound.
+         * @param min Pointer to value to be filled with the minimum volume distance for the sound. See remarks for more on units. Optional. Specify 0 or NULL to ignore. 
+         * @param max Pointer to value to be filled with the maximum volume distance for the sound. See remarks for more on units. Optional. Specify 0 or NULL to ignore.
+         */
+        get3DMinMaxDistance(min:Outval<number>, max:Outval<number>): RESULT;
+        /**
+         * Retrieves a sound's default attributes for when it is played on a channel with System::playSound.
+         * @param frequency Address of a variable that receives the default frequency for the sound. Optional. Specify 0 or NULL to ignore.
+         * @param priority priority Address of a variable that receives the default priority for the sound when played on a channel. Result will be from 0 to 256. 0 = most important, 256 = least important. Default = 128. Optional. Specify 0 or NULL to ignore. 
+         */
+        getDefaults(frequency:Outval<number>, priority:Outval<number>): RESULT;
+        /**
+         * Returns format information about the sound.
+         * @param type Address of a variable that receives the type of sound. Optional. Specify 0 or NULL to ignore. 
+         * @param format Address of a variable that receives the format of the sound. Optional. Specify 0 or NULL to ignore. 
+         * @param channels Address of a variable that receives the number of channels for the sound. Optional. Specify 0 or NULL to ignore.
+         * @param bits Address of a variable that receives the number of bits per sample for the sound. This corresponds to FMOD_SOUND_FORMAT but is provided as an integer format for convenience. Optional. Specify 0 or NULL to ignore. 
+         */
+        getFormat(type:Outval<SOUND_TYPE>, format:Outval<SOUND_FORMAT>, channels:Outval<number>, bits:Outval<number>): RESULT;
+        /**
+         * Retrieves the length of the sound using the specified time unit.
+         * @param length Address of a variable that receives the length of the sound. 
+         * @param lengthtype Time unit retrieve into the length parameter. See FMOD_TIMEUNIT. 
+         */
+        getLength(length:Outval<number>, lengthtype:TIMEUNIT): RESULT;
+        /**
+         * Retrieves the current loop count value for the specified sound.
+         * @param loopcount Address of a variable that receives the number of times a sound will loop by default before stopping. 0 = oneshot. 1 = loop once then stop. -1 = loop forever. Default = -1 
+         */
+        getLoopCount(loopcount:Outval<number>): RESULT;
+        /**
+         * Retrieves the loop points for a sound.
+         * @param loopstart Address of a variable to receive the loop start point. This point in time is played, so it is inclusive. Optional. Specify 0 or NULL to ignore.
+         * @param loopstarttype The time format used for the returned loop start point. See FMOD_TIMEUNIT. 
+         * @param loopend Address of a variable to receive the loop end point. This point in time is played, so it is inclusive. Optional. Specify 0 or NULL to ignore. 
+         * @param loopendtype The time format used for the returned loop end point. See FMOD_TIMEUNIT. 
+         */
+        getLoopPoints(loopstart:Outval<number>, loopstarttype:TIMEUNIT, loopend:Outval<number>, loopendtype:TIMEUNIT): RESULT;
+        /**
+         * Retrieves the mode bits set by the codec and the user when opening the sound.
+         * @param mode Address of a variable that receives the current mode for this sound. 
+         */
+        getMode(mode: MODE): RESULT;
+        /**
+         * Retrieves the volume of a MOD/S3M/XM/IT/MIDI music channel volume.
+         * @param channel MOD/S3M/XM/IT/MIDI music subchannel to retrieve the volume for. 
+         * @param volume Address of a variable to receive the volume of the channel from 0.0 to 1.0. Default = 1.0. 
+         */
+        getMusicChannelVolume(channel:number, volume:Outval<number>): RESULT;
+        /**
+         * Gets the number of music channels inside a MOD/S3M/XM/IT/MIDI file.
+         * @param numchannels Address of a variable to receive the number of music channels used in the song. 
+         */
+        getMusicNumChannels(numchannels:Outval<number>): RESULT;
+        /**
+         * Gets the relative speed of MOD/S3M/XM/IT/MIDI music.
+         * @param speed Address of a variable to receive the relative speed of the song from 0.01 to 100.0. 0.5 = half speed, 2.0 = double speed. Default = 1.0.
+         */
+        getMusicSpeed(speed:Outval<number>): RESULT;
+        /**
+         * Retrieves the name of a sound
+         * @param name Address of a variable that receives the name of the sound encoded in a UTF-8 string.
+         */
+        getName(name:Outval<string>): RESULT;
+        /**
+         * Retrieves the number of subsounds stored within a sound.
+         * @param numsubsounds Address of a variable that receives the number of subsounds stored within this sound. 
+         */
+        getNumSubSounds(numsubsounds:Outval<number>): RESULT;
+        /**
+         * Retrieves the number of sync points stored within a sound. These points can be user generated or can come from a wav file with embedded markers.
+         * @param numsyncpoints Address of a variable to receive the number of sync points within this sound. 
+         */
+        getNumSyncPoints(numsyncpoints:Outval<number>): RESULT;
+        /**
+         * Retrieves the number of tags belonging to a sound.
+         * @param numtags Address of a variable that receives the number of tags in the sound. Optional. Specify 0 or NULL to ignore. 
+         * @param numtagsupdated Address of a variable that receives the number of tags updated since this function was last called. Optional. Specify 0 or NULL to ignore. 
+         */
+        getNumTags(numtags:Outval<number>, numtagsupdated:Outval<number>): RESULT;
+        /**
+         * Retrieves the state a sound is in after FMOD_NONBLOCKING has been used to open it, or the state of the streaming buffer.
+         * @param openstate Address of a variable that receives the open state of a sound. Optional. Specify 0 or NULL to ignore. 
+         * @param percentbuffered Address of a variable that receives the percentage of the file buffer filled progress of a stream. Optional. Specify 0 or NULL to ignore. 
+         * @param isStarving Address of a variable that receives the starving state of a sound. If a stream has decoded more than the stream file buffer has ready for it, it will return TRUE. Optional. Specify 0 or NULL to ignore. 
+         * @param isDiskBusy Address of a variable that receives the disk busy state of a sound. That is, whether the disk is currently being accessed for the sound.
+         */
+        getOpenState(openstate:Outval<OPENSTATE>, percentbuffered:Outval<number>, isStarving:Outval<boolean>, isDiskBusy:Outval<boolean>): RESULT;
+        /**
+         * 
+         * @param soundgroup 
+         */
+        getSoundGroup(soundgroup:Outval<SoundGroup>): RESULT;
+        /**
+         * Retrieves a handle to a Sound object that is contained within the parent sound.
+         * @param index Index of the subsound to retrieve within this sound. 
+         * @param subsound Address of a variable that receives the sound object specified.
+         */
+        getSubSound(index:number, subsound:Outval<Sound>): RESULT;
+        /**
+         * Retrieves a handle to the parent Sound object that contains our subsound.
+         * @param parentsound Address of a variable that receives the sound object specified. 
+         */
+        getSubSoundParent(parentsound:Outval<Sound>): RESULT;
+        /** 
+         * Currently not supported in JavaScript 
+         */
+        getSyncPoint(): RESULT;
+        /** 
+         * Currently not supported in JavaScript 
+         */
+        getSyncPointInfo(): RESULT;
+        /**
+         * Retrieves the parent System object that was used to create this object.
+         * @param system Address of a pointer that receives the System object. 
+         */
+        getSystemObject(system:Outval<System>): RESULT;
 
+        getTag(name:string, index:number, tag): RESULT;
+        /**
+         * Retrieves the user value that that was set by calling the Sound::setUserData function.
+         * @param userdata Address of a pointer that receives the data specified with the Sound::setUserData function. 
+         */
+        getUserData(userdata:Outval<any>): RESULT;
+        /**
+         * Returns a pointer to the beginning of the sample data for a sound.
+         * @param offset Offset in bytes to the position you want to lock in the sample buffer
+         * @param length Number of bytes you want to lock in the sample buffer. 
+         * @param ptr1 Address of a pointer that will point to the first part of the locked data. 
+         * @param ptr2 Address of a pointer that will point to the second part of the locked data. This will be null if the data locked hasn't wrapped at the end of the buffer.
+         * @param len1 Length of data in bytes that was locked for ptr1. 
+         * @param len2 Length of data in bytes that was locked for ptr2. This will be 0 if the data locked hasn't wrapped at the end of the buffer. 
+         */
+        lock(offset:number, length:number, ptr1:Outval<any>, ptr2:Outval<any>, len1:Outval<number>, len2:Outval<number>): RESULT;
+        /**
+         * Reads data from an opened sound to a specified pointer, using the FMOD codec created internally.
+         * @param buffer Address of a buffer that receives the decoded data from the sound. 
+         * @param length Number of bytes to read into the buffer. 
+         * @param read Number of bytes actually read. 
+         */
+        readData(buffer:Outval<any>, length:Outval<number>, read:Outval<number>): RESULT;
+        /**
+         * Frees a sound object
+         */
+        release(): RESULT;
+        /**
+         * Seeks a sound for use with data reading. This is not a function to 'seek a sound' for normal use. This is for use in conjunction with Sound::readData.
+         * @param pcm Offset to seek to in PCM samples
+         */
+        seekData(pcm:number): RESULT;
+        /**
+         * Sets the inside and outside angles of the sound projection cone, as well as the volume of the sound outside the outside angle of the sound projection cone.
+         * @param insideconeangle Inside cone angle, in degrees, from 0 to 360. This is the angle within which the sound is at its normal volume. Must not be greater than outsideconeangle. Default = 360. 
+         * @param outsideconeangle Outside cone angle, in degrees, from 0 to 360. This is the angle outside of which the sound is at its outside volume. Must not be less than insideconeangle. Default = 360. 
+         * @param outsidevolume Cone outside volume, from 0 to 1.0. Default = 1.0. 
+         */
+        set3DConeSettings(insideconeangle:number, outsideconeangle:number, outsidevolume:number): RESULT;
+        /**
+         * Point a sound to use a custom rolloff curve. Must be used in conjunction with FMOD_3D_CUSTOMROLLOFF flag to be activated.
+         * @param points An array of FMOD_VECTOR structures where x = distance and y = volume from 0.0 to 1.0. z should be set to 0. 
+         * @param numpoints 
+         */
+        set3DCustomRolloff(points:VECTOR[], numpoints:number): RESULT;
+        /**
+         * Sets the minimum and maximum audible distance for a sound.
+         * @param min The sound's minimum volume distance in "units". See remarks for more on units.
+         * @param max The sound's maximum volume distance in "units". See remarks for more on units. 
+         */
+        set3DMinMaxDistance(min:number, max:number): RESULT;
+        /**
+         * Sets a sounds's default attributes, so when it is played it uses these values without having to specify them later for each channel each time the sound is played.
+         * @param frequency Default playback frequency for the sound, in hz. (ie 44100hz).
+         * @param priority Default priority for the sound when played on a channel. 0 to 256. 0 = most important, 256 = least important. Default = 128. 
+         */
+        setDefaults(frequency:number, priority:number): RESULT;
+        /**
+         * Sets a sound, by default, to loop a specified number of times before stopping if its mode is set to FMOD_LOOP_NORMAL or FMOD_LOOP_BIDI.
+         * @param loopcount Number of times to loop before stopping. 0 = oneshot. 1 = loop once then stop. -1 = loop forever. Default = -1 
+         */
+        setLoopCount(loopcount:number): RESULT;
+        /**
+         * Sets the loop points within a sound.
+         * @param loopstart The loop start point. This point in time is played, so it is inclusive. 
+         * @param loopstarttype The time format used for the loop start point. See FMOD_TIMEUNIT. 
+         * @param loopend The loop end point. This point in time is played, so it is inclusive. 
+         * @param loopendtype The time format used for the loop end point. See FMOD_TIMEUNIT. 
+         */
+        setLoopPoints(loopstart:number, loopstarttype:TIMEUNIT, loopend:number, loopendtype:TIMEUNIT): RESULT;
+
+        setMode(mode:MODE): RESULT;
+        /** 
+         * Sets the volume of a MOD/S3M/XM/IT/MIDI music channel volume. 
+         * @param channel MOD/S3M/XM/IT/MIDI music subchannel to set a linear volume for. 
+         * @param volume Volume of the channel from 0.0 to 1.0. Default = 1.0. 
+         */
+        setMusicChannelVolume(channel:number, volume:number): RESULT;
+        /** 
+         * Sets the relative speed of MOD/S3M/XM/IT/MIDI music. 
+         * @param speed Relative speed of the song from 0.01 to 100.0. 0.5 = half speed, 2.0 = double speed. Default = 1.0. 
+        */
+        setMusicSpeed(speed:number): RESULT;
+        /**
+         * Moves the sound from its existing SoundGroup to the specified sound group.
+         * @param soundgroup Address of a SoundGroup object to move the sound to. 
+         */
+        setSoundGroup(soundgroup:SoundGroup): RESULT;
+        /**
+         * Sets a user value that the Sound object will store internally. Can be retrieved with Sound::getUserData.
+         * @param userdata Address of user data that the user wishes stored within the Sound object. 
+         */
+        setUserData(userdata:any): RESULT;
+        /** Releases previous sample data lock from Sound::lock
+         * @param ptr1 Pointer to the 1st locked portion of sample data, from Sound::lock. 
+         * @param ptr2 Pointer to the 2nd locked portion of sample data, from Sound::lock. 
+         * @param len1 Length of data in bytes that was locked for ptr1
+         * @param len2 Length of data in bytes that was locked for ptr2. This will be 0 if the data locked hasn't wrapped at the end of the buffer.
+         */
+        unlock(ptr1, ptr2, len1:number, len2:number): RESULT;
     }
 
     export interface ChannelControl {
