@@ -1200,35 +1200,35 @@ export namespace IFMOD {
     }
 
     export interface Bank {
-        getBusCount(): RESULT;
+        getBusCount(count:Outval<number>): RESULT;
 
-        getBusList(): RESULT;
+        getBusList(array:Outval<Bus[]>, capacity:number, count:Outval<number>): RESULT;
 
-        getEventCount(): RESULT;
+        getEventCount(count:Outval<number>): RESULT;
 
-        getEventList(): RESULT;
+        getEventList(array:Outval<EventDescription[]>, capacity:number, count:Outval<number>): RESULT;
 
-        getID(): RESULT;
+        getID(id:Outval<GUID>): RESULT;
 
-        getLoadingState(): RESULT;
+        getLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
 
-        getPath(): RESULT;
+        getPath(path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
 
-        getSampleLoadingState(): RESULT;
+        getSampleLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
 
-        getStringCount(): RESULT;
+        getStringCount(count:Outval<number>): RESULT;
 
-        getStringInfo(): RESULT;
+        getStringInfo(index:number, id:Outval<GUID>, path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
 
-        getUserData(): RESULT;
+        getUserData(userdata:Outval<any>): RESULT;
 
-        getVCACount(): RESULT;
+        getVCACount(count:Outval<number>): RESULT;
 
-        getVCAList(): RESULT;
+        getVCAList(array:Outval<VCA[]>, capacity:number, count:Outval<number>): RESULT;
 
         loadSampleData(): RESULT;
 
-        setUserData(): RESULT;
+        setUserData(userdata:any): RESULT;
 
         unload(): RESULT;
 
