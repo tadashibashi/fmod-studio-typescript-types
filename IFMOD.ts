@@ -23,6 +23,7 @@ export function CHECK_RESULT (result: IFMOD.RESULT, string: string)
 export namespace IFMOD { 
 
     // #region Namespace Functions Wrap FMOD functions
+    // #region Low Level System Functions
     export function Debug_Initialize(flags:DEBUG_FLAGS) {
         let result: RESULT = FMOD.Debug_Initialize(flags);
         return result;
@@ -46,7 +47,16 @@ export namespace IFMOD {
         let result: RESULT = FMOD.Studio_System_Create(studioSystem);
         return result;
     }
+    //#endregion Low Level System Functions
+
+    //#region Studio System Functions ////////////////////////////////////////////////////////////////////////////////////////
+    export interface ParseID {
+        (idString:string, id:Outval<GUID>): RESULT;
+    }
+    //#endregion Studio System Functions \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
     //#endregion Namespace Functions
+
     //#region System Objects
     export interface System {
         attachChannelGroupToPort(): RESULT;
@@ -241,8 +251,41 @@ export namespace IFMOD {
     export interface Sound {
 
     }
-    //#endregion System Objects
 
+    export interface ChannelControl {
+
+    }
+
+    export interface Channel {
+
+    }
+
+    export interface ChannelGroup {
+
+    }
+
+    export interface SoundGroup {
+
+    }
+
+    export interface DSP {
+
+    }
+
+    export interface DSPConnection {
+
+    }
+
+    export interface Geometry {
+
+    }
+
+    export interface Reverb3D {
+
+    }
+    //#endregion System Objects \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+    //#region Studio System Objects  /////////////////////////////////////////////////////////////////////////////////////////
     export interface StudioSystem {
         // Functions
 
@@ -546,9 +589,6 @@ export namespace IFMOD {
         update(): RESULT;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     export interface EventDescription {
         createInstance(instance:Outval<EventInstance>): RESULT;
 
@@ -847,9 +887,6 @@ export namespace IFMOD {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     export interface Bus {
         getChannelGroup(): RESULT;
 
@@ -875,9 +912,6 @@ export namespace IFMOD {
 
         unlockChannelGroup(): RESULT;
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     export interface ParameterInstance {
         /** Retrieves the description for the parameter
@@ -998,11 +1032,11 @@ export namespace IFMOD {
         stop(): RESULT;
     }
 
-    export interface ParseID {
-        (idString:string, id:Outval<GUID>): RESULT;
-    }
+    //#endregion Studio System Objects \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+    //#region LOW LEVEL CALLBACKS //////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //#region LOW LEVEL DEFINES //////////////////////////////////////////////////////////////////////////////////////////////
+    //#region LOW LEVEL DEFINES ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /** These are bitfields to describe for a certain number of channels in a signal, which channels are being represented.
      * @description For example, a signal could be 1 channel, but contain the LFE channel only. */
