@@ -1135,27 +1135,27 @@ export namespace IFMOD {
     }
 
     export interface Bus {
-        getChannelGroup(): RESULT;
+        getChannelGroup(channelgroup:Outval<ChannelGroup>): RESULT;
 
-        getID(): RESULT;
+        getID(id:Outval<GUID>): RESULT;
 
-        getMute(): RESULT;
+        getMute(mute:Outval<boolean>): RESULT;
 
-        getPath(): RESULT;
+        getPath(path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
+        
+        getPaused(isPaused:Outval<boolean>): RESULT;
 
-        getPaused(): RESULT;
-
-        getVolume(): RESULT;
+        getVolume(volume:Outval<number>, finalvolume:Outval<number>): RESULT;
 
         lockChannelGroup(): RESULT;
 
-        setMute(): RESULT;
+        setMute(mute:boolean): RESULT;
 
-        setPaused(): RESULT;
+        setPaused(paused:boolean): RESULT;
 
-        setVolume(): RESULT;
+        setVolume(volume:number): RESULT;
 
-        stopAllEvents(): RESULT;
+        stopAllEvents(mode:STUDIO_STOP_MODE): RESULT;
 
         unlockChannelGroup(): RESULT;
     }
