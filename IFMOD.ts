@@ -459,7 +459,10 @@ export namespace IFMOD {
          * @param loopendtype The time format used for the loop end point. See FMOD_TIMEUNIT. 
          */
         setLoopPoints(loopstart:number, loopstarttype:TIMEUNIT, loopend:number, loopendtype:TIMEUNIT): RESULT;
-
+        /**
+         * Sets or alters the mode of a sound.
+         * @param mode Mode bits to set. 
+         */
         setMode(mode:MODE): RESULT;
         /** 
          * Sets the volume of a MOD/S3M/XM/IT/MIDI music channel volume. 
