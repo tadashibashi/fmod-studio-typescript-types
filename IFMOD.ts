@@ -22,8 +22,8 @@ export function CHECK_RESULT (result: IFMOD.RESULT, string: string)
 
 export namespace IFMOD { 
 
-    // #region Namespace Functions Wrap FMOD functions
-    // #region Low Level System Functions
+    // #region Namespace Functions Wrap FMOD functions ///////////////////////////////////////////////////////////////////////
+    // #region Low Level System Functions ////////////////////////////
     export function Debug_Initialize(flags:DEBUG_FLAGS) {
         let result: RESULT = FMOD.Debug_Initialize(flags);
         return result;
@@ -47,17 +47,15 @@ export namespace IFMOD {
         let result: RESULT = FMOD.Studio_System_Create(studioSystem);
         return result;
     }
-    //#endregion Low Level System Functions
-
-    //#region Studio System Functions ////////////////////////////////////////////////////////////////////////////////////////
+    // #endregion Low Level System Functions
+    // #region Studio System Functions ////////////////////////////////
     export interface ParseID {
         (idString:string, id:Outval<GUID>): RESULT;
     }
-    //#endregion Studio System Functions \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    //#endregion Studio System Functions
+    // #endregion Namespace Functions
 
-    //#endregion Namespace Functions
-
-    //#region System Objects
+    // #region System Objects /////////////////////////////////////////////////////////////////////////////////////////////////
     export interface System {
         attachChannelGroupToPort(portType, portIndex, channelgroup:Outval<ChannelGroup>): RESULT;
 
@@ -500,39 +498,634 @@ export namespace IFMOD {
     }
 
     export interface ChannelControl {
+        addDSP(): RESULT;
+
+        addFadePoint(): RESULT;
+
+        get3DAttributes(): RESULT;
+
+        get3DConeOrientation(): RESULT;
+
+        get3DConeSettings(): RESULT;
+
+        get3DCustomRolloff(): RESULT;
+
+        get3DDistanceFilter(): RESULT;
+
+        get3DDopplerLevel(): RESULT;
+
+        get3DLevel(): RESULT;
+
+        get3DMinMaxDistance(): RESULT;
+
+        get3DOcclusion(): RESULT;
+
+        get3DSpread(): RESULT;
+
+        getAudibility(): RESULT;
+
+        getDSP(): RESULT;
+
+        getDSPClock(): RESULT;
+
+        getDSPIndex(): RESULT;
+
+        getDelay(): RESULT;
+
+        getFadePoints(): RESULT;
+
+        getLowPassGain(): RESULT;
+
+        getMixMatrix(): RESULT;
+
+        getMode(): RESULT;
+
+        getMute(): RESULT;
+
+        getNumDSPs(): RESULT;
+
+        getPaused(): RESULT;
+
+        getPitch(): RESULT;
+
+        getReverbProperties(): RESULT;
+
+        getSystemObject(): RESULT;
+
+        getUserData(): RESULT;
+
+        getVolume(): RESULT;
+
+        getVolumeRamp(): RESULT;
+
+        isPlaying(): RESULT;
+
+        removeDSP(): RESULT;
+
+        removeFadePoints(): RESULT;
+
+        set3DAttributes(): RESULT;
+
+        set3DConeOrientation(): RESULT;
+
+        set3DConeSettings(): RESULT;
+
+        set3DCustomRolloff(): RESULT;
+
+        set3DDistanceFilter(): RESULT;
+
+        set3DDopplerLevel(): RESULT;
+
+        set3DLevel(): RESULT;
+
+        set3DMinMaxDistance(): RESULT;
+
+        set3DOcclusion(): RESULT;
+
+        set3DSpread(): RESULT;
+
+        setCallback(): RESULT;
+
+        setDSPIndex(): RESULT;
+
+        setDelay(): RESULT;
+
+        setFadePointRamp(): RESULT;
+
+        setLowPassGain(): RESULT;
+
+        setMixLevelsInput(): RESULT;
+
+        setMixLevelsOutput(): RESULT;
+
+        setMixMatrix(): RESULT;
+
+        setMode(): RESULT;
+
+        setMute(): RESULT;
+
+        setPan(): RESULT;
+
+        setPaused(): RESULT;
+
+        setPitch(): RESULT;
+
+        setReverbProperties(): RESULT;
+
+        setUserData(): RESULT;
+
+        setVolume(): RESULT;
+
+        setVolumeRamp(): RESULT;
+
+        stop(): RESULT;
 
     }
 
     export interface Channel {
+        addDSP(): RESULT;
+
+        addFadePoint(): RESULT;
+
+        get3DAttributes(): RESULT;
+
+        get3DConeOrientation(): RESULT;
+
+        get3DConeSettings(): RESULT;
+
+        get3DCustomRolloff(): RESULT;
+
+        get3DDistanceFilter(): RESULT;
+
+        get3DDopplerLevel(): RESULT;
+
+        get3DLevel(): RESULT;
+
+        get3DMinMaxDistance(): RESULT;
+
+        get3DOcclusion(): RESULT;
+
+        get3DSpread(): RESULT;
+
+        getAudibility(): RESULT;
+
+        getChannelGroup(): RESULT;
+
+        getCurrentSound(): RESULT;
+
+        getDSP(): RESULT;
+
+        getDSPClock(): RESULT;
+
+        getDSPIndex(): RESULT;
+
+        getDelay(): RESULT;
+
+        getFadePoints(): RESULT;
+
+        getFrequency(): RESULT;
+
+        getIndex(): RESULT;
+
+        getLoopCount(): RESULT;
+
+        getLoopPoints(): RESULT;
+
+        getLowPassGain(): RESULT;
+
+        getMixMatrix(): RESULT;
+
+        getMode(): RESULT;
+
+        getMute(): RESULT;
+
+        getNumDSPs(): RESULT;
+
+        getPaused(): RESULT;
+
+        getPitch(): RESULT;
+
+        getPosition(): RESULT;
+
+        getPriority(): RESULT;
+
+        getReverbProperties(): RESULT;
+
+        getSystemObject(): RESULT;
+
+        getUserData(): RESULT;
+
+        getVolume(): RESULT;
+
+        getVolumeRamp(): RESULT;
+
+        isPlaying(): RESULT;
+
+        isVirtual(): RESULT;
+
+        removeDSP(): RESULT;
+
+        removeFadePoints(): RESULT;
+
+        set3DAttributes(): RESULT;
+
+        set3DConeOrientation(): RESULT;
+
+        set3DConeSettings(): RESULT;
+
+        set3DCustomRolloff(): RESULT;
+
+        set3DDistanceFilter(): RESULT;
+
+        set3DDopplerLevel(): RESULT;
+
+        set3DLevel(): RESULT;
+
+        set3DMinMaxDistance(): RESULT;
+
+        set3DOcclusion(): RESULT;
+
+        set3DSpread(): RESULT;
+
+        setCallback(): RESULT;
+
+        setChannelGroup(): RESULT;
+
+        setDSPIndex(): RESULT;
+
+        setDelay(): RESULT;
+
+        setFadePointRamp(): RESULT;
+
+        setFrequency(): RESULT;
+
+        setLoopCount(): RESULT;
+
+        setLoopPoints(): RESULT;
+
+        setLowPassGain(): RESULT;
+
+        setMixLevelsInput(): RESULT;
+
+        setMixLevelsOutput(): RESULT;
+
+        setMixMatrix(): RESULT;
+
+        setMode(): RESULT;
+
+        setMute(): RESULT;
+
+        setPan(): RESULT;
+
+        setPaused(): RESULT;
+
+        setPitch(): RESULT;
+
+        setPosition(): RESULT;
+
+        setPriority(): RESULT;
+
+        setReverbProperties(): RESULT;
+
+        setUserData(): RESULT;
+
+        setVolume(): RESULT;
+
+        setVolumeRamp(): RESULT;
+
+        stop(): RESULT;
+
 
     }
 
     export interface ChannelGroup {
+        addDSP(): RESULT;
+
+        addFadePoint(): RESULT;
+
+        addGroup(): RESULT;
+
+        get3DAttributes(): RESULT;
+
+        get3DConeOrientation(): RESULT;
+
+        get3DConeSettings(): RESULT;
+
+        get3DCustomRolloff(): RESULT;
+
+        get3DDistanceFilter(): RESULT;
+
+        get3DDopplerLevel(): RESULT;
+
+        get3DLevel(): RESULT;
+
+        get3DMinMaxDistance(): RESULT;
+
+        get3DOcclusion(): RESULT;
+
+        get3DSpread(): RESULT;
+
+        getAudibility(): RESULT;
+
+        getChannel(): RESULT;
+
+        getDSP(): RESULT;
+
+        getDSPClock(): RESULT;
+
+        getDSPIndex(): RESULT;
+
+        getDelay(): RESULT;
+
+        getFadePoints(): RESULT;
+
+        getGroup(): RESULT;
+
+        getLowPassGain(): RESULT;
+
+        getMixMatrix(): RESULT;
+
+        getMode(): RESULT;
+
+        getMute(): RESULT;
+
+        getName(): RESULT;
+
+        getNumChannels(): RESULT;
+
+        getNumDSPs(): RESULT;
+
+        getNumGroups(): RESULT;
+
+        getParentGroup(): RESULT;
+
+        getPaused(): RESULT;
+
+        getPitch(): RESULT;
+
+        getReverbProperties(): RESULT;
+
+        getSystemObject(): RESULT;
+
+        getUserData(): RESULT;
+
+        getVolume(): RESULT;
+
+        getVolumeRamp(): RESULT;
+
+        isPlaying(): RESULT;
+
+        release(): RESULT;
+
+        removeDSP(): RESULT;
+
+        removeFadePoints(): RESULT;
+
+        set3DAttributes(): RESULT;
+
+        set3DConeOrientation(): RESULT;
+
+        set3DConeSettings(): RESULT;
+
+        set3DCustomRolloff(): RESULT;
+
+        set3DDistanceFilter(): RESULT;
+
+        set3DDopplerLevel(): RESULT;
+
+        set3DLevel(): RESULT;
+
+        set3DMinMaxDistance(): RESULT;
+
+        set3DOcclusion(): RESULT;
+
+        set3DSpread(): RESULT;
+
+        setCallback(): RESULT;
+
+        setDSPIndex(): RESULT;
+
+        setDelay(): RESULT;
+
+        setFadePointRamp(): RESULT;
+
+        setLowPassGain(): RESULT;
+
+        setMixLevelsInput(): RESULT;
+
+        setMixLevelsOutput(): RESULT;
+
+        setMixMatrix(): RESULT;
+
+        setMode(): RESULT;
+
+        setMute(): RESULT;
+
+        setPan(): RESULT;
+
+        setPaused(): RESULT;
+
+        setPitch(): RESULT;
+
+        setReverbProperties(): RESULT;
+
+        setUserData(): RESULT;
+
+        setVolume(): RESULT;
+
+        setVolumeRamp(): RESULT;
+
+        stop(): RESULT;
 
     }
 
     export interface SoundGroup {
+        getMaxAudible(): RESULT;
+
+        getMaxAudibleBehavior(): RESULT;
+
+        getMuteFadeSpeed(): RESULT;
+
+        getName(): RESULT;
+
+        getNumPlaying(): RESULT;
+
+        getNumSounds(): RESULT;
+
+        getSound(): RESULT;
+
+        getSystemObject(): RESULT;
+
+        getUserData(): RESULT;
+
+        getVolume(): RESULT;
+
+        release(): RESULT;
+
+        setMaxAudible(): RESULT;
+
+        setMaxAudibleBehavior(): RESULT;
+
+        setMuteFadeSpeed(): RESULT;
+
+        setUserData(): RESULT;
+
+        setVolume(): RESULT;
+
+        stop(): RESULT;
 
     }
 
     export interface DSP {
+        addInput(): RESULT;
+
+        disconnectAll(): RESULT;
+
+        disconnectFrom(): RESULT;
+
+        getActive(): RESULT;
+
+        getBypass(): RESULT;
+
+        getCPUUsage(): RESULT;
+
+        getChannelFormat(): RESULT;
+
+        getDataParameterIndex(): RESULT;
+
+        getIdle(): RESULT;
+
+        getInfo(): RESULT;
+
+        getInput(): RESULT;
+
+        getMeteringEnabled(): RESULT;
+
+        getMeteringInfo(): RESULT;
+
+        getNumInputs(): RESULT;
+
+        getNumOutputs(): RESULT;
+
+        getNumParameters(): RESULT;
+
+        getOutput(): RESULT;
+
+        getOutputChannelFormat(): RESULT;
+
+        getParameterBool(): RESULT;
+
+        getParameterData(): RESULT;
+
+        getParameterFloat(): RESULT;
+
+        getParameterInfo(): RESULT;
+
+        getParameterInt(): RESULT;
+
+        getSystemObject(): RESULT;
+
+        getType(): RESULT;
+
+        getUserData(): RESULT;
+
+        getWetDryMix(): RESULT;
+
+        release(): RESULT;
+
+        reset(): RESULT;
+
+        setActive(): RESULT;
+
+        setBypass(): RESULT;
+
+        setChannelFormat(): RESULT;
+
+        setMeteringEnabled(): RESULT;
+
+        setParameterBool(): RESULT;
+
+        setParameterData(): RESULT;
+
+        setParameterFloat(): RESULT;
+
+        setParameterInt(): RESULT;
+
+        setUserData(): RESULT;
+
+        setWetDryMix(): RESULT;
+
+        showConfigDialog(): RESULT;
+
 
     }
 
     export interface DSPConnection {
+        getInput(): RESULT;
 
+        getMix(): RESULT;
+
+        getMixMatrix(): RESULT;
+
+        getOutput(): RESULT;
+
+        getType(): RESULT;
+
+        getUserData(): RESULT;
+
+        setMix(): RESULT;
+
+        setMixMatrix(): RESULT;
+
+        setUserData(): RESULT;
+    
     }
 
     export interface Geometry {
+        addPolygon(): RESULT;
+
+        getActive(): RESULT;
+
+        getMaxPolygons(): RESULT;
+
+        getNumPolygons(): RESULT;
+
+        getPolygonAttributes(): RESULT;
+
+        getPolygonNumVertices(): RESULT;
+
+        getPolygonVertex(): RESULT;
+
+        getPosition(): RESULT;
+
+        getRotation(): RESULT;
+
+        getScale(): RESULT;
+
+        getUserData(): RESULT;
+
+        release(): RESULT;
+
+        save(): RESULT;
+
+        setActive(): RESULT;
+
+        setPolygonAttributes(): RESULT;
+
+        setPolygonVertex(): RESULT;
+
+        setPosition(): RESULT;
+
+        setRotation(): RESULT;
+
+        setScale(): RESULT;
+
+        setUserData(): RESULT;
 
     }
 
     export interface Reverb3D {
+        get3DAttributes(): RESULT;
+
+        getActive(): RESULT;
+
+        getProperties(): RESULT;
+
+        getUserData(): RESULT;
+
+        release(): RESULT;
+
+        set3DAttributes(): RESULT;
+
+        setActive(): RESULT;
+
+        setProperties(): RESULT;
+
+        setUserData    (): RESULT;
 
     }
     //#endregion System Objects \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-    //#region Studio System Objects  /////////////////////////////////////////////////////////////////////////////////////////
+    // #region Studio System Objects  /////////////////////////////////////////////////////////////////////////////////////////
     export interface StudioSystem {
         // Functions
 
@@ -1192,77 +1785,143 @@ export namespace IFMOD {
     }
     
     export interface ParameterInstance {
-        /** Retrieves the description for the parameter
+        /** 
+         * Retrieves the description for the parameter
          * @param description Address of a variable to receive the parameter description. 
          */
         getDescription(description:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
-        
-        /** Retrieves the value of the parameter 
+        /** 
+         * Retrieves the value of the parameter 
          * @param value Address of a variable to receive the parameter value. 
         */
         getValue(value:Outval<number>): RESULT;
-        
-        /** Sets the value of the parameter */
+        /** 
+         * Sets the value of the parameter 
+         */
         setValue(value:number): RESULT;
     }
 
     export interface VCA {
-        /** Retrieves the ID of the VCA.
+        /** 
+         * Retrieves the ID of the VCA.
          * @param id Address of a variable to receive the 128-bit GUID. 
          */
         getID (id:Outval<GUID>) : RESULT;
-        /** Retrieves the path of the VCA.
+        /** 
+         * Retrieves the path of the VCA.
          * @param path Address of a buffer to receive the path. Specify 0 or NULL to ignore.
          * @param size Size of the path buffer in bytes. Required if path parameter is not NULL. 
          * @param retrieved Address of a variable to receive the size of the retrieved path in bytes, 
          * including the terminating null character. Optional. Specify 0 or NULL to ignore. 
          */
         getPath (path:Outval<string>, size:number, retrieved:Outval<number>) : RESULT;
-
-        /** Retrieves the volume level of the VCA 
+        /** 
+         * Retrieves the volume level of the VCA 
          * @param volume Address of a variable to receive the volume as set from the public API. Specify 0 or NULL to ignore. 
          * @param finalvolume Address of a variable to receive the final combined volume. Specify 0 or NULL to ignore.
         */
         getVolume (volume:Outval<number>, finalvolume:Outval<number>) : RESULT;
-        /** Sets the volume level of the VCA.
+        /** 
+         * Sets the volume level of the VCA.
          * @param volume The volume level to set as a linear gain. 0 = silent, 1 = full volume.
          */
         getsetVolume (volume:number) : RESULT;
     }
 
     export interface Bank {
+        /**
+         * 
+         * @param count 
+         */
         getBusCount(count:Outval<number>): RESULT;
-
+        /**
+         * 
+         * @param array 
+         * @param capacity 
+         * @param count 
+         */
         getBusList(array:Outval<Bus[]>, capacity:number, count:Outval<number>): RESULT;
-
+        /**
+         * 
+         * @param count 
+         */
         getEventCount(count:Outval<number>): RESULT;
-
+        /**
+         * 
+         * @param array 
+         * @param capacity 
+         * @param count 
+         */
         getEventList(array:Outval<EventDescription[]>, capacity:number, count:Outval<number>): RESULT;
-
+        /**
+         * 
+         * @param id 
+         */
         getID(id:Outval<GUID>): RESULT;
-
+        /**
+         * 
+         * @param state 
+         */
         getLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
-
+        /**
+         * 
+         * @param path 
+         * @param size 
+         * @param retrieved 
+         */
         getPath(path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
-
+        /**
+         * 
+         * @param state 
+         */
         getSampleLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
-
+        /**
+         * 
+         * @param count 
+         */
         getStringCount(count:Outval<number>): RESULT;
-
+        /**
+         * 
+         * @param index 
+         * @param id 
+         * @param path 
+         * @param size 
+         * @param retrieved 
+         */
         getStringInfo(index:number, id:Outval<GUID>, path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
-
+        /**
+         * 
+         * @param userdata 
+         */
         getUserData(userdata:Outval<any>): RESULT;
-
+        /**
+         * 
+         * @param count 
+         */
         getVCACount(count:Outval<number>): RESULT;
-
+        /**
+         * 
+         * @param array 
+         * @param capacity 
+         * @param count 
+         */
         getVCAList(array:Outval<VCA[]>, capacity:number, count:Outval<number>): RESULT;
-
+        /**
+         * 
+         */
         loadSampleData(): RESULT;
-
+        /**
+         * 
+         * @param userdata 
+         */
         setUserData(userdata:any): RESULT;
-
+        /**
+         * 
+         */
         unload(): RESULT;
-
+        /**
+         * 
+         */
         unloadSampleData(): RESULT;
     }
 
@@ -1312,9 +1971,201 @@ export namespace IFMOD {
 
     //#endregion Studio System Objects \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     
-    //#region LOW LEVEL CALLBACKS //////////////////////////////////////////////////////////////////////////////////////////////////
+    // #region LOW LEVEL CALLBACKS //Fill in all parameters//Not sure about the types///////////////////////////////////////////////////////////////
 
-    //#region LOW LEVEL DEFINES ////////////////////////////////////////////////////////////////////////////////////////////////////
+    export interface _3D_ROLLOFF_CALLBACK {
+        /**
+         * @function
+         * @param channel
+         * @param distance
+         */
+        (channel:Channel, distance:number): void;
+    }
+    export interface CHANNELCONTROL_CALLBACK {
+        (channel, controltype, callbacktype, commanddata1, commanddata2): void;
+    }
+    export interface CODEC_CLOSE_CALLBACK {
+        (codec_state): void;
+    }
+    export interface CODEC_GETLENGTH_CALLBACK {
+        (codec_state, length, lengthtype): void;
+    }
+    export interface CODEC_GETPOSITION_CALLBACK {
+        (codec_state, position, postype): void;
+    }
+    export interface CODEC_METADATA_CALLBACK {
+        (codec_state, type, name, data, datalen, datatype, unique): void;
+    }
+    export interface CODEC_OPEN_CALLBACK {
+        (codec_state, usermode, userexinfo): void;
+    }
+    export interface CODEC_READ_CALLBACK {
+        (codec_state, buffer, samples_in, samples_out): void;
+    }
+    export interface CODEC_SETPOSITION_CALLBACK {
+        (codec_state, subsound, position, postype): void;
+    }
+    export interface CODEC_SOUNDCREATE_CALLBACK {
+        (codec_state, subsound, sound): void;
+    }
+    export interface DEBUG_CALLBACK {
+        (flags:DEBUG_FLAGS, file:string, line:number, func:string, message:string): void;
+    }
+    export interface DSP_CREATE_CALLBACK {
+        (dsp_state:DSP_STATE): void;
+    }
+    export interface DSP_DIALOG_CALLBACK {
+        (dsp_state:DSP_STATE, hwnd, show:number): void;
+    }
+    export interface DSP_GETPARAM_BOOL_CALLBACK {
+        (dsp_state:DSP_STATE, index:number, value:boolean, valuestr:string): void;
+    }
+    export interface DSP_GETPARAM_DATA_CALLBACK {
+        (dsp_state:DSP_STATE, index:number, value, length:number, valuestr:string): void;
+    }
+    export interface DSP_GETPARAM_FLOAT_CALLBACK {
+        (dsp_state:DSP_STATE, index:Outval<number>, value:Outval<number>, valuestr:Outval<string>): void;
+    }
+    export interface DSP_GETPARAM_INT_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_PROCESS_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_READ_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_RELEASE_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_RESET_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_SETPARAM_BOOL_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_SETPARAM_DATA_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_SETPARAM_FLOAT_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_SETPARAM_INT_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_SETPOSITION_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_SHOULDIPROCESS_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_SYSTEM_DEREGISTER_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_SYSTEM_MIX_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface DSP_SYSTEM_REGISTER_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface FILE_ASYNCCANCEL_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface FILE_ASYNCDONE_FUNC {
+        (callbackdata): void;
+    }
+    export interface FILE_ASYNCREAD_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface FILE_CLOSE_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface FILE_OPEN_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface FILE_READ_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface FILE_SEEK_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface MEMORY_ALLOC_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface MEMORY_FREE_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface MEMORY_REALLOC_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_CLOSE_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_GETDRIVERINFO_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_GETHANDLE_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_GETNUMDRIVERS_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_GETPOSITION_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_INIT_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_LOCK_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_MIXER_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_OBJECT3DALLOC_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_OBJECT3DFREE_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_OBJECT3DGETINFO_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_OBJECT3DUPDATE_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_READFROMMIXER {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_START_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_STOP_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_UNLOCK_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface OUTPUT_UPDATE_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface SOUND_NONBLOCK_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface SOUND_PCMREAD_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface SOUND_PCMSETPOS_CALLBACK {
+        (callbackdata): void;
+    }
+    export interface SYSTEM_CALLBACK {
+        (callbackdata): void;
+    }
+
+
+    // #endregion LOW LEVEL CALLBACKS
+
+    //#region LOW LEVEL DEFINES //Complete///////////////////////////////////////////////////////////////////////////////////////////
 
     /** These are bitfields to describe for a certain number of channels in a signal, which channels are being represented.
      * @description For example, a signal could be 1 channel, but contain the LFE channel only. */
@@ -1339,7 +2190,9 @@ export namespace IFMOD {
         CHANNELMASK_7POINT1 = CHANNELMASK_FRONT_LEFT | CHANNELMASK_FRONT_RIGHT | CHANNELMASK_FRONT_CENTER | CHANNELMASK_LOW_FREQUENCY | CHANNELMASK_SURROUND_LEFT | CHANNELMASK_SURROUND_RIGHT | CHANNELMASK_BACK_LEFT | CHANNELMASK_BACK_RIGHT
     }
 
-    /** Specify the requested information to be output when using the logging version of FMOD. */
+    /** 
+     * Specify the requested information to be output when using the logging version of FMOD. 
+    */
     export enum DEBUG_FLAGS {
         /** Disable all messages */
         LEVEL_NONE = 0x00000000,
@@ -1380,41 +2233,26 @@ export namespace IFMOD {
         DEFAULT = 2
     }
 
-    /** Length in bytes of the buffer pointed to by the valuestr argument of 
-     * FMOD_DSP_GETPARAM_XXXX_CALLBACK functions. DSP plugins should not copy 
-     * more than this number of bytes into the buffer or memory corruption will occur. */
+    /** Length in bytes of the buffer pointed to by the valuestr argument of FMOD_DSP_GETPARAM_XXXX_CALLBACK functions. DSP plugins should not copy more than this number of bytes into the buffer or memory corruption will occur. */
     export const DSP_GETPARAM_VALUESTR_LENGTH = 32;
 
-    /** Initialization flags. Use them with System::init in the flags parameter to change
-     *  various behavior. Use System::setAdvancedSettings to adjust settings for some of the
-     *  features that are enabled by these flags. */
+    /** Initialization flags. Use them with System::init in the flags parameter to change various behavior. Use System::setAdvancedSettings to adjust settings for some of the features that are enabled by these flags. */
     export enum INITFLAGS {
         /** Initialize normally */
         NORMAL = 0,
-        /** No stream thread is created internally. Streams are driven from System.update. 
-         * Mainly used with non-realtime outputs. */
+        /** No stream thread is created internally. Streams are driven from System.update. Mainly used with non-realtime outputs. */
         STREAM_FROM_UPDATE = 1,
-        /** No mixer thread is created internally. Mixing is driven from System.update.
-         * Only applies to polling based output modes such as FMOD_OUTPUTTYPE_NOSOUND, 
-         * FMOD_OUTPUTTYPE_WAVWRITER, FMOD_OUTPUTTYPE_DSOUND, FMOD_OUTPUTTYPE_WINMM,
-         * FMOD_OUTPUTTYPE_XAUDIO. */
+        /** No mixer thread is created internally. Mixing is driven from System.update. Only applies to polling based output modes such as FMOD_OUTPUTTYPE_NOSOUND,  FMOD_OUTPUTTYPE_WAVWRITER, FMOD_OUTPUTTYPE_DSOUND, FMOD_OUTPUTTYPE_WINMM, FMOD_OUTPUTTYPE_XAUDIO. */
         MIX_FROM_UPDATE = 2,
         /** 3D calculations will be performed in right-handed coordinates. */
         _3D_RIGHTHANDED = 4,
-        /** Enables usage of Channel::setLowPassGain, Channel::set3DOcclusion, or automatic
-         * usage by the Geometry API. All voices will add a software lowpass filter effect
-         * into the DSP chain which is idle unless one of the previous functions/features are used. */
+        /** Enables usage of Channel::setLowPassGain, Channel::set3DOcclusion, or automatic usage by the Geometry API. All voices will add a software lowpass filter effect into the DSP chain which is idle unless one of the previous functions/features are used. */
         CHANNEL_LOWPASS = 256,
-        /** All FMOD_3D based voices will add a software lowpass and highpass filter effect
-         * into the DSP chain which will act as a distance-automated bandpass filter. Use
-         * System::setAdvancedSettings to adjust the center frequency. */
+        /** All FMOD_3D based voices will add a software lowpass and highpass filter effect into the DSP chain which will act as a distance-automated bandpass filter. Use System::setAdvancedSettings to adjust the center frequency. */
         CHANNEL_DISTANCEFILTER = 512,
-        /** Enable TCP/IP based host which allows FMOD Designer or FMOD Profiler to connect
-         * to it, and view memory, CPU and the DSP network graph in real-time. */
+        /** Enable TCP/IP based host which allows FMOD Designer or FMOD Profiler to connect to it, and view memory, CPU and the DSP network graph in real-time. */
         PROFILE_ENABLE = 65536,
-        /** Any sounds that are 0 volume will go virtual and not be processed except for
-         * having their positions updated virtually. Use System::setAdvancedSettings to
-         * adjust what volume besides zero to switch to virtual at. */
+        /** Any sounds that are 0 volume will go virtual and not be processed except for having their positions updated virtually. Use System::setAdvancedSettings to adjust what volume besides zero to switch to virtual at. */
         VOL0_BECOMES_VIRTUAL = 131072,
         /** With the geometry engine, only process the closest polygon rather than accumulating all polygons the sound to listener line intersects. (Feature removed in HTML5) */
         GEOMETRY_USECLOSEST = 262144,
@@ -1439,10 +2277,7 @@ export namespace IFMOD {
     export const MAX_SYSTEMS = 8;
 
     /** Bit fields for memory allocation type being passed into FMOD memory callbacks.
-     * @description Remember this is a bitfield. You may get more than 1 bit set (ie physical + persistent) 
-     * so do not simply switch on the types! You must check each bit individually or clear out 
-     * the bits that you do not want within the callback. 
-     * Bits can be excluded if you want during Memory_Initialize so that you never get them. */
+     * @description Remember this is a bitfield. You may get more than 1 bit set (ie physical + persistent) so do not simply switch on the types! You must check each bit individually or clear out the bits that you do not want within the callback. Bits can be excluded if you want during Memory_Initialize so that you never get them. */
     export enum MEMORY_TYPE {
         /** Standard memory. */
         MEMORY_NORMAL = 0x00000000,
@@ -1468,27 +2303,7 @@ export namespace IFMOD {
     }
 
     /** Sound description bitfields, bitwise OR them together for loading and describing sounds.
-     * @description By default a sound will open as a static sound that is decompressed fully
-     * into memory to PCM. (ie equivalent of FMOD_CREATESAMPLE) 
-     * To have a sound stream instead, use FMOD_CREATESTREAM, or use the wrapper function System::createStream. 
-     * Some opening modes (ie FMOD_OPENUSER, FMOD_OPENMEMORY, FMOD_OPENMEMORY_POINT, 
-     * FMOD_OPENRAW) will need extra information. 
-     * This can be provided using the FMOD_CREATESOUNDEXINFO structure. 
-     * Specifying FMOD_OPENMEMORY_POINT will POINT to your memory rather allocating its
-     * own sound buffers and duplicating it internally. This means you cannot free the
-     * memory while FMOD is using it, until after Sound::release is called.
-     * With FMOD_OPENMEMORY_POINT, for PCM formats, only WAV, FSB, and RAW are supported.
-     * For compressed formats, only those formats supported by FMOD_CREATECOMPRESSEDSAMPLE 
-     * are supported. With FMOD_OPENMEMORY_POINT and FMOD_OPENRAW or PCM, if using them
-     * together, note that you must pad the data on each side by 16 bytes. This is so fmod 
-     * can modify the ends of the data for looping/interpolation/mixing purposes. If a wav 
-     * file, you will need to insert silence, and then reset loop points to stop the 
-     * playback from playing that silence. Xbox 360 memory On Xbox 360 Specifying 
-     * FMOD_OPENMEMORY_POINT to a virtual memory address will cause FMOD_ERR_INVALID_ADDRESS
-     *  to be returned. Use physical memory only for this functionality. 
-     * FMOD_LOWMEM is used on a sound if you want to minimize the memory overhead, 
-     * by having FMOD not allocate memory for certain features that are not likely 
-     * to be used in a game environment. These are : 1. Sound::getName functionality is removed. 256 bytes per sound is saved
+     * @description By default a sound will open as a static sound that is decompressed fully into memory to PCM. (ie equivalent of FMOD_CREATESAMPLE) To have a sound stream instead, use FMOD_CREATESTREAM, or use the wrapper function System::createStream. Some opening modes (ie FMOD_OPENUSER, FMOD_OPENMEMORY, FMOD_OPENMEMORY_POINT, FMOD_OPENRAW) will need extra information. This can be provided using the FMOD_CREATESOUNDEXINFO structure. Specifying FMOD_OPENMEMORY_POINT will POINT to your memory rather allocating its own sound buffers and duplicating it internally. This means you cannot free the memory while FMOD is using it, until after Sound::release is called. With FMOD_OPENMEMORY_POINT, for PCM formats, only WAV, FSB, and RAW are supported. For compressed formats, only those formats supported by FMOD_CREATECOMPRESSEDSAMPLE are supported. With FMOD_OPENMEMORY_POINT and FMOD_OPENRAW or PCM, if using them together, note that you must pad the data on each side by 16 bytes. This is so fmod can modify the ends of the data for looping/interpolation/mixing purposes. If a wav file, you will need to insert silence, and then reset loop points to stop the playback from playing that silence. Xbox 360 memory On Xbox 360 Specifying FMOD_OPENMEMORY_POINT to a virtual memory address will cause FMOD_ERR_INVALID_ADDRESS to be returned. Use physical memory only for this functionality. FMOD_LOWMEM is used on a sound if you want to minimize the memory overhead, by having FMOD not allocate memory for certain features that are not likely to be used in a game environment. These are : 1. Sound::getName functionality is removed. 256 bytes per sound is saved
      */
     export enum MODE {
         /** Default for all modes listed below. FMOD_LOOP_OFF, FMOD_2D, FMOD_3D_WORLDRELATIVE, 
@@ -1959,9 +2774,9 @@ export namespace IFMOD {
         MODPATTERN = 0x00000400,
     }
  
-// #endregion LOW LEVEL SYSTEM DEFINES
+    // #endregion LOW LEVEL SYSTEM DEFINES
 
-    // #region LOW LEVEL SYSTEM STRUCTURES /////////////////////////////////////////////////////////////////////////////////////////
+    // #region LOW LEVEL SYSTEM STRUCTURES //Needs to be Typed//////////////////////////////////////////////////////////////////////////
 
     export interface _3D_ATTRIBUTES {
         position:VECTOR,
@@ -2160,6 +2975,105 @@ export namespace IFMOD {
         absolute:_3D_ATTRIBUTES
     }
 
+    export interface DSP_PARAMETER_3DATTRIBUTES_MULTI {
+        numlisteners:number;
+    }
+
+    export interface DSP_PARAMETER_DESC {
+        type;
+        name;
+        label;
+        description;    
+    }
+
+    export interface DSP_PARAMETER_DESC_BOOL {
+        defaultval;
+    }
+
+    export interface DSP_PARAMETER_DESC_DATA {
+        datatype;
+    }
+
+    export interface DSP_PARAMETER_DESC_FLOAT {
+        min;
+        max;
+        defaultval;
+    }
+
+    export interface DSP_PARAMETER_DESC_INT {
+        min;
+        max;
+        defaultval;
+        goestoinf; 
+    }
+
+    export interface DSP_PARAMETER_FFT {
+        length;
+        numchannels;
+    }
+
+    export interface DSP_PARAMETER_FLOAT_MAPPING {
+        type;
+    }
+
+    export interface DSP_PARAMETER_FLOAT_MAPPING_PIECEWISE_LINEAR {
+        numpoints;
+    }
+
+    export interface DSP_PARAMETER_OVERALLGAIN {
+        linear_gain;
+        linear_gain_additive;      
+    }
+
+    export interface DSP_PARAMETER_SIDECHAIN {
+        sidechainenable;
+    }
+
+    export interface DSP_STATE {
+        plugindata;
+        channelmask;
+        source_speakermode;
+        sidechainchannels;
+        systemobject;      
+    }
+
+    export interface DSP_STATE_DFT_FUNCTIONS {
+        fftreal;
+        inversefftreal;
+    }
+
+    export interface DSP_STATE_FUNCTIONS {
+        alloc;
+        realloc;
+        free;
+        getsamplerate;
+        getblocksize;
+        dft;
+        pan;
+        getspeakermode;
+        getclock;
+        getlistenerattributes;
+        log;
+        getuserdata;
+    }
+
+    export interface DSP_STATE_PAN_FUNCTIONS {
+        summonomatrix;
+        sumstereomatrix;
+        sumsurroundmatrix;
+        summonotosurroundmatrix;
+        sumstereotosurroundmatrix;
+        getrolloffgain;
+    }
+
+    export interface ERRORCALLBACK_INFO {
+        result;
+        instancetype;
+        instance;
+        functionname;
+        functionparams;
+    }
+
     export interface GUID {
         /** Specifies the first 8 hexadecimal digits of the GUID  */
         Data1:number,
@@ -2173,6 +3087,46 @@ export namespace IFMOD {
     }
 
 
+    export interface OUTPUT_DESCRIPTION {
+        apiversion;
+        name;
+        version;
+        polling;
+        getnumdrivers;
+        getdriverinfo;
+        init;
+        start;
+        stop;
+        close;
+        update;
+        gethandle;
+        getposition;
+        lock;
+        unlock;
+        mixer;
+        object3dgetinfo;
+        object3dalloc;
+        object3dfree;
+        object3dupdate;
+        openport;
+        closeport;      
+    }
+
+    export interface OUTPUT_OBJECT3DINFO {
+        bufferlength;
+        gain;
+        spread;
+        priority;
+    }
+
+    export interface OUTPUT_STATE {
+        plugindata
+    }
+
+    export interface PLUGINLIST {
+        type;
+        description;
+    }
 
     /** Structure defining a reverb environment.
      * @description In the documentation, each property description follows: \[r/w\] = read/write, <min> <max> <default> <description>
@@ -2204,6 +3158,14 @@ export namespace IFMOD {
         EarlyLateMix:number,
         /** [r/w] -80.0 20.0 -6.0 Room effect level at mid frequencies (dB) */
         WetLevel:number
+    }
+
+    export interface TAG {
+        type;
+        datatype;
+        data;
+        datalen;
+        updated;
     }
 
     export interface VECTOR {
@@ -3103,8 +4065,8 @@ export namespace IFMOD {
     export interface STUDIO_COMMANDREPLAY_FRAME_CALLBACK {
         (replay, commandIndex:number, currentTime:number, userdata:any): RESULT;
     }
-
-    /** Callback for command replay bank loading
+    /** 
+     * Callback for command replay bank loading
      * @function STUDIO_COMMANDREPLAY_LOAD_BANK_CALLBACK
      * @param replay Pointer to the command replay object
      * @param commandIndex The command that invoked this callback
@@ -3117,8 +4079,8 @@ export namespace IFMOD {
         (replay, commandIndex:number, bankGuid, bankFilename, 
             flags:STUDIO_LOAD_BANK_FLAGS, bank, userdata:any): RESULT;
     }
-
-    /** The Interface shape for Event Callback Handlers 
+    /** 
+     * The Interface shape for Event Callback Handlers 
      * @function STUDIO_EVENT_CALLBACK
      * @param type The type of event that has occurred.
      * @param event The event instance that has changed state.
@@ -3137,11 +4099,13 @@ export namespace IFMOD {
         (system:StudioSystem, type, commanddata:any, userdata:any): RESULT
     }
 
-// #endregion
+    // #endregion Studio Callbacks
 
     // #region Studio Structures ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** Settings for advanced features like configuring memory and cpu usage. */
+    /** 
+     * Settings for advanced features like configuring memory and cpu usage. 
+     */
     export interface STUDIO_ADVANCEDSETTINGS {
         /** [r/w] Optional. Specify 0 to ignore. Specify the command queue size for 
          * studio async processing. Default 32kB. */
@@ -3299,9 +4263,9 @@ export namespace IFMOD {
       
     }
 
-    // #endregion Studio Structures ///////////////////////////////////////////////////
+    // #endregion Studio Structures //
 
-    // #region Studio Defines /////////////////////////////////////////////////////////
+    // #region Studio Defines ////////////////////////////////////////////////////////////////////////////////
 
     /* Flags passed into Studio::System::startCommandCapture. */
     export enum STUDIO_COMMANDCAPTURE_FLAGS {
