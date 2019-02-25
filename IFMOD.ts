@@ -498,17 +498,17 @@ export namespace IFMOD {
     }
 
     export interface ChannelControl {
-        addDSP(): RESULT;
+        addDSP(index:number, dsp:DSP): RESULT;
 
-        addFadePoint(): RESULT;
+        addFadePoint(dspclock:number, volume:number): RESULT;
 
-        get3DAttributes(): RESULT;
+        get3DAttributes(pos:Outval<VECTOR>, vel:Outval<VECTOR>, alt_pan_pos:Outval<VECTOR>): RESULT;
 
-        get3DConeOrientation(): RESULT;
+        get3DConeOrientation(orientation:Outval<VECTOR>): RESULT;
 
-        get3DConeSettings(): RESULT;
+        get3DConeSettings(insideconeangle:Outval<number>, outsideconeangle:Outval<number>, outsidevolume:Outval<number>): RESULT;
 
-        get3DCustomRolloff(): RESULT;
+        get3DCustomRolloff(points:Outval<VECTOR[]>, numpoints:Outval<number>): RESULT;
 
         get3DDistanceFilter(): RESULT;
 
@@ -957,110 +957,313 @@ export namespace IFMOD {
     }
 
     export interface DSP {
-        addInput(): RESULT;
-
-        disconnectAll(): RESULT;
-
-        disconnectFrom(): RESULT;
-
-        getActive(): RESULT;
-
-        getBypass(): RESULT;
-
-        getCPUUsage(): RESULT;
-
-        getChannelFormat(): RESULT;
-
-        getDataParameterIndex(): RESULT;
-
-        getIdle(): RESULT;
-
-        getInfo(): RESULT;
-
-        getInput(): RESULT;
-
-        getMeteringEnabled(): RESULT;
-
-        getMeteringInfo(): RESULT;
-
-        getNumInputs(): RESULT;
-
-        getNumOutputs(): RESULT;
-
-        getNumParameters(): RESULT;
-
-        getOutput(): RESULT;
-
-        getOutputChannelFormat(): RESULT;
-
-        getParameterBool(): RESULT;
-
-        getParameterData(): RESULT;
-
-        getParameterFloat(): RESULT;
-
-        getParameterInfo(): RESULT;
-
-        getParameterInt(): RESULT;
-
-        getSystemObject(): RESULT;
-
-        getType(): RESULT;
-
-        getUserData(): RESULT;
-
-        getWetDryMix(): RESULT;
-
+        /**
+         * Adds the specified DSP unit as an input of the DSP object.
+         * @param input The DSP unit to add as an input of the current unit. 
+         * @param connection The connection between the 2 units. Optional. Specify 0 or NULL to ignore. 
+         * @param type The type of connection between the 2 units. See FMOD_DSPCONNECTION_TYPE.
+         */
+        addInput(input:DSP, connection:Outval<DSPConnection>, type:DSPCONNECTION_TYPE): RESULT;
+        /**
+         * Helper function to disconnect either all inputs or all outputs of a dsp unit.
+         * @param inputs true = disconnect all inputs to this DSP unit. false = leave input connections alone
+         * @param outputs true = disconnect all outputs to this DSP unit. false = leave output connections alone. 
+         */
+        disconnectAll(inputs:boolean, outputs:boolean): RESULT;
+        /**
+         * Disconnect the DSP unit from the specified input.
+         * @param target The input unit that this unit is to be disconnected from. Specify 0 or NULL to disconnect the unit from all outputs and inputs. 
+         * @param connection If there is more than one connection between 2 dsp units, this can be used to define which of the connections should be disconnected. 
+         */
+        disconnectFrom(target:DSP, connection:DSPConnection): RESULT;
+        /**
+         * Retrieves the active state of a DSP unit
+         * @param isActive Address of a variable that receives the active state of the unit.
+         */
+        getActive(isActive:Outval<boolean>): RESULT;
+        /**
+         * Retrieves the bypass state of the DSP unit.
+         * @param isBypassed Address of a variable that receieves the bypass state for a DSP unit.
+         */
+        getBypass(isBypassed:Outval<boolean>): RESULT;
+        /**
+         * Retrieve the CPU usage for a particular DSP
+         * @param exclusive Address of a variable to receive exclusive CPU usage. Optional. Specify 0 or NULL to ignore. 
+         * @param inclusive Address of a variable to receive inclusive CPU usage. Optional. Specify 0 or NULL to ignore. 
+         */
+        getCPUUsage(exclusive:Outval<number>, inclusive:Outval<number>): RESULT;
+        /**
+         * Gets the input signal format for a dsp units read/process callback, to determine which speakers the signal will be processed on and how many channels will be processed.
+         * @param channelmask Address of a variable that receives the FMOD_CHANNELMASK which determines which speakers are represented by the channels in the input signal. 
+         * @param numchannels Address of a variable that receives the number of channels to be processed on this unit. 
+         * @param source_speakermode Address of a variable that receives the source speaker mode where the signal came from. 
+         */
+        getChannelFormat(channelmask:Outval<CHANNELMASK>, numchannels:Outval<number>, source_speakermode:Outval<SPEAKERMODE>): RESULT;
+        /**
+         * Retrieve the index of the first data parameter of a particular data type.
+         * @param datatype The type of data to find. This would usually be set to a value defined in FMOD_DSP_PARAMETER_DATA_TYPE but can be any value for custom types.
+         * @param index Contains the index of the first data parameter of type 'datatype' after the function is called. Will be -1 if no matches were found. Can be null. 
+         */
+        getDataParameterIndex(datatype:DSP_PARAMETER_DATA_TYPE, index:Outval<number>): RESULT;
+        /**
+         * Retrieves the idle state of a DSP. A DSP is idle when no signal is coming into it. This can be a useful method of determining if a DSP sub branch is finished processing, so it can be disconnected for example.
+         * @param isIdle Address of a variable to receive the idle state for the DSP
+         */
+        getIdle(isIdle:Outval<boolean>): RESULT;
+        /**
+         * Retrieves information about the current DSP unit, including name, version, default channels and width and height of configuration dialog box if it exists
+         * @param name Address of a variable that receives the name of the unit. This will be a maximum of 32bytes. If the DSP unit has filled all 32 bytes with the name with no terminating \0 null character it is up to the caller to append a null character. Optional. Specify 0 or NULL to ignore.
+         * @param version Address of a variable that receives the version number of the DSP unit. Version number is usually formated as hex AAAABBBB where the AAAA is the major version number and the BBBB is the minor version number. Optional. Specify 0 or NULL to ignore. 
+         * @param channels Address of a variable that receives the number of channels the unit was initialized with. 0 means the plugin will process whatever number of channels is currently in the network. >0 would be mostly used if the unit is a unit that only generates sound, or is not flexible enough to take any number of input channels. Optional. Specify 0 or NULL to ignore
+         * @param configwidth Address of a variable that receives the width of an optional configuration dialog box that can be displayed with DSP::showConfigDialog. 0 means the dialog is not present. Optional. Specify 0 or NULL to ignore. 
+         * @param configheight Address of a variable that receives the height of an optional configuration dialog box that can be displayed with DSP::showConfigDialog. 0 means the dialog is not present. Optional. Specify 0 or NULL to ignore. 
+         */
+        getInfo(name:Outval<string>, version:Outval<number>, channels:Outval<number>, configwidth:Outval<number>, configheight:Outval<number>): RESULT;
+        /**
+         * Retrieves a pointer to a DSP unit which is acting as an input to this unit
+         * @param index Index of the input unit to retrieve
+         * @param input Address of a variable that receieves the pointer to the desired input unit. 
+         * @param inputconnection The connection between the 2 units. Optional. Specify 0 or NULL to ignore.
+         */
+        getInput(index:number, input:Outval<DSP>, inputconnection:Outval<DSPConnection>): RESULT;
+        /**
+         * Retrieve the information about metering for a particular DSP to see if it is enabled or not.
+         * @param inputEnabled Address of a variable to receive the metering enabled state for the DSP, for the intput signal (pre-processing). true = on, false = off. Optional. Specify 0 or NULL to ignore. 
+         * @param outputEnabled Address of a variable to receive the metering enabled state for the DSP, for the output signal (post-processing). true = on, false = off. Optional. Specify 0 or NULL to ignore. 
+         */
+        getMeteringEnabled(inputEnabled:Outval<boolean>, outputEnabled:Outval<boolean>): RESULT;
+        /**
+         * Retrieve the metering information for a particular DSP
+         * @param inputInfo Address of a variable to receive metering information for the DSP, for the intput signal (pre-processing). true = on, false = off. Optional. Specify 0 or NULL to ignore. 
+         * @param outputInfo Address of a variable to receive metering information for the DSP, for the output signal (post-processing). true = on, false = off. Optional. Specify 0 or NULL to ignore.
+         */
+        getMeteringInfo(inputInfo:Outval<DSP_METERING_INFO>, outputInfo:Outval<DSP_METERING_INFO>): RESULT;
+        /**
+         * Retrieves the number of inputs connected to the DSP unit.
+         * @param numinputs Address of a variable that receives the number of inputs connected to this unit. 
+         */
+        getNumInputs(numinputs:Outval<number>): RESULT;
+        /**
+         * Retrieves the number of outputs connected to the DSP unit.
+         * @param numoutputs Address of a variable that receives the number of outputs connected to this unit. 
+         */
+        getNumOutputs(numoutputs:Outval<number>): RESULT;
+        /**
+         * Retrieves the number of parameters a DSP unit has to control its behaviour.
+         * @param numparams Address of a variable that receives the number of parameters contained within this DSP unit. 
+         */
+        getNumParameters(numparams:Outval<number>): RESULT;
+        /**
+         * Retrieves a pointer to a DSP unit which is acting as an output to this unit.
+         * @param index Index of the output unit to retrieve. 
+         * @param output Address of a variable that receieves the pointer to the desired output unit
+         * @param outputconnection The connection between the 2 units. Optional. Specify 0 or NULL to ignore. 
+         */
+        getOutput(index:number, output:Outval<DSP>, outputconnection:Outval<DSPConnection>): RESULT;
+        /**
+         * Call the DSP process function to retrieve the output signal format for a DSP based on input values.
+         * @param inmask Channel bitmask representing the speakers enabled for the incoming signal. For example a 5.1 signal could have inchannels 2 that represent FMOD_CHANNELMASK_SURROUND_LEFT and FMOD_CHANNELMASK_SURROUND_RIGHT. 
+         * @param inchannels Number of channels for the incoming signal
+         * @param inspeakermode Speaker mode for the incoming signal. 
+         * @param outmask Address of a variable to receive the DSP unit's output mask, based on the DSP units preference and settings. 
+         * @param outchannels Address of a variable to receive the DSP unit's output channel count, based on the DSP units preference and settings. 
+         * @param outspeakermode Address of a variable to receive the DSP unit's output speaker mode, based on the DSP units preference and settings. 
+         */
+        getOutputChannelFormat(inmask: CHANNELMASK, inchannels:number, inspeakermode:SPEAKERMODE, outmask:Outval<CHANNELMASK>, outchannels:Outval<number>, outspeakermode:Outval<SPEAKERMODE>): RESULT;
+        /**
+         * Retrieves a DSP unit's boolean parameter by index. To find out the parameter names and range, see the see also field.
+         * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
+         * @param value Address of a variable that receives the boolean parameter value for the parameter specified. 
+         * @param valuestr Address of a variable that receives the string containing a formatted or more meaningful representation of the DSP parameter's value. For example if a switch parameter has on and off (0.0 or 1.0) it will display "ON" or "OFF" by using this parameter. Optional. Specify 0 or NULL to ignore. 
+         */
+        getParameterBool(index:number, value:Outval<boolean>, valuestr:Outval<string>): RESULT;
+        /**
+         * Retrieves a DSP unit's data block parameter by index. To find out the parameter names and range, see the see also field.
+         * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
+         * @param data Address of a variable that receives binary data for the parameter specified. 
+         * @param length Address of a variable that receives the length of data block in bytes. Optional. 
+         * @param valuestr Address of a variable that receives the string containing a formatted or more meaningful representation of the DSP parameter's value. For example if a switch parameter has on and off (0.0 or 1.0) it will display "ON" or "OFF" by using this parameter. Optional. Specify 0 or NULL to ignore. 
+         */  
+        getParameterData(index:number, data:Outval<any>, length:Outval<number>, valuestr:Outval<string>): RESULT;
+        /**
+         * Retrieves a DSP unit's floating point parameter by index. To find out the parameter names and range, see the see also field.
+         * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
+         * @param value Address of a variable that receives the floating point parameter value for the parameter specified. 
+         * @param valuestr Address of a variable that receives the string containing a formatted or more meaningful representation of the DSP parameter's value. For example if a switch parameter has on and off (0.0 or 1.0) it will display "ON" or "OFF" by using this parameter. Optional. Specify 0 or NULL to ignore. 
+         */
+        getParameterFloat(index:number, value:Outval<string>, valuestr:Outval<string>): RESULT;
+        /**
+         * Retrieve information about a specified parameter within the DSP unit.
+         * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
+         * @param desc Address of a variable to receive the contents of an array of FMOD_DSP_PARAMETER_DESC structures for this DSP unit.
+         */
+        getParameterInfo(index:number, desc:Outval<DSP_PARAMETER_DESC>): RESULT;
+        /**
+         * 
+         * @param index Retrieves a DSP unit's integer parameter by index. To find out the parameter names and range, see the see also field.
+         * @param value Address of a variable that receives the integer parameter value for the parameter specified. 
+         * @param valuestr Address of a variable that receives the string containing a formatted or more meaningful representation of the DSP parameter's value. For example if a switch parameter has on and off (0.0 or 1.0) it will display "ON" or "OFF" by using this parameter. Optional. Specify 0 or NULL to ignore. 
+         */
+        getParameterInt(index:number, value:Outval<number>, valuestr:Outval<string>): RESULT;
+        /**
+         * Retrieves the parent System object that was used to create this object.
+         * @param system Address of a variable that receives the System object. 
+         */
+        getSystemObject(system:Outval<System>): RESULT;
+        /**
+         * Retrieves the pre-defined type of a FMOD registered DSP unit
+         * @param type Address of a variable to receive the FMOD dsp type
+         */
+        getType(type:Outval<DSP_TYPE>): RESULT;
+        /**
+         * Retrieves the user value that that was set by calling the DSP::setUserData function.
+         * @param userdata Address of a pointer that receives the user data specified with the DSP::setUserData function. 
+         */
+        getUserData(userdata:Outval<any>): RESULT;
+        /**
+         * Retrieves the wet/dry scale of a DSP effect, through the 'wet' mix, which is the post-processed signal and the 'dry' mix which is the pre-processed signal
+         * @param prewet Address of a floating point value, to receive typically 0 to 1, describing a linear scale of the 'wet' (pre-processed signal) mix of the effect. Default = 1.0. Scale can be lower than 0 (negating) and higher than 1 (amplifying).
+         * @param postwet Address of a floating point value, to receive typically 0 to 1, describing a linear scale of the 'wet' (post-processed signal) mix of the effect. Default = 1.0. Scale can be lower than 0 (negating) and higher than 1 (amplifying). 
+         * @param dry Address of a floating point value, to receive typically 0 to 1, describing a linear scale of the 'dry' (pre-processed signal) mix of the effect. Default = 0.0. Scale can be lower than 0 and higher than 1 (amplifying). 
+         */
+        getWetDryMix(prewet:Outval<number>, postwet:Outval<number>, dry:Outval<number>): RESULT;
+        /**
+         * Frees a DSP object
+         */
         release(): RESULT;
-
+        /**
+         * Calls the DSP unit's reset function, which will clear internal buffers and reset the unit back to an initial state.
+         */
         reset(): RESULT;
-
-        setActive(): RESULT;
-
-        setBypass(): RESULT;
-
-        setChannelFormat(): RESULT;
-
-        setMeteringEnabled(): RESULT;
-
-        setParameterBool(): RESULT;
-
-        setParameterData(): RESULT;
-
-        setParameterFloat(): RESULT;
-
-        setParameterInt(): RESULT;
-
-        setUserData(): RESULT;
-
-        setWetDryMix(): RESULT;
-
-        showConfigDialog(): RESULT;
+        /**
+         * Enables or disables a unit for being processed.
+         * @param isActive true = unit is activated, false = unit is deactivated
+         */
+        setActive(isActive:boolean): RESULT;
+        /**
+         * Enables or disables the read callback of a DSP unit so that it does or doesn't process the data coming into it.
+A DSP unit that is disabled still processes its inputs, it will just be 'dry'.
+         * @param isBypassed Boolean to cause the read callback of the DSP unit to be bypassed or not. Default = false. 
+         */
+        setBypass(isBypassed:boolean): RESULT;
+        /**
+         * Sets the signal format of a dsp unit so that the signal is processed on the speakers specified.
+Also defines the number of channels in the unit that a read callback will process, and the output signal of the unit.
+         * @param channelmask A series of bits specified by FMOD_CHANNELMASK to determine which speakers are represented by the channels in the signal. 
+         * @param numchannels The number of channels to be processed on this unit and sent to the outputs connected to it. Maximum of FMOD_MAX_CHANNEL_WIDTH. 
+         * @param source_speakermode The source speaker mode where the signal came from. See description.
+         * @description Setting the number of channels on a unit will force a down or up mix to that channel count before processing the DSP read callback. This channelcount is then sent to the outputs of the unit. source_speakermode is informational, when channelmask describes what bits are active, and numchannels describes how many channels are in a buffer, source_speakermode describes where the channels originated from. For example if numchannels = 2 then this could describe for the DSP if the original signal started from a stereo signal or a 5.1 signal. It could also describe the signal as all monaural, for example if numchannels was 16 and the speakermode was FMOD_SPEAKERMODE_MONO.
+         */
+        setChannelFormat(channelmask:CHANNELMASK, numchannels:number, source_speakermode:SPEAKERMODE): RESULT;
+        /**
+         * Enable metering for a DSP unit so that DSP::getMeteringInfo will return metering information, and so that FMOD Studio profiler tool can visualize the levels.
+         * @param inputEnabled Enable metering for the input signal (pre-processing). Specify true to turn on input level metering, false to turn it off.
+         * @param outputEnabled Enable metering for the output signal (post-processing). Specify true to turn on output level metering, false to turn it off. 
+         */
+        setMeteringEnabled(inputEnabled:boolean, outputEnabled:boolean): RESULT;
+        /**
+         * Sets a DSP unit's boolean parameter by index. To find out the parameter names and range, see the see also field.
+         * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
+         * @param value Boolean parameter value to be passed to the DSP unit. Should be TRUE or FALSE. 
+         */
+        setParameterBool(index:number, value:boolean): RESULT;
+        /**
+         * Sets a DSP unit's binary data parameter by index. To find out the parameter names and range, see the 'see also' field in the documentation.
+         * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
+         * @param data Data block parameter. This will be raw binary data to be passed to the DSP unit. An array of bytes.
+         * @param length Length of data block in bytes being passed in. 
+         */
+        setParameterData(index:number, data:number[], length:number): RESULT;
+        /**
+         * Sets a DSP unit's floating point parameter by index. To find out the parameter names and range, see the see also field.
+         * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
+         * @param value Floating point parameter value to be passed to the DSP unit. 
+         */
+        setParameterFloat(index:number, value:number): RESULT;
+        /**
+         * Sets a DSP unit's integer parameter by index. To find out the parameter names and range, see the see also field.
+         * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
+         * @param value Integer parameter value to be passed to the DSP unit.  
+         */
+        setParameterInt(index:number, value:number): RESULT;
+        /**
+         * Sets a user value that the DSP object will store internally. Can be retrieved with DSP::getUserData.
+         * @param userdata Address of user data that the user wishes stored within the DSP object. 
+         */
+        setUserData(userdata:any): RESULT;
+        /**
+         * Allows the user to scale the affect of a DSP effect, through control of the 'wet' mix, which is the post-processed signal and the 'dry' which is the pre-processed signal.
+         * @param prewet Floating point value from 0 to 1, describing a linear scale of the 'wet' (pre-processed signal) mix of the effect. Default = 1.0. Scale can be lower than 0 (negating) and higher than 1 (amplifying). 
+         * @param postwet Floating point value from 0 to 1, describing a linear scale of the 'wet' (post-processed signal) mix of the effect. Default = 1.0. Scale can be lower than 0 (negating) and higher than 1 (amplifying). 
+         * @param dry Floating point value from 0 to 1, describing a linear scale of the 'dry' (pre-processed signal) mix of the effect. Default = 0.0. Scale can be lower than 0 and higher than 1 (amplifying). 
+         */
+        setWetDryMix(prewet:number, postwet:number, dry:number): RESULT;
+        /**
+         * Display or hide a DSP unit configuration dialog box inside the target window.
+         * @param hwnd Target HWND in windows to display configuration dialog
+         * @param show true = show dialog box inside target hwnd. false = remove dialog from target hwnd. 
+         */
+        showConfigDialog(hwnd:any, show:boolean): RESULT;
 
 
     }
 
     export interface DSPConnection {
-        getInput(): RESULT;
-
-        getMix(): RESULT;
-
-        getMixMatrix(): RESULT;
-
-        getOutput(): RESULT;
-
-        getType(): RESULT;
-
-        getUserData(): RESULT;
-
-        setMix(): RESULT;
-
-        setMixMatrix(): RESULT;
-
-        setUserData(): RESULT;
+        /**
+         * Retrieves the DSP unit that is the input of this connection.
+         * @param input Address of a pointer that receives the pointer to the DSP unit that is the input of this connection. 
+         */
+        getInput(input:Outval<DSP>): RESULT;
+        /**
+         * Retrieves the volume of the connection - the scale level of the input before being passed to the output.
+         * @param volume Address of a variable to receive the volume or mix level of the specified input. 0.0 = silent, 1.0 = full volume. 
+         */
+        getMix(volume:Outval<number>): RESULT;
+        /**
+         * Returns the panning matrix set by the user, for a connection.
+         * @param matrix Address of a variable to recieve an array of floating point matrix data, where rows represent output speakers, and columns represent input channels.
+         * @param outchannels Address of a variable to receive the number of output channels in the set matrix. 
+         * @param inchannels Address of a variable to receive the number of input channels in the set matrix. 
+         * @param inchannel_hop Number of floating point values available in the destination n memory for a row, so that the destination memory can be skipped through correctly to write the right values, if the intended matrix memory to be written to is wider than the matrix stored in the DSPConnection.
+         */
+        getMixMatrix(matrix:Outval<number[]>, outchannels:Outval<number>, inchannels:Outval<number>, inchannel_hop:number): RESULT;
+        /**
+         * Retrieves the DSP unit that is the output of this connection.
+         * @param output Address of a pointer that receives the pointer to the DSP unit that is the output of this connection. 
+         */
+        getOutput(output:Outval<DSP>): RESULT;
+        /**
+         * Returns the type of the connection between 2 DSP units. This can be FMOD_DSPCONNECTION_TYPE_STANDARD, FMOD_DSPCONNECTION_TYPE_SIDECHAIN, FMOD_DSPCONNECTION_TYPE_SEND or FMOD_DSPCONNECTION_TYPE_SEND_SIDECHAIN.
+         * @param type Address of the variable to receive the type of connection between 2 DSP units. See FMOD_DSPCONNECTION_TYPE.  
+         */
+        getType(type:Outval<DSPCONNECTION_TYPE>): RESULT;
+        /**
+         * Sets a user value that the DSPConnection object will store internally. Can be retrieved with DSPConnection::getUserData.
+         * @param userdata Address of user data that the user wishes stored within the DSPConnection object. 
+         */
+        getUserData(userdata:Outval<any>): RESULT;
+        /**
+         * Sets the volume of the connection so that the input is scaled by this value before being passed to the output.
+         * @param volume Volume or mix level of the connection. 0.0 = silent, 1.0 = full volume.
+         */
+        setMix(volume:number): RESULT;
+        /**
+         * Sets a NxN panning matrix on a DSP connection. Skipping/hop is supported, so memory for the matrix can be wider than the width of the inchannels parameter.
+         * @param matrix Pointer to an array of floating point matrix data, where rows represent output speakers, and columns represent input channels.
+         * @param outchannels Number of output channels in the matrix being specified. 
+         * @param inchannels Number of input channels in the matrix being specified. 
+         * @param inchannel_hop Number of floating point values stored in memory for a row, so that the memory can be skipped through correctly to read the right values, if the intended matrix memory to be read from is wider than the matrix stored in the DSPConnection. 
+         */
+        setMixMatrix(matrix: number[], outchannels:number, inchannels:number, inchannel_hop:number): RESULT;
+        /**
+         * Sets a user value that the DSPConnection object will store internally. Can be retrieved with DSPConnection::getUserData.
+         * @param userdata Address of user data that the user wishes stored within the DSPConnection object. 
+         */
+        setUserData(userdata:any): RESULT;
     
     }
 
+    /** Currently not supported in JavaScript */
     export interface Geometry {
         addPolygon(): RESULT;
 
@@ -1103,7 +1306,7 @@ export namespace IFMOD {
         setUserData(): RESULT;
 
     }
-
+    
     export interface Reverb3D {
         get3DAttributes(): RESULT;
 
@@ -1124,8 +1327,8 @@ export namespace IFMOD {
         setUserData    (): RESULT;
 
     }
-    //#endregion System Objects \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    // #region Studio System Objects  /////////////////////////////////////////////////////////////////////////////////////////
+    //#endregion System Objects
+    // #region Studio System Objects  //Command Replay needs parameters in functions /////////////////////////////////////////
     export interface StudioSystem {
         // Functions
 
