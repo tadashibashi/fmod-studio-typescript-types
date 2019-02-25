@@ -21,6 +21,33 @@ export function CHECK_RESULT (result: IFMOD.RESULT, string: string)
 }
 
 export namespace IFMOD { 
+
+    // #region Namespace Functions Wrap FMOD functions
+\
+    export function Debug_Initialize(flags:DEBUG_FLAGS) {
+        let result: RESULT = FMOD.Debug_Initialize(flags);
+        return result;
+    }
+
+    export function ErrorString(result: RESULT) {
+        FMOD.ErrorString(result);
+    }
+
+    export function FS_createPreloadedFile(foldername:string, filename:string, url:string, canread:boolean,canwrite:boolean) {
+        let result: RESULT = FMOD.FS_createPreloadedFile(foldername, filename, url, canread, canwrite);
+        return result;
+    }    
+    // fill in outval generic type with systems
+    export function System_Create(system:Outval<any>) {
+        let result: RESULT = FMOD.System_Create(system);
+        return result;
+    }
+
+    export function Studio_System_Create(studioSystem: Outval<StudioSystem>) {
+        let result: RESULT = FMOD.Studio_System_Create(studioSystem);
+        return result;
+    }
+    //#endregion Namespace Functions
     
     export interface StudioSystem {
         // Functions
