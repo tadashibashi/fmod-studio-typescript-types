@@ -7,6 +7,19 @@ export class Outval<T> {
 	constructor() {}
 }
 
+/** Check the FMOD.RESULT to see if there are any errors
+* @function CHECK_RESULT
+* @param result The error code
+* @param string The attempted task
+* @returns void
+*/
+export function CHECK_RESULT (result: IFMOD.RESULT, string: string)
+{
+   if (result != IFMOD.RESULT.OK) {
+       alert("FMOD ERROR! [" + FMOD.ErrorString(result) + "]\n" + "=> Problem while " + string);
+   }
+}
+
 export namespace IFMOD { 
     
     export interface StudioSystem {
