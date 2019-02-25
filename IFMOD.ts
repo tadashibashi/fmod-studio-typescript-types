@@ -1,3 +1,7 @@
+export var FMOD:any = {
+
+};
+
 export class Outval<T> {
 	val: T;
 	constructor() {}
