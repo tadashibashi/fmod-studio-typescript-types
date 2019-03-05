@@ -1,6 +1,4 @@
-export var FMOD:any = {
-
-};
+export var FMOD:any = {};
 
 export class Outval<T> {
 	val: T;
@@ -13,8 +11,7 @@ export class Outval<T> {
 * @param string The attempted task
 * @returns void
 */
-export function CHECK_RESULT (result: IFMOD.RESULT, string: string)
-{
+export function CHECK_RESULT (result: IFMOD.RESULT, string: string) {
    if (result != IFMOD.RESULT.OK) {
        alert("FMOD ERROR! [" + FMOD.ErrorString(result) + "]\n" + "=> Problem while " + string);
    }
@@ -23,17 +20,19 @@ export function CHECK_RESULT (result: IFMOD.RESULT, string: string)
 export namespace IFMOD { 
 
     // #region Namespace Functions Wrap FMOD functions ///////////////////////////////////////////////////////////////////////
+
     // #region Low Level System Functions ////////////////////////////
     /**
-     * 
-     * @param flags 
+     * Specify the level and delivery method of log messages when using the logging version of FMOD.
+     * @param flags Mask of bits representing the desired log information. Note: LOG implies WARN and WARN implies ERROR.
      */
     export function Debug_Initialize(flags:DEBUG_FLAGS) {
         let result: RESULT = FMOD.Debug_Initialize(flags);
         return result;
     }
+
     /**
-     * 
+     * Helper function to close a file manually, that is preloaded with FMOD.FS_createPreloadedFile
      * @param handle 
      */
     export function file_close(handle:object) { 
@@ -175,7 +174,9 @@ export namespace IFMOD {
         attachChannelGroupToPort(portType, portIndex, channelgroup:Outval<ChannelGroup>): RESULT;
 
         attachFileSystem(useropen, userclose, userread, userseek): RESULT;
-        /** Closes the system object without freeing the object's memory, so the system handle will still be valid. */
+        /** 
+         * Closes the system object without freeing the object's memory, so the system handle will still be valid. 
+         */
         close(): RESULT;
 
         createChannelGroup(name:string, channelgroup:ChannelGroup): RESULT;
@@ -193,23 +194,23 @@ export namespace IFMOD {
         /** Loads a sound into memory, or opens it for streaming. */
         createSound(name_or_data:string, mode:MODE, exinfo:CREATESOUNDEXINFO, sound:Outval<any>): RESULT;
 
-        createSoundGroup(): RESULT;
+        createSoundGroup(name:string, soundgroup:Outval<SoundGroup>): RESULT;
 
         createStream(name_or_data:string, mode:MODE, sound:Outval<any>): RESULT;
 
-        detachChannelGroupFromPort(): RESULT;
+        detachChannelGroupFromPort(name:string, soundgroup:Outval<SoundGroup>): RESULT;
 
-        get3DListenerAttributes(): RESULT;
+        get3DListenerAttributes(listener:number, pos:Outval<VECTOR>, vel:Outval<VECTOR>, forward:Outval<VECTOR>, up:Outval<VECTOR>): RESULT;
 
-        get3DNumListeners(): RESULT;
+        get3DNumListeners(numlisteners:Outval<number>): RESULT;
         /** Retrieves the global doppler scale, distance factor and rolloff scale for all 3D sound in FMOD. */
         get3DSettings(doplerscale:Outval<number>, distancefactor:Outval<number>, folloffscale:Outval<number>): RESULT;
 
-        getAdvancedSetting(): RESULT;
+        getAdvancedSetting(settings:Outval<ADVANCEDSETTINGS>): RESULT;
 
-        getCPUUsage(): RESULT;
+        getCPUUsage(dsp:Outval<number>, stream:Outval<number>, geometry:Outval<number>, update:Outval<number>, total:Outval<number>): RESULT;
 
-        getChannel(): RESULT;
+        getChannel(channelid:number, channel:Outval<Channel>): RESULT;
 
         getChannelsPlaying(): RESULT;
 
@@ -1447,185 +1448,187 @@ Also defines the number of channels in the unit that a read callback will proces
     export interface StudioSystem {
         // Functions
 
-        /** Creates a Studio System object. This must be called before you do anything else.
-         * @param system
-         * @param headerversion
+        /** 
+         * Creates a Studio System object. This must be called before you do anything else.
+         * @param system Address of a variable to receive the new Studio System object.
+         * @param headerversion The expected FMOD Studio API version, to ensure the library matches the headers. For the C API, pass in FMOD_VERSION. For the C++ API, it defaults to FMOD_VERSION, so you don't need to pass it in explicitly. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         create(system:Outval<StudioSystem>, headerversion:number): RESULT;
 
         /** 
+         * Waits until all pending commands have been executed.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         flushCommands(): RESULT;
-
         /** 
+         * Waits until all sample loading and unloading has completed.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         flushSampleLoading(): RESULT;
-
         /** 
-         * @param settings
+         * Retrieves the advanced settings assigned to the studio system object.
+         * @param settings Address of a variable to receive the contents of the FMOD_STUDIO_ADVANCEDSETTINGS structure specified by the user. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getAdvancedSettings(settings:Outval<any>): RESULT;
-
+        getAdvancedSettings(settings:Outval<STUDIO_ADVANCEDSETTINGS>): RESULT;
         /** 
+         * Retrieves an already loaded Bank object by path, filename or ID string.
          * @param path The bank path, filename, or the ID string that identifies the bank. 
          * @param bankOut Address of a variable to receive the Bank object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBank(path:string, bankOut:Outval<any>): RESULT;
+        getBank(path:string, bankOut:Outval<Bank>): RESULT;
 
         /** 
+         * Retrieves an already loaded Bank object by ID.
          * @param id The 128-bit GUID which identifies the bank. FMOD.GUID type
          * @param bankOut Address of a variable to receive the Bank object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBankByID(id:GUID, bankOut:Outval<any>): RESULT;
+        getBankByID(id:GUID, bankOut:Outval<Bank>): RESULT;
 
         /** 
+         * Retrieves the number of loaded banks.
          * @param countOut Address of a variable to receive the number of loaded Banks.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         getBankCount(countOut:Outval<number>): RESULT;
-
         /** 
+         * Retrieves the loaded Banks.
          * @param arrayOut An array of memory allocated by the user. 
          * @param capacity The capacity of the array passed in as the first parameter 
          * @param countOut Address of a variable to receive the number of Banks written to the array 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBankList(arrayOut:Outval<any[]>, capacity:number, countOut:Outval<number>): RESULT;
+        getBankList(arrayOut:Outval<Bank[]>, capacity:number, countOut:Outval<number>): RESULT;
 
         /** 
+         * Retrieves information about various memory buffers used by FMOD Studio.
          * @param usageOut Address of a variable to receive the performance information. 
          * Struct passed out is of FMOD_STUDIO_BUFFER_USAGE type.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         getBufferUsage(usageOut:Outval<STUDIO_BUFFER_USAGE>): RESULT;
-
         /** 
+         * Retrieves a bus by path or ID string.
          * @param path The bus path or the ID string that identifies the bus. 
          * @param busOut Address of a variable to receive the bus object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBus(path:string, busOut:Outval<any>): RESULT;
-
+        getBus(path:string, busOut:Outval<Bus>): RESULT;
         /** 
+         * Retrieves a bus by ID.
          * @param id The 128-bit GUID which identifies the bus. Type FMOD_GUID
          * @param busOut Address of a variable to receive the bus object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBusByID(id:GUID, busOut:Outval<any>): RESULT;
-
-        /** Retrieves performance information for FMOD Studio and low level systems  
+        getBusByID(id:GUID, busOut:Outval<Bus>): RESULT;
+        /** 
+         * Retrieves performance information for FMOD Studio and low level systems  
          * @param usageOut Address of a variable to receive the performance info. 
          * FMOD_STUDIO_CPU_USAGE. Cast .val to IFMOD.STUDIO_CPU_USAGE
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         getCPUUsage(usageOut:Outval<STUDIO_CPU_USAGE>): RESULT;
-
-        /** Retrieves an EventDescription by path or ID string.
-
+        /** 
+         * Retrieves an EventDescription by path or ID string.
          * @param path The path or the ID string that identifies the event or snapshot
          * @param eventOut Address of a variable to receive the EventDescription object
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getEvent(path:string, eventOut:Outval<any>): RESULT;
-
+        getEvent(path:string, eventOut:Outval<EventDescription>): RESULT;
         /** Retrieves an EventDescription by ID.
-
          * @param id The 128-bit GUID which identifies the event or snapshot.
          * @param eventOut Address of a variable to receive the EventDescription object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getEventByID(id:number, event:Outval<any>): RESULT;
-
-        /** Retrieves the position, velocity and orientation of the 3D sound listener.
-         * @param listener
-         * @param attributes
+        getEventByID(id:number, event:Outval<EventDescription>): RESULT;
+        /** 
+         * Retrieves the position, velocity and orientation of the 3D sound listener.
+         * @param listener Listener index. Specify 0 if there is only 1 listener. 
+         * @param attributes Address of a variable to receive the 3D attributes for the listener. See FMOD_3D_ATTRIBUTES. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getListenerAttributes(listener:number, attributes:Outval<any>): RESULT;
-
-        /** Gets the listener weighting, which allows listeners to fade in and out
+        getListenerAttributes(listener:number, attributes:Outval<_3D_ATTRIBUTES>): RESULT;
+        /** 
+         * Gets the listener weighting, which allows listeners to fade in and out
          * @param listner Listener index.
          * @param weightOut Address of a variable to receive the weighting value. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         getListenerWeight(listener:number, weightOut:Outval<number>): RESULT;
-
-        /** Retrieves the Studio System's internal Low Level System object for 
+        /** 
+         * Retrieves the Studio System's internal Low Level System object for 
          * access to the Low Level API.
          * @param systemOut Address of a variable to pass the low level System to
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getLowLevelSystem(systemOut:Outval<any>): RESULT;
-
-        /** Gets the number of listeners that have been set into in the 3D sound scene.
-         * @param numlistenersOut
+        getLowLevelSystem(systemOut:Outval<System>): RESULT;
+        /** 
+         * Gets the number of listeners that have been set into in the 3D sound scene.
+         * @param numlistenersOut Number of listeners that have been set. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         getNumListeners(numlistenersOut:Outval<number>): RESULT;
-
-        /** Retrieves information for loading a sound from an audio table.
+        /** 
+         * Retrieves information for loading a sound from an audio table.
          * @param key The key that identifies the sound, listed in FMOD Studio
          * @param infoOut Address of a variable to receive the sound loading information. SOUND_INFO type.
          * @returns an integer value defined in the FMOD_RESULT enumeration
-         * @remarks Input each field into lowLevelSystem.createSound(info.name_or_data, 
+         * @description Input each field into lowLevelSystem.createSound(info.name_or_data, 
          * info.mode, nullSinceNoExsoundinfoInJavascriptStruct, soundOut) to receive the parent sound. You can then retrieve
          * the subsound with Sound.getSubSound( info.subsoundindex, Outval );
          */
         getSoundInfo(key:string,infoOut:Outval<STUDIO_SOUND_INFO>): RESULT;
-
-        /** Retrieves the user data that is set on the system.
+        /** 
+         * Retrieves the user data that is set on the system.
          * @param userdataOut Address of a variable to receive the user data. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         getUserData(userdataOut:Outval<any>): RESULT;
-
-        /** Retrieves a VCA by path or ID string.
-         * @param path
-         * @param vcaOut
+        /** 
+         * Retrieves a VCA by path or ID string.
+         * @param path The VCA path or the ID string that identifies the VCA. 
+         * @param vcaOut Address of a variable to receive the VCA object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getVCA(path:string, vcaOut:Outval<any>): RESULT;
-
-        /** Retrieves a VCA by ID
+        getVCA(path:string, vcaOut:Outval<VCA>): RESULT;
+        /** 
+         * Retrieves a VCA by ID
          * @param id The 128-bit GUID which identifies the VCA. 
          * @param vcaOut Address of a variable to receive the VCA object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getVCAByID(id:GUID, vcaOut:Outval<any>): RESULT;
-
-        /** Initializes the Studio System, the Low Level System, and the sound device.
-         * @param maxchannels
-         * @param studioflags
-         * @param lowlevelflags
-         * @param extradriverdata
+        getVCAByID(id:GUID, vcaOut:Outval<VCA>): RESULT;
+        /** 
+         * Initializes the Studio System, the Low Level System, and the sound device.
+         * @param maxchannels The maximum number of channels to be used in FMOD. These are also called 'virtual channels', as you can play as many of these as you want, even if you only have a small number of real voices. 
+         * @param studioflags See FMOD_STUDIO_INITFLAGS. This can be a selection of flags bitwise OR'ed together to change the behaviour of the Studio System. 
+         * @param lowlevelflags See FMOD_INITFLAGS. This can be a selection of flags bitwise OR'ed together to change the behaviour of the Low Level System. 
+         * @param extradriverdata Driver specific data that can be passed to the output plugin. For example the filename for the wav writer plugin. See FMOD_OUTPUTTYPE for what each output mode might take here. Optional. Specify 0 or NULL to ignore. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         initialize(maxchannels: number, studioflags:STUDIO_INITFLAGS, 
-        lowlevelflags:INITFLAGS, extradriverdata): RESULT;
-
-        /** Loads a Studio event bank using custom read callbacks.
+        lowlevelflags:INITFLAGS, extradriverdata:any): RESULT;
+        /** 
+         * Loads a Studio event bank using custom read callbacks.
          * @param info Information for loading the bank
          * @param flags Flags to control bank loading
          * @param bankOut Address of a variable to receive the Bank object
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        loadBankCustom(info:STUDIO_BANK_INFO, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Outval<any>): RESULT;
-
-        /** Loads a Studio event bank from a file.
+        loadBankCustom(info:STUDIO_BANK_INFO, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Outval<Bank>): RESULT;
+        /** 
+         * Loads a Studio event bank from a file.
          * @param filename Name of the file on disk
          * @param flags Flags to control bank loading
          * @param bankOut Address of a variable to receive the Bank object
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        loadBankFile(filename:string, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Outval<any>): RESULT;
-
-        /** Loads a Studio event bank from memory.
+        loadBankFile(filename:string, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Outval<Bank>): RESULT;
+        /** 
+         * Loads a Studio event bank from memory.
          * @param buffer Memory buffer to load from. This should be 32-byte aligned 
          * if mode is FMOD_STUDIO_LOAD_MEMORY_POINT. 
          * @param length Length of the memory buffer. 
@@ -1634,27 +1637,27 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param bankOut Address of a variable to receive the Bank object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        loadBankMemory(buffer:number[], length:number, mode:STUDIO_LOAD_MEMORY_MODE, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Outval<any>): RESULT;
-
-        /** Playback Studio commands that have previously been recorded to file.
+        loadBankMemory(buffer:number[], length:number, mode:STUDIO_LOAD_MEMORY_MODE, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Outval<Bank>): RESULT;
+        /** 
+         * Playback Studio commands that have previously been recorded to file.
          * @param filename The filename to load the command replay file from. 
          * @param flags Flags that control the command replay. 
          * @param playback Address of a variable to receive the CommandReplay object
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        loadCommandReplay(filename:string, flags:STUDIO_COMMANDREPLAY_FLAGS, playback:Outval<any>): RESULT;
-
-        /** Retrieves the ID for a bank, event, snapshot, bus or VCA
+        loadCommandReplay(filename:string, flags:STUDIO_COMMANDREPLAY_FLAGS, playback:Outval<CommandReplay>): RESULT;
+        /** 
+         * Retrieves the ID for a bank, event, snapshot, bus or VCA
          * @param path The path to the object as shown in FMOD Studio.
          * @param id Address of a variable to receive the 128-bit GUID.
          * @returns an integer value defined in the FMOD_RESULT enumeration
-         * @remarks This function will return FMOD_ERR_EVENT_NOTFOUND unless string
+         * @description This function will return FMOD_ERR_EVENT_NOTFOUND unless string
          * data for the requested object is loaded (by loading the "Master Bank.strings.bank" file).
          * e.g. "event:/UI/Cancel", "snapshot:/IngamePause", "bus:/SFX/Ambience", "vca:/Mega Strip", "bank:/Vehicles" 
          */
         lookupID(path:string, id:Outval<GUID>): RESULT;
-
-        /** Retrieves the path for a bank, event, snapshot, bus or VCA.
+        /** 
+         * Retrieves the path for a bank, event, snapshot, bus or VCA.
          * @param id The 128-bit GUID which identifies the bank, event, snapshot, bus or VCA. 
          * @param path Address of a buffer to receive the path. Specify 0 or NULL to ignore.
          * @param size Size of the path buffer in bytes. Required if path parameter is not NULL.
@@ -1662,85 +1665,85 @@ Also defines the number of channels in the unit that a read callback will proces
          * including the terminating null character. Optional. Specify 0 or NULL to ignore.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        lookupPath(id, path:string, size:number, retrieved:Outval<any>): RESULT;
-
-        /** Registers a third party plugin DSP for use by events loaded by the Studio API.
+        lookupPath(id, path:string, size:number, retrieved:Outval<number>): RESULT;
+        /** 
+         * Registers a third party plugin DSP for use by events loaded by the Studio API.
          * @param description The description of the DSP. See FMOD_DSP_DESCRIPTION
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         registerPlugin(description:DSP_DESCRIPTION): RESULT;
-
-        /** Shuts down and frees the Studio System
+        /** 
+         * Shuts down and frees the Studio System
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         release(): RESULT;
-
-        /** Resets information about memory buffers used by FMOD Studio.
+        /** 
+         * Resets information about memory buffers used by FMOD Studio.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         resetBufferUsage(): RESULT;
-
-        /** Sets advanced features like configuring memory and cpu usage.
+        /** 
+         * Sets advanced features like configuring memory and cpu usage.
          * @param settings Pointer to FMOD_STUDIO_ADVANCEDSETTINGS structure. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         setAdvancedSettings(settings:ADVANCEDSETTINGS): RESULT;
-
-        /** Sets a callback to hook into various informational events.
+        /** 
+         * Sets a callback to hook into various informational events.
          * @param callback
          * @param callbackmask
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         setCallback(callback:STUDIO_SYSTEM_CALLBACK, callbackmask:STUDIO_SYSTEM_CALLBACK_TYPE): RESULT;
-
-        /** Sets the position, velocity and orientation of the 3D sound listener.
+        /** 
+         * Sets the position, velocity and orientation of the 3D sound listener.
          * @param listener index. Specify 0 if there is only 1 listener.
          * @param attributes The 3D attributes for the listener. See FMOD_3D_ATTRIBUTES. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         setListenerAttributes(listener:number, attributes:_3D_ATTRIBUTES): RESULT;
-
-        /** Sets the listener weighting, allowing listeners to fade in and out.
+        /** 
+         * Sets the listener weighting, allowing listeners to fade in and out.
          * @param listner Listener index. 
          * @param weight The weighting value from 0 to 1. 
          * @returns an integer value defined in the FMOD_RESULT enumeration */
         setListenerWeight(listener:number, weight:number): RESULT;
-
-        /** Sets the number of listeners in the 3D sound scene. 
+        /** 
+         * Sets the number of listeners in the 3D sound scene. 
          * This function is useful mainly for split-screen game purposes.
          * @param numlisteners Number of listeners in the scene. Valid values are from 1
          *  to FMOD_MAX_LISTENERS inclusive. Default = 1. 
          * @returns an integer value defined in the FMOD_RESULT enumeration */
         setNumListners(numlisteners:number): RESULT;
-
-        /** Sets arbitrary user data on the system
+        /** 
+         * Sets arbitrary user data on the system
          * @param userdata
          * @returns an integer value defined in the FMOD_RESULT enumeration */
         setUserData(userdata:any): RESULT;
-
-        /** Start recording all Studio commands to a file with the given path.
+        /** 
+         * Start recording all Studio commands to a file with the given path.
          * @param filename The filename where the write the command replay file.
          * @param flags Flags that control command capturing. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         startCommandCapture(filename:string, flags:STUDIO_COMMANDCAPTURE_FLAGS): RESULT;
-
-        /** Stop recording Studio commands.
+        /** 
+         * Stop recording Studio commands.
          * @returns an integer value defined in the FMOD_RESULT enumeration */
         stopCommandCapture(): RESULT;
-
-        /** Unloads all currently loaded banks.
+        /** 
+         * Unloads all currently loaded banks.
          * @returns an integer value defined in the FMOD_RESULT enumeration */
         unloadAll(): RESULT;
-
-        /** Unregisters a previously registered third party plugin DSP.
+        /** 
+         * Unregisters a previously registered third party plugin DSP.
          * @param name The name of the DSP. This should match the description passed 
          * to Studio::System::registerPlugin. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         unregisterPlugin(name:string): RESULT;
-
-        /** Updates the Studio System. This should be called once per 'game' tick, 
+        /** 
+         * Updates the Studio System. This should be called once per 'game' tick, 
          * or once per frame in your application.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
@@ -2148,100 +2151,103 @@ Also defines the number of channels in the unit that a read callback will proces
 
     export interface Bank {
         /**
-         * 
-         * @param count 
+         * Retrieves the number of buses in the bank.
+         * @param count Address of a variable to receive the number of buses.
          */
         getBusCount(count:Outval<number>): RESULT;
         /**
-         * 
-         * @param array 
-         * @param capacity 
-         * @param count 
+         * Retrieves the buses in the bank.
+         * @param array An array of memory allocated by the user. 
+         * @param capacity The capacity of the array passed in as the first parameter 
+         * @param count Address of a variable to receive the number of buses written to the array 
          */
         getBusList(array:Outval<Bus[]>, capacity:number, count:Outval<number>): RESULT;
         /**
-         * 
-         * @param count 
+         * Retrieves the number of EventDescriptions in the bank.
+         * @param count Address of a variable to receive the number of EventDescriptions. 
          */
         getEventCount(count:Outval<number>): RESULT;
         /**
-         * 
-         * @param array 
-         * @param capacity 
-         * @param count 
+         * Retrieves the EventDescriptions in the bank.
+         * @param array An array of memory allocated by the user. 
+         * @param capacity The capacity of the array passed in as the first parameter
+         * @param count Address of a variable to receive the number of Event Descriptions written to the array 
          */
         getEventList(array:Outval<EventDescription[]>, capacity:number, count:Outval<number>): RESULT;
         /**
-         * 
-         * @param id 
+         * Retrieves the ID of the bank.
+         * @param id Address of a variable to receive the ID. 
          */
         getID(id:Outval<GUID>): RESULT;
         /**
-         * 
-         * @param state 
+         * Retrieves the bank loading state.
+         * @param state Address of a variable to receive the loading state. 
          */
         getLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
         /**
-         * 
-         * @param path 
-         * @param size 
-         * @param retrieved 
+         * Retrieves the path of the bank.
+         * @param path Address of a buffer to receive the path. Specify 0 or NULL to ignore. 
+         * @param size Size of the path buffer in bytes. Required if path parameter is not NULL. 
+         * @param retrieved Address of a variable to receive the size of the retrieved path in bytes, including the terminating null character. Optional. Specify 0 or NULL to ignore. 
          */
         getPath(path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
         /**
-         * 
-         * @param state 
+         * Retrieves the sample data loading state of the bank.
+         * @param state Address of a variable to receive the loading state. 
          */
         getSampleLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
         /**
-         * 
-         * @param count 
+         * Retrieves the number of string table entries in the bank.
+         * @param count Address of a variable to receive the number of string table entries. 
          */
         getStringCount(count:Outval<number>): RESULT;
         /**
-         * 
-         * @param index 
-         * @param id 
-         * @param path 
-         * @param size 
-         * @param retrieved 
+         * Retrieves the string table entry for the given index.
+         * @param index Index of string table entry to retrieve. 
+         * @param id Address of a variable to receive the ID. Specify 0 or NULL to ignore.
+         * @param path Address of a buffer to receive the path. Specify 0 or NULL to ignore. 
+         * @param size Size of the path buffer in bytes. Required if path parameter is not NULL. 
+         * @param retrieved Address of a variable to receive the size of the retrieved path in bytes, including the terminating null character. Optional. Specify 0 or NULL to ignore. 
          */
         getStringInfo(index:number, id:Outval<GUID>, path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
         /**
-         * 
-         * @param userdata 
+         * Retrieves the user data that is set on the bank.
+         * @param userdata Address of a variable to receive the user data. 
          */
         getUserData(userdata:Outval<any>): RESULT;
         /**
-         * 
-         * @param count 
+         * Retrieves the number of VCAs in the bank.
+         * @param count Address of a variable to receive the number of VCAs. 
          */
         getVCACount(count:Outval<number>): RESULT;
         /**
-         * 
-         * @param array 
-         * @param capacity 
-         * @param count 
+         * Retrieves the VCAs in the bank.
+         * @param array An array of memory allocated by the user.
+         * @param capacity The capacity of the array passed in as the first parameter 
+         * @param count Address of a variable to receive the number of VCAs written to the array 
          */
         getVCAList(array:Outval<VCA[]>, capacity:number, count:Outval<number>): RESULT;
         /**
-         * 
+         * Loads all non-streaming sample data used by events in the bank.
+         * @description You can use this function to preload sample data ahead of time so that events can be played immediately when required. Each time this function is called, it will increment the reference count, so the sample data will not be unloaded until Studio::Bank::unloadSampleData is called the same number of times. It is valid to mix calls to Studio::Bank::loadSampleData with calls to Studio::EventDescription::loadSampleData. If you do this, the sample data will be loaded when either reference count is non-zero, and will be unloaded when both reference counts go to zero.
          */
         loadSampleData(): RESULT;
         /**
-         * 
-         * @param userdata 
+         * Sets arbitrary user data on the bank.
+         * @param userdata Address of user data to store within the event description object.
          */
         setUserData(userdata:any): RESULT;
         /**
-         * 
+         * Unloads the bank and all of its data.
          */
         unload(): RESULT;
         /**
-         * 
+         * Unloads all non-streaming sample data used by events in the bank.
+         * @description Each time this function is called, it will decrement the reference count. If the reference count goes to zero, the sample data will be unloaded. Any sample data that is being used by event instances will not be unloaded until the event instances are released.
          */
         unloadSampleData(): RESULT;
     }
+
 
     export interface CommandReplay {
         getCommandAtTime(): RESULT;
@@ -3106,42 +3112,74 @@ Also defines the number of channels in the unit that a read callback will proces
     /** Settings for advanced features like configuring memory and cpu usage for the 
      * FMOD_CREATECOMPRESSEDSAMPLE feature. */
     export interface ADVANCEDSETTINGS {
+        /** [r/w] Optional. Specify 0 to ignore. For use with FMOD_CREATECOMPRESSEDSAMPLE only. MPEG codecs consume 22,216 bytes per instance and this number will determine how many MPEG channels can be played simultaneously. Default = 32.  */
         maxMPEGCodecs:number,
+        /** [r/w] Optional. Specify 0 to ignore. For use with FMOD_CREATECOMPRESSEDSAMPLE only. ADPCM codecs consume 2,480 bytes per instance and this number will determine how many ADPCM channels can be played simultaneously. Default = 32.  */
         maxADPCMCodecs:number,
+        /** [r/w] Optional. Specify 0 to ignore. For use with FMOD_CREATECOMPRESSEDSAMPLE only. XMA codecs consume 6,263 bytes per instance and this number will determine how many XMA channels can be played simultaneously. Default = 32.  */
         maxXMACodecs:number,
+        /** [r/w] Optional. Specify 0 to ignore. For use with FMOD_CREATECOMPRESSEDSAMPLE only. Vorbis codecs consume 16,512 bytes per instance and this number will determine how many Vorbis channels can be played simultaneously. Default = 32.  */
         maxVorbisCodecs:number,
+        /** [r/w] Optional. Specify 0 to ignore. For use with FMOD_CREATECOMPRESSEDSAMPLE only. AT9 codecs consume 20,664 bytes per instance and this number will determine how many AT9 channels can be played simultaneously. Default = 32.  */
         maxAT9Codecs:number,
+        /** [r/w] Optional. Specify 0 to ignore. For use with FMOD_CREATECOMPRESSEDSAMPLE only. FADPCM codecs consume 2,232 bytes per instance and this number will determine how many FADPCM channels can be played simultaneously. Default = 32.  */
         maxFADPCMCodecs:number,
+        /** [r/w] Optional. Specify 0 to ignore. For use with PS3 only. PCM codecs consume 2,536 bytes per instance and this number will determine how many streams and PCM voices can be played simultaneously. Default = 32.  */
         maxPCMCodecs:number,
+        /** [r/w] Optional. Specify 0 to ignore. Number of channels available on the ASIO device.  */
         ASIONumChannels:number,
+        /** [r/w] Unsupported. Deprecated API feature. */
         HRTFMinAngle:number,
+        /** [r/w] Unsupported. Deprecated API feature. */
         HRTFMaxAngle:number,
+        /** [r/w] Unsupported. Deprecated API feature. */
         HRTFFreq:number,
+        /** [r/w] Optional. Specify 0 to ignore. For use with FMOD_INIT_VOL0_BECOMES_VIRTUAL. If this flag is used, and the volume is below this, then the sound will become virtual. Use this value to raise the threshold to a different point where a sound goes virtual.  */
         vol0virtualvol:number,
+        /** [r/w] Optional. Specify 0 to ignore. For streams. This determines the default size of the double buffer (in milliseconds) that a stream uses. Default = 400ms  */
         defaultDecodeBufferSize:number,
+        /** [r/w] Optional. Specify 0 to ignore. For use with FMOD_INIT_PROFILE_ENABLE. Specify the port to listen on for connections by the profiler application.  */
         profilePort:number,
+        /** [r/w] Optional. Specify 0 to ignore. The maximum time in miliseconds it takes for a channel to fade to the new level when its occlusion changes.  */
         geometryMaxFadeTime:number,
+        /** [r/w] Optional. Specify 0 to ignore. For use with FMOD_INIT_CHANNEL_DISTANCEFILTER. The default center frequency in Hz for the distance filtering effect. Default = 1500.0.  */
         distanceFilterCenterFreq:number,
+        /** [r/w] Optional. Specify 0 to ignore. Out of 0 to 3, 3d reverb spheres will create a phyical reverb unit on this instance slot. See FMOD_REVERB_PROPERTIES.  */
         reverb3Dinstance:number,
+        /** [r/w] Optional. Specify 0 to ignore. Number of buffers in DSP buffer pool. Each buffer will be DSPBlockSize * sizeof(float) * SpeakerModeChannelCount. ie 7.1 @ 1024 DSP block size = 8 * 1024 * 4 = 32kb. Default = 8.  */
         DSPBufferPoolSize:number,
+        /** [r/w] Optional. Specify 0 to ignore. Specify the stack size for the FMOD Stream thread in bytes. Useful for custom codecs that use excess stack. Default 49,152 (48kb)  */
         stackSizeStream:number,
+        /** [r/w] Optional. Specify 0 to ignore. Specify the stack size for the FMOD_NONBLOCKING loading thread. Useful for custom codecs that use excess stack. Default 65,536 (64kb)  */
         stackSizeNonBlocking:number,
+        /** [r/w] Optional. Specify 0 to ignore. Specify the stack size for the FMOD mixer thread. Useful for custom dsps that use excess stack. Default 49,152 (48kb)  */
         stackSizeMixer:number,
-        resamplerMethod,
+        /** [r/w] Optional. Specify 0 to ignore. Resampling method used with fmod's software mixer. See FMOD_DSP_RESAMPLER for details on methods.  */
+        resamplerMethod:DSP_RESAMPLER,
+        /** [r/w] Optional. Specify 0 to ignore. Specify the command queue size for thread safe processing. Default 2048 (2kb) */
         commandQueueSize:number,
+        /** [r/w] Optional. Specify 0 to ignore. Seed value that FMOD will use to initialize its internal random number generators.  */
         randomSeed:number
     }
 
     /** NOT COMPATIBLE WITH HTML5 */
     export interface ASYNCREADINFO {
-        handle,
-        offset,
-        sizebytes,
-        priority,
-        userdata,
-        buffer,
-        bytesread,
-        done,      
+        /** [r] The file handle that was filled out in the open callback.  */
+        handle:any,
+        /** [r] Seek position, make sure you read from this file offset. */
+        offset:number,
+        /** [r] how many bytes requested for read.  */
+        sizebytes:number,
+        /** [r] 0 = low importance. 100 = extremely important (ie 'must read now or stuttering may occur')  */
+        priority:number,
+        /** [r/w] User data pointer specific to this request. Initially 0, can be ignored or set by the user. Not related to the file's main userdata member.  */
+        userdata:any,
+        /** [w] Buffer to read file data into.  */
+        buffer:any,
+        /**[w] Fill this in before setting result code to tell FMOD how many bytes were read.   */
+        bytesread:number,
+        /** [r] FMOD file system wake up function. Call this when user file read is finished. Pass result of file read as a parameter.  */
+        done:FILE_ASYNCDONE_FUNC,      
     }
 
     /** When creating a codec, declare one of these and provide the relevant callbacks 
@@ -3182,18 +3220,31 @@ Also defines the number of channels in the unit that a read callback will proces
      * 44khz sound, you would specify FMOD_SOUND_FORMAT_PCM16, and channels would be equal to 2, and frequency 
      * would be 44100. */
     export interface CODEC_WAVEFORAT {
+        /** [w] Name of sound. Optional. If used, the codec must own the lifetime of the string memory until the codec is destroyed.  */
         name:string,
-        format,
+        /** [w] Format for (decompressed) codec output, ie FMOD_SOUND_FORMAT_PCM8, FMOD_SOUND_FORMAT_PCM16. Mandantory - Must be supplied.  */
+        format:SOUND_FORMAT,
+        /** [w] Number of channels used by codec, ie mono = 1, stereo = 2. Mandantory - Must be supplied.  */
         channels:number,
+        /** [w] Default frequency in hz of the codec, ie 44100. Mandantory - Must be supplied.  */
         frequency:number,
+        /** [w] Length in bytes of the source data. Used for FMOD_TIMEUNIT_RAWBYTES. Optional. Default = 0.  */
         lengthbytes:number,
+        /** [w] Length in decompressed, PCM samples of the file, ie length in seconds * frequency. Used for Sound::getLength and for memory allocation of static decompressed sample data. Mandantory - Must be supplied.  */
         lengthpcm:number,
+        /** [w] Minimum, optimal number of decompressed PCM samples codec can handle. 0 or 1 = no buffering. Anything higher means FMOD will allocate a PCM buffer of this size to read in chunks. The codec read callback will be called in multiples of this value. Optional. */
         pcmblocksize:number,
+        /** [w] Loopstart in decompressed, PCM samples of file. Optional. Default = 0. */
         loopstart:number,
+        /** [w] Loopend in decompressed, PCM samples of file. Optional. Default = 0. */
         loopend:number,
+        /** [w] Mode to determine whether the sound should by default load as looping, non looping, 2d or 3d. Optional. Default = FMOD_DEFAULT.  */
         mode:MODE,
+        /** [w] Defined channel order type, to describe where each sound channel should pan for the number of channels specified. See fmod_common.h. Optional. Leave at 0 to play in default speaker order.  */
         channelmask:CHANNELMASK,
-        channelorder,
+        /** [w] Defined channel order type, to describe where each sound channel should pan for the number of channels specified. See fmod_common.h. Optional. Leave at 0 to play in default speaker order.  */
+        channelorder:CHANNELORDER,
+        /** [w] Peak volume of sound. Optional. Default = 0 if not used.  */
         peakvolume:number,
     }
 
@@ -3385,11 +3436,11 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     export interface ERRORCALLBACK_INFO {
-        result;
-        instancetype;
-        instance;
-        functionname;
-        functionparams;
+        result:RESULT;
+        instancetype:ERRORCALLBACK_INSTANCETYPE;
+        instance:any;
+        functionname:string;
+        functionparams:string;
     }
 
     export interface GUID {
@@ -4083,7 +4134,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
     
     /** Used to distinguish the instance type passed into FMOD_ERROR_CALLBACK */
-    export enum ERRORCALLBACK_INSTACETYPE {
+    export enum ERRORCALLBACK_INSTANCETYPE {
         NONE,
         SYSTEM,
         CHANNEL,
@@ -4405,7 +4456,7 @@ Also defines the number of channels in the unit that a read callback will proces
      * @param parameters The callback parameters. The data passed varies based 
      * on the callback type.
      * @returns an integer value defined in the FMOD_RESULT enumeration
-     * @remarks This callback is used for tracking replay state and providing 
+     * @description This callback is used for tracking replay state and providing 
      * programmer sounds. The data passed to the callback function in the parameters 
      * argument varies based on the callback type. See FMOD_STUDIO_EVENT_CALLBACK_TYPE 
      * for more information. */
@@ -4722,7 +4773,7 @@ Also defines the number of channels in the unit that a read callback will proces
         UNLOADED,
         /** Loading in progress */
         LOADING,
-        /** Loaed and ready to play */
+        /** Loaded and ready to play */
         LOADED,
         /** Failed to load and is now in error state */
         ERROR     
