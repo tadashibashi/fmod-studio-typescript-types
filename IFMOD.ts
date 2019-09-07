@@ -40,24 +40,24 @@ export namespace IFMOD {
         return result;
     }
     /**
-     * 
-     * @param system 
-     * @param filename 
-     * @param filesize_out 
-     * @param handle_out 
+     * Helper function to open a file manually, that is preloaded with FMOD.FS_createPreloadedFile 
+     * @param system FMOD::System object handle
+     * @param filename path and filename which matches the path/filename set up in FMOD.FS_createPreloadedFile if this is the system being used (ie not file callbacks)
+     * @param filesize_out an integer with the size of the file is put in filesize_out.val
+     * @param handle_out an object with the file handle is put in handle_out.val
      */
-    export function file_open(system:System, filename:string, filesize_out:number, handle_out:object) {
+    export function file_open(system:System, filename:string, filesize_out: Outval<number>, handle_out: Outval<object>) {
         let result: RESULT = FMOD.file_open(system, filename, filesize_out, handle_out);
         return result;
     }
     /**
-     * 
-     * @param handle 
-     * @param buffer 
-     * @param sizebytes 
-     * @param bytesread_out 
+     * Helper function to read a file manually, that is preloaded with FMOD.FS_createPreloadedFile 
+     * @param handle Handle returned by the FMOD.file_open function
+     * @param buffer memory address that would come from an internal FMOD memory address, not an array or string type object declared in the JS scope.  See Remarks
+     * @param sizebytes Integer value with the number of bytes requested to be read from the file handle.
+     * @param bytesread_out An integer with the number of bytes actually read is put in bytesread_out.val
      */
-    export function file_read(handle:object, buffer:number, sizebytes:number, bytesread_out:number) {
+    export function file_read(handle:object, buffer:number, sizebytes:number, bytesread_out: Outval<number>) {
         let result: RESULT = FMOD.file_read(handle, buffer, sizebytes, bytesread_out);
         return result;
     }
@@ -71,13 +71,17 @@ export namespace IFMOD {
         return result;
     }
     /**
-     * 
-     * @param result 
+     * Returns a more verbose string version of the error code returned by any FMOD function. 
+     * @param result error code
      */
     export function ErrorString(result: RESULT) {
         FMOD.ErrorString(result);
     }
 
+    /**
+     * Information function to retreive the state of fmod's disk access.
+     * @param busy Address of an integer to receive the busy state of the disk at the current time.
+     */
     export function File_GetDiskBusy(busy:Outval<number>) {
         let result: RESULT = FMOD.File_GetDiskBusy(busy);
         return result;
@@ -92,44 +96,98 @@ export namespace IFMOD {
         return result;
     }
 
+    /**
+     * Returns information on the memory usage of FMOD. This information is byte accurate and counts all allocs and frees internally.
+     * @param currentalloced Address of a variable that receives the currently allocated memory at time of call. Optional. Specify 0 or NULL to ignore.
+     * @param maxalloced Address of a variable that receives the maximum allocated memory since System::init or Memory_Initialize. Optional. Specify 0 or NULL to ignore.
+     * @param blocking Boolean indicating whether to favour speed or accuracy. Specifying true for this parameter will flush the DSP network to make sure all queued allocations happen immediately, which can be costly.
+     */
     export function Memory_GetStats(currentalloced:Outval<number>, maxalloced:Outval<number>, blocking:boolean) {
         let result: RESULT = FMOD.Memory_GetStats(currentalloced, maxalloced, blocking);
         return result;
     }
+
+    /**
+     * Specifies a method for FMOD to allocate memory, either through callbacks or its own internal memory management. 
+     * @description You can also supply a pool of memory for FMOD to work with and it will do so with no extra calls to malloc or free.
+     * @param poolmem If you want a fixed block of memory for FMOD to use, pass it in here. Specify the length in poollen. Specifying NULL doesn't use internal management and it relies on callbacks.
+     * @param poollen Length in bytes of the pool of memory for FMOD to use specified in poolmem. Specifying 0 turns off internal memory management and relies purely on callbacks. Length must be a multiple of 512.
+     * @param userrealalloc Only supported if pool is NULL. Otherwise it overrides the FMOD internal calls to alloc. Compatible with ansi malloc().
+     * @param userfree Only supported if pool is NULL. Otherwise it overrides the FMOD internal calls to free. Compatible with ansi free().
+     */
     export function Memory_Initialize(poolmem, poollen:number, useralloc:MEMORY_ALLOC_CALLBACK, userrealloc:MEMORY_REALLOC_CALLBACK, userfree: MEMORY_FREE_CALLBACK, memtypeflags: MEMORY_TYPE) {
         let result: RESULT = FMOD.Memory_Initialize(poolmem, poollen, useralloc, userrealloc, userfree, memtypeflags);
         return result;
     }
+
+    /**
+     * FMOD System creation function. This must be called to create an FMOD System object before you can do anything else. Use this function to create 1, or multiple instances of FMOD System objects.
+     * @param system Address of a pointer that receives the new FMOD System object. HTML5 Note - the object is written to system.val
+     */
     export function System_Create(system:Outval<System>) {
         let result: RESULT = FMOD.System_Create(system);
         return result;
     }
 
     /**
-     * 
-     * @param foldername 
-     * @param filename 
-     * @param url 
-     * @param canread 
-     * @param canwrite 
+     * Mounts a local file so that FMOD can recognize it when calling a function that uses a filename (ie loadBank/createSound)
+See https://kripken.github.io/emscripten-site/docs/api_reference/Filesystem-API.html#FS.createPreloadedFile for docs on FS_createPreloadedFile 
+     * @param foldername Parent folder, ie '/'
+     * @param filename Filename to preload.
+     * @param url Path inside parent folder. ie the subdirectory.
+     * @param canread Whether the file should have read permissions set from the program’s point of view
+     * @param canwrite Whether the file should have write permissions set from the program’s point of view. 
      */
     export function FS_createPreloadedFile(foldername:string, filename:string, url:string, canread:boolean,canwrite:boolean) {
         let result: RESULT = FMOD.FS_createPreloadedFile(foldername, filename, url, canread, canwrite);
         return result;
     }    
 
+    /**
+     * 
+     * @param dsp_state FMOD_DSP_STATE handle passed into the DSP callback
+     * @param blocksize offset in bytes to seek into the file, relatve to the start
+     */
     export function getblocksize(dsp_state:DSP_STATE, blocksize:number) {
         let result: RESULT = FMOD.getblocksize(dsp_state, blocksize);
         return result;
     }
+    /**
+     * 
+     * @param dsp_state FMOD_DSP_STATE handle passed into the DSP callback
+     * @param samplerate FMOD_DSP_STATE handle passed into the DSP callback
+     */
     export function getsamplerate(dsp_state:DSP_STATE, samplerate:number) {
         let result: RESULT = FMOD.getsamplerate(dsp_state, samplerate);
         return result;
     }
+
+    /**
+     * 
+     * @param dsp_state FMOD_DSP_STATE handle passed into the DSP callback
+     * @param clock this DSP's current clock value in PCM samples.
+     * @param offset this DSP's current mix offset value in PCM samples.  This may be a DSP that is only writing to part of the buffer.  Typically 0.  See length.
+     * @param length this DSP's current mix length value in PCM samples.  This may be a DSP that is only writing to part of the buffer.  Typically the length of the DSP buffer.  See offset
+
+     */
     export function getspeakermode(dsp_state:DSP_STATE, clock:number, offset:number, length:number) {
         let result: RESULT = FMOD.getspeakermode(dsp_state, clock, offset, length);
         return result;
     }
+
+    /**
+     * Returns a value memory managed by FMOD. This sort of value is typically sound data that is passed to the user as an 'address' which is internal to FMOD. This avoids duplication of large buffers which waste memory, because everything is passed by reference in JS. 
+     * @param address 
+     * @param value 
+     * @param format 
+     * @description See https://kripken.github.io/emscripten-site/docs/api_reference/preamble.js.html#accessing-memory for docs on getValue.
+     * 'address' is a memory address, and only FMOD functions will return a memory address. Examples of this would be 
+    1. buffer parameter of FMOD_FILE_READ_CALLBACK
+    2. data parameter of FMOD_CREATESOUNDEXINFO::pcmreadcallback, 
+    3. buffer parameter of FMOD_STUDIO_BANK_INFO::readcallback
+    4. inbuffer parameter of FMOD_DSP::readcallback.
+    'format' can be values like 'i8', 'i16', 'i32', 'i64', 'float', 'double' typically.
+     */
     export function getValue(address, value:number, format:string) {
         let result: RESULT = FMOD.getValue(address, value, format);
         return result;
@@ -152,11 +210,20 @@ export namespace IFMOD {
         let result: RESULT = FMOD.ReadFile(system, filename, output);
         return result;
     }
+    /**
+     * Writes a value to memory managed by FMOD. This sort of value is typically sound data that is passed to the user as an 'address' which is internal to FMOD. This avoids duplication of large buffers which waste memory, because everything is passed by reference in JS. 
+     * @param address Memory address returned by an FMOD function.  See remarks.
+     * @param value A value which can be an integer or a real/floating point number.
+     * @param format A format 'string' which identifies which type of value it is.  See Remarks
+     */
     export function setValue(address, value:number, format:string) {
         let result: RESULT = FMOD.setValue(address, value, format);
         return result;
     }
-
+    /**
+     * Creates a Studio System object. This must be called before you do anything else. Special JS version of Studio::System::create.
+     * @param studioSystem Address of a variable to receive the new Studio System object. 
+     */
     export function Studio_System_Create(studioSystem: Outval<StudioSystem>) {
         let result: RESULT = FMOD.Studio_System_Create(studioSystem);
         return result;
@@ -212,29 +279,33 @@ export namespace IFMOD {
 
         getChannel(channelid:number, channel:Outval<Channel>): RESULT;
 
-        getChannelsPlaying(): RESULT;
+        getChannelsPlaying(channels: Outval<number>, realchannels: Outval<number>): RESULT;
 
-        getDSPBufferSize(): RESULT;
+        getDSPBufferSize(bufferlength: Outval<number>, numbuffers: Outval<number>): RESULT;
+        /**
+         * Retrieve the description structure for a pre-existing DSP plugin.
+         * @param handle Handle to a pre-existing DSP plugin, loaded by System::loadPlugin. 
+         * @param description Address of a variable to receive the description structure for the DSP. 
+         */
+        getDSPInfoByPlugin(handle: number, description: Outval<DSP_DESCRIPTION>): RESULT;
 
-        getDSPInfoByPlugin(): RESULT;
-
-        getDefaultMixMatrix(): RESULT;
+        getDefaultMixMatrix(sourcespeakermode: SPEAKERMODE, targetspeakermode: SPEAKERMODE, matrix: Outval<number[]>, matrixhop: number): RESULT;
         /** Returns the currently selected driver number.  */
         getDriver(driver:Outval<number>): RESULT;
 
         getDriverInfo(id:number, name:Outval<string>, guid:Outval<GUID>, systemrate:Outval<number>, speakermode:Outval<SPEAKERMODE>, speakermodechannels:Outval<number>): RESULT;
 
-        getFileUsage(): RESULT;
+        getFileUsage(sampleBytesRead: Outval<number>, streamBytesRead: Outval<number>, otherBytesRead: Outval<number>): RESULT;
 
-        getGeometryOcclusion(): RESULT;
+        getGeometryOcclusion(listener: VECTOR, source: VECTOR, direct: Outval<number>, reverb: Outval<number>): RESULT;
 
-        getGeometrySettings(): RESULT;
+        getGeometrySettings(maxworldsize: Outval<number>): RESULT;
 
-        getMasterChannelGroup(): RESULT;
+        getMasterChannelGroup(channelgroup: Outval<ChannelGroup>): RESULT;
 
-        getMasterSoundGroup(): RESULT;
+        getMasterSoundGroup(soundgroup: Outval<SoundGroup>): RESULT;
 
-        getNestedPlugin(): RESULT;
+        getNestedPlugin(handle: number, index: number, nestedhandle: Outval<number>): RESULT;
 
         getNetworkProxy(): RESULT;
 
@@ -266,26 +337,39 @@ export namespace IFMOD {
 
         getSoftwareChannels(): RESULT;
 
-        getSoftwareFormat(): RESULT;
+        getSoftwareFormat(samplerate: Outval<number>, speakermode: Outval<SPEAKERMODE>, numrawspeakers: Outval<number>): RESULT;
 
-        getSoundRAM(): RESULT;
+        getSoundRAM(currentalloced: Outval<number>, maxalloced: Outval<number>, total: Outval<number>): RESULT;
 
-        getSpeakerModeChannels(): RESULT;
+        getSpeakerModeChannels(mode: SPEAKERMODE, channels: Outval<number>): RESULT;
 
-        getSpeakerPosition(): RESULT;
+        getSpeakerPosition(speaker: SPEAKER, x: Outval<number>, y: Outval<number>, active: Outval<boolean>): RESULT;
 
-        getStreamBufferSize(): RESULT;
+        getStreamBufferSize(filebuffersize: Outval<number>, filebuffersizetype: Outval<TIMEUNIT>): RESULT;
 
-        getUserData(): RESULT;
+        getUserData(userdata: Outval<any>): RESULT;
 
-        getVersion(): RESULT;
+        getVersion(version: Outval<number>): RESULT;
 
         /** Initializes the system object, and the sound device. This has to be called at the start of the user's program. 
-         * You must create a system object with FMOD::System_create. */
+         * You must create a system object with FMOD::System_create. 
+         * @param maxchannels
+         * @param flags 
+         * @param extradriverdata 
+         */
         init(maxchannels:number, flags:INITFLAGS, extradriverdata): RESULT;
-
+        /**
+         * 
+         * @param id 
+         * @param recording 
+         */
         isRecording(id:number, recording:Outval<boolean>): RESULT;
-
+        /**
+         * 
+         * @param data 
+         * @param datasize 
+         * @param geometry 
+         */
         loadGeometry(data, datasize:number, geometry:Outval<Geometry>): RESULT;
         /**
          * Currently not supported in JavaScript
@@ -310,37 +394,37 @@ export namespace IFMOD {
 
         registerDSP(description:DSP_DESCRIPTION, handle:Outval<number>): RESULT;
 
-        registerOutput(): RESULT;
+        registerOutput(description: OUTPUT_DESCRIPTION, handle: Outval<number>): RESULT;
         /** Closes and frees a system object and its resources. */
         release(): RESULT;
 
-        set3DListenerAttributes(): RESULT;
+        set3DListenerAttributes(listener: number, pos: VECTOR, vel: VECTOR, forward: VECTOR, up: VECTOR): RESULT;
 
-        set3DNumListeners(): RESULT;
+        set3DNumListeners(numlisteners: number): RESULT;
 
-        set3DRolloffCallback(): RESULT;
+        set3DRolloffCallback(callback: _3D_ROLLOFF_CALLBACK): RESULT;
 
-        set3DSettings(): RESULT;
+        set3DSettings(dopplerscale: number, distancefactor: number, rolloffscale: number): RESULT;
 
-        setAdvancedSetting(): RESULT;
+        setAdvancedSetting(settings: ADVANCEDSETTINGS): RESULT;
 
-        setCallback(callback, callbackmask:SYSTEM_CALLBACK_TYPE): RESULT;
+        setCallback(callback: SYSTEM_CALLBACK, callbackmask:SYSTEM_CALLBACK_TYPE): RESULT;
 
-        setDSPBufferSize(): RESULT;
+        setDSPBufferSize(bufferlength: number, numbuffers: number): RESULT;
 
         setDriver(driver:number): RESULT;
 
-        setFileSystem(): RESULT;
+        setFileSystem(useropen: FILE_OPEN_CALLBACK, userclose: FILE_CLOSE_CALLBACK, userread: FILE_READ_CALLBACK, userseek: FILE_SEEK_CALLBACK, userasyncread: FILE_ASYNCREAD_CALLBACK, userasynccancel: FILE_ASYNCCANCEL_CALLBACK, blockalign: number): RESULT;
 
-        setGeometrySettings(): RESULT;
+        setGeometrySettings(maxworldsize: number): RESULT;
 
-        setNetworkProxy(): RESULT;
+        setNetworkProxy(proxy: string): RESULT;
 
-        setNetworkTimeout(): RESULT;
+        setNetworkTimeout(timeout: number): RESULT;
 
-        setOutput(): RESULT;
+        setOutput(output: OUTPUTTYPE): RESULT;
 
-        setOutputByPlugin(): RESULT;
+        setOutputByPlugin(handle: number): RESULT;
         /**
          * Specify a base search path for plugins so they can be placed somewhere else than the directory of the main executable.
          * @param path A character string containing a correctly formatted path to load plugins from encoded in a UTF-8 string. 
