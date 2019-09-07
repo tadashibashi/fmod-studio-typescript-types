@@ -3,9 +3,6 @@ IFMOD
 
 IFMOD is a TypeScript interface and partial wrapper for the fmodstudio.js library version 1.12 to bring type-safety features and some covenient documentation when using the FMOD Studio / Low Level APIs.
 
-Quick-start:
-If you haven't already set up FMOD in HTML5, I highly recommend reading the FMOD Studio 'HTML5 Specific Starter Guide', which can be found in the 'Introduction' section of the official FMOD Studio API Documentation.
-
 IFMOD contains its own blank FMOD object which should be used to initialize FMOD using the boilerplate code found in the *HTML5 Specific Starter Guide* of the official FMOD Studio API Documentation. Once you initialize this object by passing it into fmodstudio.js's global FMODModule constructor function This will allow namespace-level functions in IFMOD to work (e.g. this is just a wrapper around FMOD's namespace-level functions which look like *IFMOD.Studio_System_Create*)
 
   import { FMOD } from 'path/to/IFMOD.ts';
