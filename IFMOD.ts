@@ -120,6 +120,7 @@ export namespace IFMOD {
         return result;
     }
 
+
     /**
      * FMOD System creation function. This must be called to create an FMOD System object before you can do anything else. Use this function to create 1, or multiple instances of FMOD System objects.
      * @param system Address of a pointer that receives the new FMOD System object. HTML5 Note - the object is written to system.val
