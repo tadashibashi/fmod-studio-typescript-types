@@ -5,6 +5,35 @@ export class Outval<T> {
 	constructor() {}
 }
 
+/**
+ * A helper function that parses an IFMOD.GUID from a hexadecimal string. 
+ * It can include or omit the '{', '}', '-' characters as formatted 
+ * in the GUIDs.txt file exported by FMOD Studio (File -> Export GUIDs...)
+ * It must contain 32 total hex digits, or it will return a zero-value GUID.
+ */
+ export function parseGUID(guid: string): IFMOD.GUID {
+ 	guid = guid
+ 		.trim()
+ 		.replace(/[^a-fA-F0-9 ]/g, ''); // Removes all chars besides a-f, A-F, 0-9
+
+ 	let returnguid: IFMOD.GUID = { // Init zero-value GUID
+ 		Data1: 0, Data2: 0, Data3: 0,
+ 		Data4: [0, 0, 0, 0, 0, 0, 0, 0]
+ 	};
+
+ 	if (guid.length === 32) {
+ 		returnguid.Data1 = parseInt(guid.substring(0, 8), 16);
+ 		returnguid.Data2 = parseInt(guid.substring(8, 12), 16);
+ 		returnguid.Data3 = parseInt(guid.substring(12, 16), 16);
+ 		for (let i = 0; i < 8; i++) {
+ 			returnguid.Data4[i] = parseInt(guid.substring(16 + i*2, 18 + i*2), 16);
+ 		}
+ 	} else {
+ 		alert('Warning! Invalid GUID stringToFMODGUID. Returning a zero-value GUID');
+ 	}
+ 	return returnguid;		
+ }
+
 /** Check the FMOD.RESULT to see if there are any errors
 * @function CHECK_RESULT
 * @param result The error code
@@ -131,16 +160,19 @@ export namespace IFMOD {
     }
 
     /**
-     * Mounts a local file so that FMOD can recognize it when calling a function that uses a filename (ie loadBank/createSound)
-See https://kripken.github.io/emscripten-site/docs/api_reference/Filesystem-API.html#FS.createPreloadedFile for docs on FS_createPreloadedFile 
-     * @param foldername Parent folder, ie '/'
+     * Mounts a local file so that FMOD can recognize it when calling a function that uses a filename (ie while using loadBank/createSound)
+		 * See https://kripken.github.io/emscripten-site/docs/api_reference/Filesystem-API.html#FS.createPreloadedFile for docs on FS_createPreloadedFile 
+		 * ```typescript
+		 * 
+		 * ```
+     * @param virtualfoldername Parent folder, ie '/'
      * @param filename Filename to preload.
-     * @param url Path inside parent folder. ie the subdirectory.
+     * @param fullurl Path inside parent folder. ie the subdirectory.
      * @param canread Whether the file should have read permissions set from the program’s point of view
      * @param canwrite Whether the file should have write permissions set from the program’s point of view. 
      */
-    export function FS_createPreloadedFile(foldername:string, filename:string, url:string, canread:boolean,canwrite:boolean) {
-        let result: RESULT = FMOD.FS_createPreloadedFile(foldername, filename, url, canread, canwrite);
+    export function FS_createPreloadedFile(virtualfoldername:string, filename:string, fullurl:string, canread:boolean,canwrite:boolean) {
+        let result: RESULT = FMOD.FS_createPreloadedFile(virtualfoldername, filename, fullurl, canread, canwrite);
         return result;
     }    
 
@@ -1628,7 +1660,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param eventOut Address of a variable to receive the EventDescription object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getEventByID(id:number, event:Outval<EventDescription>): RESULT;
+        getEventByID(id:GUID, event:Outval<EventDescription>): RESULT;
         /** 
          * Retrieves the position, velocity and orientation of the 3D sound listener.
          * @param listener Listener index. Specify 0 if there is only 1 listener. 
@@ -1649,7 +1681,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param systemOut Address of a variable to pass the low level System to
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getLowLevelSystem(systemOut:Outval<System>): RESULT;
+        getCoreSystem(systemOut:Outval<System>): RESULT;
         /** 
          * Gets the number of listeners that have been set into in the 3D sound scene.
          * @param numlistenersOut Number of listeners that have been set. 
@@ -1750,7 +1782,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * including the terminating null character. Optional. Specify 0 or NULL to ignore.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        lookupPath(id, path:string, size:number, retrieved:Outval<number>): RESULT;
+        lookupPath(id:GUID, path:string, size:number, retrieved:Outval<number>): RESULT;
         /** 
          * Registers a third party plugin DSP for use by events loaded by the Studio API.
          * @param description The description of the DSP. See FMOD_DSP_DESCRIPTION
