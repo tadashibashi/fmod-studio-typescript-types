@@ -1,52 +1,16 @@
-export var FMOD:any = {};
-
-export class Outval<T> {
-	val: T;
-	constructor() {}
+interface Out<T> {
+	val?: T;
 }
+
+export declare function FMODModule (fmodObject: FMOD): void;
 
 /**
- * A helper function that parses an IFMOD.GUID from a hexadecimal string. 
- * It can include or omit the '{', '}', '-' characters as formatted 
- * in the GUIDs.txt file exported by FMOD Studio (File -> Export GUIDs...)
- * It must contain 32 total hex digits, or it will return a zero-value GUID.
+ * FMOD Object Interface. Make sure to only call functions at and after onRuntimeInitialized.
  */
- export function parseGUID(guid: string): IFMOD.GUID {
- 	guid = guid
- 		.trim()
- 		.replace(/[^a-fA-F0-9 ]/g, ''); // Removes all chars besides a-f, A-F, 0-9
-
- 	let returnguid: IFMOD.GUID = { // Init zero-value GUID
- 		Data1: 0, Data2: 0, Data3: 0,
- 		Data4: [0, 0, 0, 0, 0, 0, 0, 0]
- 	};
-
- 	if (guid.length === 32) {
- 		returnguid.Data1 = parseInt(guid.substring(0, 8), 16);
- 		returnguid.Data2 = parseInt(guid.substring(8, 12), 16);
- 		returnguid.Data3 = parseInt(guid.substring(12, 16), 16);
- 		for (let i = 0; i < 8; i++) {
- 			returnguid.Data4[i] = parseInt(guid.substring(16 + i*2, 18 + i*2), 16);
- 		}
- 	} else {
- 		alert('Warning! Invalid GUID stringToFMODGUID. Returning a zero-value GUID');
- 	}
- 	return returnguid;		
- }
-
-/** Check the FMOD.RESULT to see if there are any errors
-* @function CHECK_RESULT
-* @param result The error code
-* @param string The attempted task
-* @returns void
-*/
-export function CHECK_RESULT (result: IFMOD.RESULT, string: string) {
-   if (result != IFMOD.RESULT.OK) {
-       alert("FMOD ERROR! [" + FMOD.ErrorString(result) + "]\n" + "=> Problem while " + string);
-   }
-}
-
-export namespace IFMOD { 
+export interface FMOD {
+		TOTAL_MEMORY?: number;
+		preRun?: ()=>void;
+		onRuntimeInitialized?: ()=>void;
 
     // #region Namespace Functions Wrap FMOD functions ///////////////////////////////////////////////////////////////////////
 
@@ -55,19 +19,13 @@ export namespace IFMOD {
      * Specify the level and delivery method of log messages when using the logging version of FMOD.
      * @param flags Mask of bits representing the desired log information. Note: LOG implies WARN and WARN implies ERROR.
      */
-    export function Debug_Initialize(flags:DEBUG_FLAGS) {
-        let result: RESULT = FMOD.Debug_Initialize(flags);
-        return result;
-    }
+    Debug_Initialize?(flags: FMOD.DEBUG_FLAGS): FMOD.RESULT;
 
     /**
      * Helper function to close a file manually, that is preloaded with FMOD.FS_createPreloadedFile
      * @param handle 
      */
-    export function file_close(handle:object) { 
-        let result: RESULT = FMOD.file_close(handle);
-        return result;
-    }
+    file_close?(handle:object): FMOD.RESULT;
     /**
      * Helper function to open a file manually, that is preloaded with FMOD.FS_createPreloadedFile 
      * @param system FMOD::System object handle
@@ -75,10 +33,7 @@ export namespace IFMOD {
      * @param filesize_out an integer with the size of the file is put in filesize_out.val
      * @param handle_out an object with the file handle is put in handle_out.val
      */
-    export function file_open(system:System, filename:string, filesize_out: Outval<number>, handle_out: Outval<object>) {
-        let result: RESULT = FMOD.file_open(system, filename, filesize_out, handle_out);
-        return result;
-    }
+    file_open?(system: FMOD.System, filename:string, filesize_out: Out<number>, handle_out: Out<object>): FMOD.RESULT;
     /**
      * Helper function to read a file manually, that is preloaded with FMOD.FS_createPreloadedFile 
      * @param handle Handle returned by the FMOD.file_open function
@@ -86,44 +41,30 @@ export namespace IFMOD {
      * @param sizebytes Integer value with the number of bytes requested to be read from the file handle.
      * @param bytesread_out An integer with the number of bytes actually read is put in bytesread_out.val
      */
-    export function file_read(handle:object, buffer:number, sizebytes:number, bytesread_out: Outval<number>) {
-        let result: RESULT = FMOD.file_read(handle, buffer, sizebytes, bytesread_out);
-        return result;
-    }
+    file_read?(handle:object, buffer:number, sizebytes:number, bytesread_out: Out<number>): FMOD.RESULT;
     /**
      * Helper function to seek a file manually, that is preloaded with FMOD.FS_createPreloadedFile 
      * @param handle Handle returned by the FMOD.file_open function
      * @param pos offset in bytes to seek into the file, relatve to the start
      */
-    export function file_seek(handle:object, pos:number) {
-        let result: RESULT = FMOD.file_seek(handle, pos);
-        return result;
-    }
+    file_seek?(handle:object, pos:number): FMOD.RESULT;
     /**
      * Returns a more verbose string version of the error code returned by any FMOD function. 
      * @param result error code
      */
-    export function ErrorString(result: RESULT) {
-        FMOD.ErrorString(result);
-    }
+    ErrorString?(result: FMOD.RESULT): void;
 
     /**
      * Information function to retreive the state of fmod's disk access.
      * @param busy Address of an integer to receive the busy state of the disk at the current time.
      */
-    export function File_GetDiskBusy(busy:Outval<number>) {
-        let result: RESULT = FMOD.File_GetDiskBusy(busy);
-        return result;
-    }
+    File_GetDiskBusy?(busy:Out<number>): FMOD.RESULT;
     /**
      * Mutex function to synchronize user file reads with FMOD's file reads. This function tells fmod that you are using the disk so that it will block until you are finished with it.
      * @description This function also blocks if FMOD is already using the disk, so that you cannot do a read at the same time FMOD is reading.
      * @param busy 1 = you are about to perform a disk access. 0 = you are finished with the disk.
      */
-    export function File_SetDiskBusy(busy:number) {
-        let result: RESULT = FMOD.File_SetDiskBusy(busy);
-        return result;
-    }
+    File_SetDiskBusy?(busy:number): FMOD.RESULT;
 
     /**
      * Returns information on the memory usage of FMOD. This information is byte accurate and counts all allocs and frees internally.
@@ -131,10 +72,7 @@ export namespace IFMOD {
      * @param maxalloced Address of a variable that receives the maximum allocated memory since System::init or Memory_Initialize. Optional. Specify 0 or NULL to ignore.
      * @param blocking Boolean indicating whether to favour speed or accuracy. Specifying true for this parameter will flush the DSP network to make sure all queued allocations happen immediately, which can be costly.
      */
-    export function Memory_GetStats(currentalloced:Outval<number>, maxalloced:Outval<number>, blocking:boolean) {
-        let result: RESULT = FMOD.Memory_GetStats(currentalloced, maxalloced, blocking);
-        return result;
-    }
+    Memory_GetStats?(currentalloced:Out<number>, maxalloced:Out<number>, blocking:boolean): FMOD.RESULT;
 
     /**
      * Specifies a method for FMOD to allocate memory, either through callbacks or its own internal memory management. 
@@ -144,20 +82,14 @@ export namespace IFMOD {
      * @param userrealalloc Only supported if pool is NULL. Otherwise it overrides the FMOD internal calls to alloc. Compatible with ansi malloc().
      * @param userfree Only supported if pool is NULL. Otherwise it overrides the FMOD internal calls to free. Compatible with ansi free().
      */
-    export function Memory_Initialize(poolmem, poollen:number, useralloc:MEMORY_ALLOC_CALLBACK, userrealloc:MEMORY_REALLOC_CALLBACK, userfree: MEMORY_FREE_CALLBACK, memtypeflags: MEMORY_TYPE) {
-        let result: RESULT = FMOD.Memory_Initialize(poolmem, poollen, useralloc, userrealloc, userfree, memtypeflags);
-        return result;
-    }
+    Memory_Initialize?(poolmem, poollen:number, useralloc:FMOD.MEMORY_ALLOC_CALLBACK, userrealloc:FMOD.MEMORY_REALLOC_CALLBACK, userfree: FMOD.MEMORY_FREE_CALLBACK, memtypeflags: FMOD.MEMORY_TYPE): FMOD.RESULT;
 
 
     /**
      * FMOD System creation function. This must be called to create an FMOD System object before you can do anything else. Use this function to create 1, or multiple instances of FMOD System objects.
      * @param system Address of a pointer that receives the new FMOD System object. HTML5 Note - the object is written to system.val
      */
-    export function System_Create(system:Outval<System>) {
-        let result: RESULT = FMOD.System_Create(system);
-        return result;
-    }
+    System_Create?(system:Out<FMOD.System>): FMOD.RESULT;
 
     /**
      * Mounts a local file so that FMOD can recognize it when calling a function that uses a filename (ie while using loadBank/createSound)
@@ -171,29 +103,20 @@ export namespace IFMOD {
      * @param canread Whether the file should have read permissions set from the program’s point of view
      * @param canwrite Whether the file should have write permissions set from the program’s point of view. 
      */
-    export function FS_createPreloadedFile(virtualfoldername:string, filename:string, fullurl:string, canread:boolean,canwrite:boolean) {
-        let result: RESULT = FMOD.FS_createPreloadedFile(virtualfoldername, filename, fullurl, canread, canwrite);
-        return result;
-    }    
+    FS_createPreloadedFile?(virtualfoldername: string, filename: string, fullurl: string, canread:boolean,canwrite:boolean): FMOD.RESULT;    
 
     /**
      * 
      * @param dsp_state FMOD_DSP_STATE handle passed into the DSP callback
      * @param blocksize offset in bytes to seek into the file, relatve to the start
      */
-    export function getblocksize(dsp_state:DSP_STATE, blocksize:number) {
-        let result: RESULT = FMOD.getblocksize(dsp_state, blocksize);
-        return result;
-    }
+    getblocksize?(dsp_state: FMOD.DSP_STATE, blocksize: number): FMOD.RESULT;
     /**
      * 
      * @param dsp_state FMOD_DSP_STATE handle passed into the DSP callback
      * @param samplerate FMOD_DSP_STATE handle passed into the DSP callback
      */
-    export function getsamplerate(dsp_state:DSP_STATE, samplerate:number) {
-        let result: RESULT = FMOD.getsamplerate(dsp_state, samplerate);
-        return result;
-    }
+    getsamplerate?(dsp_state: FMOD.DSP_STATE, samplerate: number): FMOD.RESULT;
 
     /**
      * 
@@ -203,10 +126,7 @@ export namespace IFMOD {
      * @param length this DSP's current mix length value in PCM samples.  This may be a DSP that is only writing to part of the buffer.  Typically the length of the DSP buffer.  See offset
 
      */
-    export function getspeakermode(dsp_state:DSP_STATE, clock:number, offset:number, length:number) {
-        let result: RESULT = FMOD.getspeakermode(dsp_state, clock, offset, length);
-        return result;
-    }
+    getspeakermode?(dsp_state:FMOD.DSP_STATE, clock:number, offset:number, length:number): FMOD.RESULT;
 
     /**
      * Returns a value memory managed by FMOD. This sort of value is typically sound data that is passed to the user as an 'address' which is internal to FMOD. This avoids duplication of large buffers which waste memory, because everything is passed by reference in JS. 
@@ -221,57 +141,42 @@ export namespace IFMOD {
     4. inbuffer parameter of FMOD_DSP::readcallback.
     'format' can be values like 'i8', 'i16', 'i32', 'i64', 'float', 'double' typically.
      */
-    export function getValue(address, value:number, format:string) {
-        let result: RESULT = FMOD.getValue(address, value, format);
-        return result;
-    }
+    getValue?(address, value: Out<number>, format: Out<string>): FMOD.RESULT;
     /**
      * Frees memory that was allocated by FMOD internally.
      * @param memory Note! Currently FMOD.ReadFile is the only function that returns an object with memory allocated by FMOD
      */
-    export function Memory_Free(memory:object) {
-        let result: RESULT = FMOD.Memory_Free(memory);
-        return result;
-    }
+    Memory_Free?(memory:object): FMOD.RESULT;
     /**
      * Read the entire contents of a file into memory, as a JS variable that contains nothing but a memory address. 
      * @param system FMOD::System object handle
      * @param filename Filename of the file that is to be loaded, that has the path and filename that matches the preloaded path/filename if loaded in that fashion.
      * @param output The variable with the allocated memory containing the contents of the file.
      */
-    export function ReadFile(system:System, filename:string, output:object) {
-        let result: RESULT = FMOD.ReadFile(system, filename, output);
-        return result;
-    }
+    ReadFile?(system:FMOD.System, filename:string, output:object): FMOD.RESULT;
     /**
      * Writes a value to memory managed by FMOD. This sort of value is typically sound data that is passed to the user as an 'address' which is internal to FMOD. This avoids duplication of large buffers which waste memory, because everything is passed by reference in JS. 
      * @param address Memory address returned by an FMOD function.  See remarks.
      * @param value A value which can be an integer or a real/floating point number.
      * @param format A format 'string' which identifies which type of value it is.  See Remarks
      */
-    export function setValue(address, value:number, format:string) {
-        let result: RESULT = FMOD.setValue(address, value, format);
-        return result;
-    }
+    setValue?(address, value:number, format:string): FMOD.RESULT;
     /**
      * Creates a Studio System object. This must be called before you do anything else. Special JS version of Studio::System::create.
      * @param studioSystem Address of a variable to receive the new Studio System object. 
      */
-    export function Studio_System_Create(studioSystem: Outval<StudioSystem>) {
-        let result: RESULT = FMOD.Studio_System_Create(studioSystem);
-        return result;
-    }
+    Studio_System_Create?(studioSystem: Out<FMOD.StudioSystem>): FMOD.RESULT
     // #endregion Low Level System Functions
     // #region Studio System Functions ////////////////////////////////
-    export interface ParseID {
-        (idString:string, id:Outval<GUID>): RESULT;
-    }
+    ParseID? (idString:string, id:Out<FMOD.GUID>): FMOD.RESULT;
     //#endregion Studio System Functions
     // #endregion Namespace Functions
+}
 
+export namespace FMOD { 
     // #region System Objects /////////////////////////////////////////////////////////////////////////////////////////////////
     export interface System {
-        attachChannelGroupToPort(portType, portIndex, channelgroup:Outval<ChannelGroup>): RESULT;
+        attachChannelGroupToPort(portType, portIndex, channelgroup:Out<ChannelGroup>): RESULT;
 
         attachFileSystem(useropen, userclose, userread, userseek): RESULT;
         /** 
@@ -281,70 +186,70 @@ export namespace IFMOD {
 
         createChannelGroup(name:string, channelgroup:ChannelGroup): RESULT;
         /** Creates a user defined DSP unit object to be inserted into a DSP network, for the purposes of sound filtering or sound generation. */
-        createDSP(description:DSP_DESCRIPTION, dsp:Outval<any>): RESULT;
+        createDSP(description:DSP_DESCRIPTION, dsp:Out<any>): RESULT;
 
-        createDSPByPlugin(handle:number, dsp:Outval<DSP>): RESULT;
+        createDSPByPlugin(handle:number, dsp:Out<DSP>): RESULT;
 
-        createDSPByType(type:DSP_TYPE, dsp:Outval<DSP>): RESULT;
+        createDSPByType(type:DSP_TYPE, dsp:Out<DSP>): RESULT;
 
         createGeometry(maxpolygons:number, maxvertices:number, geometry:Geometry): RESULT;
 
-        createReverb3D(reverb:Outval<Reverb3D>): RESULT;
+        createReverb3D(reverb:Out<Reverb3D>): RESULT;
 
         /** Loads a sound into memory, or opens it for streaming. */
-        createSound(name_or_data:string, mode:MODE, exinfo:CREATESOUNDEXINFO, sound:Outval<any>): RESULT;
+        createSound(name_or_data:string, mode:MODE, exinfo:CREATESOUNDEXINFO, sound:Out<any>): RESULT;
 
-        createSoundGroup(name:string, soundgroup:Outval<SoundGroup>): RESULT;
+        createSoundGroup(name:string, soundgroup:Out<SoundGroup>): RESULT;
 
-        createStream(name_or_data:string, mode:MODE, sound:Outval<any>): RESULT;
+        createStream(name_or_data:string, mode:MODE, sound:Out<any>): RESULT;
 
-        detachChannelGroupFromPort(name:string, soundgroup:Outval<SoundGroup>): RESULT;
+        detachChannelGroupFromPort(name:string, soundgroup:Out<SoundGroup>): RESULT;
 
-        get3DListenerAttributes(listener:number, pos:Outval<VECTOR>, vel:Outval<VECTOR>, forward:Outval<VECTOR>, up:Outval<VECTOR>): RESULT;
+        get3DListenerAttributes(listener:number, pos:Out<VECTOR>, vel:Out<VECTOR>, forward:Out<VECTOR>, up:Out<VECTOR>): RESULT;
 
-        get3DNumListeners(numlisteners:Outval<number>): RESULT;
+        get3DNumListeners(numlisteners:Out<number>): RESULT;
         /** Retrieves the global doppler scale, distance factor and rolloff scale for all 3D sound in FMOD. */
-        get3DSettings(doplerscale:Outval<number>, distancefactor:Outval<number>, folloffscale:Outval<number>): RESULT;
+        get3DSettings(doplerscale:Out<number>, distancefactor:Out<number>, folloffscale:Out<number>): RESULT;
 
-        getAdvancedSetting(settings:Outval<ADVANCEDSETTINGS>): RESULT;
+        getAdvancedSetting(settings:Out<ADVANCEDSETTINGS>): RESULT;
 
-        getCPUUsage(dsp:Outval<number>, stream:Outval<number>, geometry:Outval<number>, update:Outval<number>, total:Outval<number>): RESULT;
+        getCPUUsage(dsp:Out<number>, stream:Out<number>, geometry:Out<number>, update:Out<number>, total:Out<number>): RESULT;
 
-        getChannel(channelid:number, channel:Outval<Channel>): RESULT;
+        getChannel(channelid:number, channel:Out<Channel>): RESULT;
 
-        getChannelsPlaying(channels: Outval<number>, realchannels: Outval<number>): RESULT;
+        getChannelsPlaying(channels: Out<number>, realchannels: Out<number>): RESULT;
 
-        getDSPBufferSize(bufferlength: Outval<number>, numbuffers: Outval<number>): RESULT;
+        getDSPBufferSize(bufferlength: Out<number>, numbuffers: Out<number>): RESULT;
         /**
          * Retrieve the description structure for a pre-existing DSP plugin.
          * @param handle Handle to a pre-existing DSP plugin, loaded by System::loadPlugin. 
          * @param description Address of a variable to receive the description structure for the DSP. 
          */
-        getDSPInfoByPlugin(handle: number, description: Outval<DSP_DESCRIPTION>): RESULT;
+        getDSPInfoByPlugin(handle: number, description: Out<DSP_DESCRIPTION>): RESULT;
 
-        getDefaultMixMatrix(sourcespeakermode: SPEAKERMODE, targetspeakermode: SPEAKERMODE, matrix: Outval<number[]>, matrixhop: number): RESULT;
+        getDefaultMixMatrix(sourcespeakermode: SPEAKERMODE, targetspeakermode: SPEAKERMODE, matrix: Out<number[]>, matrixhop: number): RESULT;
         /** Returns the currently selected driver number.  */
-        getDriver(driver:Outval<number>): RESULT;
+        getDriver(driver:Out<number>): RESULT;
 
-        getDriverInfo(id:number, name:Outval<string>, guid:Outval<GUID>, systemrate:Outval<number>, speakermode:Outval<SPEAKERMODE>, speakermodechannels:Outval<number>): RESULT;
+        getDriverInfo(id:number, name:Out<string>, guid:Out<GUID>, systemrate:Out<number>, speakermode:Out<SPEAKERMODE>, speakermodechannels:Out<number>): RESULT;
 
-        getFileUsage(sampleBytesRead: Outval<number>, streamBytesRead: Outval<number>, otherBytesRead: Outval<number>): RESULT;
+        getFileUsage(sampleBytesRead: Out<number>, streamBytesRead: Out<number>, otherBytesRead: Out<number>): RESULT;
 
-        getGeometryOcclusion(listener: VECTOR, source: VECTOR, direct: Outval<number>, reverb: Outval<number>): RESULT;
+        getGeometryOcclusion(listener: VECTOR, source: VECTOR, direct: Out<number>, reverb: Out<number>): RESULT;
 
-        getGeometrySettings(maxworldsize: Outval<number>): RESULT;
+        getGeometrySettings(maxworldsize: Out<number>): RESULT;
 
-        getMasterChannelGroup(channelgroup: Outval<ChannelGroup>): RESULT;
+        getMasterChannelGroup(channelgroup: Out<ChannelGroup>): RESULT;
 
-        getMasterSoundGroup(soundgroup: Outval<SoundGroup>): RESULT;
+        getMasterSoundGroup(soundgroup: Out<SoundGroup>): RESULT;
 
-        getNestedPlugin(handle: number, index: number, nestedhandle: Outval<number>): RESULT;
+        getNestedPlugin(handle: number, index: number, nestedhandle: Out<number>): RESULT;
 
         getNetworkProxy(): RESULT;
 
         getNetworkTimeout(): RESULT;
 
-        getNumDrivers(numdrivers:Outval<number>): RESULT;
+        getNumDrivers(numdrivers:Out<number>): RESULT;
 
         getNumNestedPlugins(): RESULT;
 
@@ -356,9 +261,9 @@ export namespace IFMOD {
 
         getOutputHandle(): RESULT;
 
-        getPluginHandle(plugintype:PLUGINTYPE, index:number, handle:Outval<number>): RESULT;
+        getPluginHandle(plugintype:PLUGINTYPE, index:number, handle:Out<number>): RESULT;
 
-        getPluginInfo(handle:number, plugintype:Outval<PLUGINTYPE>, name:Outval<string>, version:Outval<number>): RESULT;
+        getPluginInfo(handle:number, plugintype:Out<PLUGINTYPE>, name:Out<string>, version:Out<number>): RESULT;
 
         getRecordDriverInfo(): RESULT;
 
@@ -370,19 +275,19 @@ export namespace IFMOD {
 
         getSoftwareChannels(): RESULT;
 
-        getSoftwareFormat(samplerate: Outval<number>, speakermode: Outval<SPEAKERMODE>, numrawspeakers: Outval<number>): RESULT;
+        getSoftwareFormat(samplerate: Out<number>, speakermode: Out<SPEAKERMODE>, numrawspeakers: Out<number>): RESULT;
 
-        getSoundRAM(currentalloced: Outval<number>, maxalloced: Outval<number>, total: Outval<number>): RESULT;
+        getSoundRAM(currentalloced: Out<number>, maxalloced: Out<number>, total: Out<number>): RESULT;
 
-        getSpeakerModeChannels(mode: SPEAKERMODE, channels: Outval<number>): RESULT;
+        getSpeakerModeChannels(mode: SPEAKERMODE, channels: Out<number>): RESULT;
 
-        getSpeakerPosition(speaker: SPEAKER, x: Outval<number>, y: Outval<number>, active: Outval<boolean>): RESULT;
+        getSpeakerPosition(speaker: SPEAKER, x: Out<number>, y: Out<number>, active: Out<boolean>): RESULT;
 
-        getStreamBufferSize(filebuffersize: Outval<number>, filebuffersizetype: Outval<TIMEUNIT>): RESULT;
+        getStreamBufferSize(filebuffersize: Out<number>, filebuffersizetype: Out<TIMEUNIT>): RESULT;
 
-        getUserData(userdata: Outval<any>): RESULT;
+        getUserData(userdata: Out<any>): RESULT;
 
-        getVersion(version: Outval<number>): RESULT;
+        getVersion(version: Out<number>): RESULT;
 
         /** Initializes the system object, and the sound device. This has to be called at the start of the user's program. 
          * You must create a system object with FMOD::System_create. 
@@ -396,14 +301,14 @@ export namespace IFMOD {
          * @param id 
          * @param recording 
          */
-        isRecording(id:number, recording:Outval<boolean>): RESULT;
+        isRecording(id:number, recording:Out<boolean>): RESULT;
         /**
          * 
          * @param data 
          * @param datasize 
          * @param geometry 
          */
-        loadGeometry(data, datasize:number, geometry:Outval<Geometry>): RESULT;
+        loadGeometry(data, datasize:number, geometry:Out<Geometry>): RESULT;
         /**
          * Currently not supported in JavaScript
          */
@@ -415,19 +320,19 @@ export namespace IFMOD {
 
         mixerSuspend(): RESULT;
 
-        playDSP(dsp:DSP, channelgroup:ChannelGroup, paused:boolean, channel:Outval<any>): RESULT;
+        playDSP(dsp:DSP, channelgroup:ChannelGroup, paused:boolean, channel:Out<any>): RESULT;
 
-        playSound(sound, channelgroup, paused:boolean, channel:Outval<any>): RESULT;
+        playSound(sound, channelgroup, paused:boolean, channel:Out<any>): RESULT;
 
         recordStart(id:number, sound:Sound, loop:boolean): RESULT;
 
         recordStop(id:number): RESULT;
 
-        registerCodec(description:CODEC_DESCRIPTION, handle:Outval<number>, priority:number): RESULT;
+        registerCodec(description:CODEC_DESCRIPTION, handle:Out<number>, priority:number): RESULT;
 
-        registerDSP(description:DSP_DESCRIPTION, handle:Outval<number>): RESULT;
+        registerDSP(description:DSP_DESCRIPTION, handle:Out<number>): RESULT;
 
-        registerOutput(description: OUTPUT_DESCRIPTION, handle: Outval<number>): RESULT;
+        registerOutput(description: OUTPUT_DESCRIPTION, handle: Out<number>): RESULT;
         /** Closes and frees a system object and its resources. */
         release(): RESULT;
 
@@ -499,25 +404,25 @@ export namespace IFMOD {
          * @param outsideconeangle Address of a variable that receives the outside angle of the sound projection cone, in degrees. This is the angle outside of which the sound is at its outside volume. Optional. Specify 0 or NULL to ignore. 
          * @param outsidevolume Address of a variable that receives the cone outside volume for this sound. Optional. Specify 0 or NULL to ignore. 
          */
-        get3DConeSettings(insideconeangle:Outval<number>, outsideconeangle:Outval<number>, outsidevolume:Outval<number>): RESULT;
+        get3DConeSettings(insideconeangle:Out<number>, outsideconeangle:Out<number>, outsidevolume:Out<number>): RESULT;
         /**
          * Retrieves a pointer to the sound's current custom rolloff curve
          * @param points Address of a variable to receive the pointer to the current custom rolloff point list. Optional. Specify 0 or NULL to ignore. 
          * @param numpoints Address of a variable to receive the number of points int he current custom rolloff point list. Optional. Specify 0 or NULL to ignore. 
          */
-        get3DCustomRolloff(points:Outval<VECTOR[]>, numpoints:Outval<number>): RESULT;
+        get3DCustomRolloff(points:Out<VECTOR[]>, numpoints:Out<number>): RESULT;
         /**
          * Retrieve the minimum and maximum audible distance for a sound.
          * @param min Pointer to value to be filled with the minimum volume distance for the sound. See remarks for more on units. Optional. Specify 0 or NULL to ignore. 
          * @param max Pointer to value to be filled with the maximum volume distance for the sound. See remarks for more on units. Optional. Specify 0 or NULL to ignore.
          */
-        get3DMinMaxDistance(min:Outval<number>, max:Outval<number>): RESULT;
+        get3DMinMaxDistance(min:Out<number>, max:Out<number>): RESULT;
         /**
          * Retrieves a sound's default attributes for when it is played on a channel with System::playSound.
          * @param frequency Address of a variable that receives the default frequency for the sound. Optional. Specify 0 or NULL to ignore.
          * @param priority priority Address of a variable that receives the default priority for the sound when played on a channel. Result will be from 0 to 256. 0 = most important, 256 = least important. Default = 128. Optional. Specify 0 or NULL to ignore. 
          */
-        getDefaults(frequency:Outval<number>, priority:Outval<number>): RESULT;
+        getDefaults(frequency:Out<number>, priority:Out<number>): RESULT;
         /**
          * Returns format information about the sound.
          * @param type Address of a variable that receives the type of sound. Optional. Specify 0 or NULL to ignore. 
@@ -525,18 +430,18 @@ export namespace IFMOD {
          * @param channels Address of a variable that receives the number of channels for the sound. Optional. Specify 0 or NULL to ignore.
          * @param bits Address of a variable that receives the number of bits per sample for the sound. This corresponds to FMOD_SOUND_FORMAT but is provided as an integer format for convenience. Optional. Specify 0 or NULL to ignore. 
          */
-        getFormat(type:Outval<SOUND_TYPE>, format:Outval<SOUND_FORMAT>, channels:Outval<number>, bits:Outval<number>): RESULT;
+        getFormat(type:Out<SOUND_TYPE>, format:Out<SOUND_FORMAT>, channels:Out<number>, bits:Out<number>): RESULT;
         /**
          * Retrieves the length of the sound using the specified time unit.
          * @param length Address of a variable that receives the length of the sound. 
          * @param lengthtype Time unit retrieve into the length parameter. See FMOD_TIMEUNIT. 
          */
-        getLength(length:Outval<number>, lengthtype:TIMEUNIT): RESULT;
+        getLength(length:Out<number>, lengthtype:TIMEUNIT): RESULT;
         /**
          * Retrieves the current loop count value for the specified sound.
          * @param loopcount Address of a variable that receives the number of times a sound will loop by default before stopping. 0 = oneshot. 1 = loop once then stop. -1 = loop forever. Default = -1 
          */
-        getLoopCount(loopcount:Outval<number>): RESULT;
+        getLoopCount(loopcount:Out<number>): RESULT;
         /**
          * Retrieves the loop points for a sound.
          * @param loopstart Address of a variable to receive the loop start point. This point in time is played, so it is inclusive. Optional. Specify 0 or NULL to ignore.
@@ -544,7 +449,7 @@ export namespace IFMOD {
          * @param loopend Address of a variable to receive the loop end point. This point in time is played, so it is inclusive. Optional. Specify 0 or NULL to ignore. 
          * @param loopendtype The time format used for the returned loop end point. See FMOD_TIMEUNIT. 
          */
-        getLoopPoints(loopstart:Outval<number>, loopstarttype:TIMEUNIT, loopend:Outval<number>, loopendtype:TIMEUNIT): RESULT;
+        getLoopPoints(loopstart:Out<number>, loopstarttype:TIMEUNIT, loopend:Out<number>, loopendtype:TIMEUNIT): RESULT;
         /**
          * Retrieves the mode bits set by the codec and the user when opening the sound.
          * @param mode Address of a variable that receives the current mode for this sound. 
@@ -555,38 +460,38 @@ export namespace IFMOD {
          * @param channel MOD/S3M/XM/IT/MIDI music subchannel to retrieve the volume for. 
          * @param volume Address of a variable to receive the volume of the channel from 0.0 to 1.0. Default = 1.0. 
          */
-        getMusicChannelVolume(channel:number, volume:Outval<number>): RESULT;
+        getMusicChannelVolume(channel:number, volume:Out<number>): RESULT;
         /**
          * Gets the number of music channels inside a MOD/S3M/XM/IT/MIDI file.
          * @param numchannels Address of a variable to receive the number of music channels used in the song. 
          */
-        getMusicNumChannels(numchannels:Outval<number>): RESULT;
+        getMusicNumChannels(numchannels:Out<number>): RESULT;
         /**
          * Gets the relative speed of MOD/S3M/XM/IT/MIDI music.
          * @param speed Address of a variable to receive the relative speed of the song from 0.01 to 100.0. 0.5 = half speed, 2.0 = double speed. Default = 1.0.
          */
-        getMusicSpeed(speed:Outval<number>): RESULT;
+        getMusicSpeed(speed:Out<number>): RESULT;
         /**
          * Retrieves the name of a sound
          * @param name Address of a variable that receives the name of the sound encoded in a UTF-8 string.
          */
-        getName(name:Outval<string>): RESULT;
+        getName(name:Out<string>): RESULT;
         /**
          * Retrieves the number of subsounds stored within a sound.
          * @param numsubsounds Address of a variable that receives the number of subsounds stored within this sound. 
          */
-        getNumSubSounds(numsubsounds:Outval<number>): RESULT;
+        getNumSubSounds(numsubsounds:Out<number>): RESULT;
         /**
          * Retrieves the number of sync points stored within a sound. These points can be user generated or can come from a wav file with embedded markers.
          * @param numsyncpoints Address of a variable to receive the number of sync points within this sound. 
          */
-        getNumSyncPoints(numsyncpoints:Outval<number>): RESULT;
+        getNumSyncPoints(numsyncpoints:Out<number>): RESULT;
         /**
          * Retrieves the number of tags belonging to a sound.
          * @param numtags Address of a variable that receives the number of tags in the sound. Optional. Specify 0 or NULL to ignore. 
          * @param numtagsupdated Address of a variable that receives the number of tags updated since this function was last called. Optional. Specify 0 or NULL to ignore. 
          */
-        getNumTags(numtags:Outval<number>, numtagsupdated:Outval<number>): RESULT;
+        getNumTags(numtags:Out<number>, numtagsupdated:Out<number>): RESULT;
         /**
          * Retrieves the state a sound is in after FMOD_NONBLOCKING has been used to open it, or the state of the streaming buffer.
          * @param openstate Address of a variable that receives the open state of a sound. Optional. Specify 0 or NULL to ignore. 
@@ -594,23 +499,23 @@ export namespace IFMOD {
          * @param isStarving Address of a variable that receives the starving state of a sound. If a stream has decoded more than the stream file buffer has ready for it, it will return TRUE. Optional. Specify 0 or NULL to ignore. 
          * @param isDiskBusy Address of a variable that receives the disk busy state of a sound. That is, whether the disk is currently being accessed for the sound.
          */
-        getOpenState(openstate:Outval<OPENSTATE>, percentbuffered:Outval<number>, isStarving:Outval<boolean>, isDiskBusy:Outval<boolean>): RESULT;
+        getOpenState(openstate:Out<OPENSTATE>, percentbuffered:Out<number>, isStarving:Out<boolean>, isDiskBusy:Out<boolean>): RESULT;
         /**
          * 
          * @param soundgroup 
          */
-        getSoundGroup(soundgroup:Outval<SoundGroup>): RESULT;
+        getSoundGroup(soundgroup:Out<SoundGroup>): RESULT;
         /**
          * Retrieves a handle to a Sound object that is contained within the parent sound.
          * @param index Index of the subsound to retrieve within this sound. 
          * @param subsound Address of a variable that receives the sound object specified.
          */
-        getSubSound(index:number, subsound:Outval<Sound>): RESULT;
+        getSubSound(index:number, subsound:Out<Sound>): RESULT;
         /**
          * Retrieves a handle to the parent Sound object that contains our subsound.
          * @param parentsound Address of a variable that receives the sound object specified. 
          */
-        getSubSoundParent(parentsound:Outval<Sound>): RESULT;
+        getSubSoundParent(parentsound:Out<Sound>): RESULT;
         /** 
          * Currently not supported in JavaScript 
          */
@@ -623,14 +528,14 @@ export namespace IFMOD {
          * Retrieves the parent System object that was used to create this object.
          * @param system Address of a pointer that receives the System object. 
          */
-        getSystemObject(system:Outval<System>): RESULT;
+        getSystemObject(system:Out<System>): RESULT;
 
         getTag(name:string, index:number, tag): RESULT;
         /**
          * Retrieves the user value that that was set by calling the Sound::setUserData function.
          * @param userdata Address of a pointer that receives the data specified with the Sound::setUserData function. 
          */
-        getUserData(userdata:Outval<any>): RESULT;
+        getUserData(userdata:Out<any>): RESULT;
         /**
          * Returns a pointer to the beginning of the sample data for a sound.
          * @param offset Offset in bytes to the position you want to lock in the sample buffer
@@ -640,14 +545,14 @@ export namespace IFMOD {
          * @param len1 Length of data in bytes that was locked for ptr1. 
          * @param len2 Length of data in bytes that was locked for ptr2. This will be 0 if the data locked hasn't wrapped at the end of the buffer. 
          */
-        lock(offset:number, length:number, ptr1:Outval<any>, ptr2:Outval<any>, len1:Outval<number>, len2:Outval<number>): RESULT;
+        lock(offset:number, length:number, ptr1:Out<any>, ptr2:Out<any>, len1:Out<number>, len2:Out<number>): RESULT;
         /**
          * Reads data from an opened sound to a specified pointer, using the FMOD codec created internally.
          * @param buffer Address of a buffer that receives the decoded data from the sound. 
          * @param length Number of bytes to read into the buffer. 
          * @param read Number of bytes actually read. 
          */
-        readData(buffer:Outval<any>, length:Outval<number>, read:Outval<number>): RESULT;
+        readData(buffer:Out<any>, length:Out<number>, read:Out<number>): RESULT;
         /**
          * Frees a sound object
          */
@@ -735,13 +640,13 @@ export namespace IFMOD {
 
         addFadePoint(dspclock:number, volume:number): RESULT;
 
-        get3DAttributes(pos:Outval<VECTOR>, vel:Outval<VECTOR>, alt_pan_pos:Outval<VECTOR>): RESULT;
+        get3DAttributes(pos:Out<VECTOR>, vel:Out<VECTOR>, alt_pan_pos:Out<VECTOR>): RESULT;
 
-        get3DConeOrientation(orientation:Outval<VECTOR>): RESULT;
+        get3DConeOrientation(orientation:Out<VECTOR>): RESULT;
 
-        get3DConeSettings(insideconeangle:Outval<number>, outsideconeangle:Outval<number>, outsidevolume:Outval<number>): RESULT;
+        get3DConeSettings(insideconeangle:Out<number>, outsideconeangle:Out<number>, outsidevolume:Out<number>): RESULT;
 
-        get3DCustomRolloff(points:Outval<VECTOR[]>, numpoints:Outval<number>): RESULT;
+        get3DCustomRolloff(points:Out<VECTOR[]>, numpoints:Out<number>): RESULT;
 
         get3DDistanceFilter(): RESULT;
 
@@ -1196,7 +1101,7 @@ export namespace IFMOD {
          * @param connection The connection between the 2 units. Optional. Specify 0 or NULL to ignore. 
          * @param type The type of connection between the 2 units. See FMOD_DSPCONNECTION_TYPE.
          */
-        addInput(input:DSP, connection:Outval<DSPConnection>, type:DSPCONNECTION_TYPE): RESULT;
+        addInput(input:DSP, connection:Out<DSPConnection>, type:DSPCONNECTION_TYPE): RESULT;
         /**
          * Helper function to disconnect either all inputs or all outputs of a dsp unit.
          * @param inputs true = disconnect all inputs to this DSP unit. false = leave input connections alone
@@ -1213,36 +1118,36 @@ export namespace IFMOD {
          * Retrieves the active state of a DSP unit
          * @param isActive Address of a variable that receives the active state of the unit.
          */
-        getActive(isActive:Outval<boolean>): RESULT;
+        getActive(isActive:Out<boolean>): RESULT;
         /**
          * Retrieves the bypass state of the DSP unit.
          * @param isBypassed Address of a variable that receieves the bypass state for a DSP unit.
          */
-        getBypass(isBypassed:Outval<boolean>): RESULT;
+        getBypass(isBypassed:Out<boolean>): RESULT;
         /**
          * Retrieve the CPU usage for a particular DSP
          * @param exclusive Address of a variable to receive exclusive CPU usage. Optional. Specify 0 or NULL to ignore. 
          * @param inclusive Address of a variable to receive inclusive CPU usage. Optional. Specify 0 or NULL to ignore. 
          */
-        getCPUUsage(exclusive:Outval<number>, inclusive:Outval<number>): RESULT;
+        getCPUUsage(exclusive:Out<number>, inclusive:Out<number>): RESULT;
         /**
          * Gets the input signal format for a dsp units read/process callback, to determine which speakers the signal will be processed on and how many channels will be processed.
          * @param channelmask Address of a variable that receives the FMOD_CHANNELMASK which determines which speakers are represented by the channels in the input signal. 
          * @param numchannels Address of a variable that receives the number of channels to be processed on this unit. 
          * @param source_speakermode Address of a variable that receives the source speaker mode where the signal came from. 
          */
-        getChannelFormat(channelmask:Outval<CHANNELMASK>, numchannels:Outval<number>, source_speakermode:Outval<SPEAKERMODE>): RESULT;
+        getChannelFormat(channelmask:Out<CHANNELMASK>, numchannels:Out<number>, source_speakermode:Out<SPEAKERMODE>): RESULT;
         /**
          * Retrieve the index of the first data parameter of a particular data type.
          * @param datatype The type of data to find. This would usually be set to a value defined in FMOD_DSP_PARAMETER_DATA_TYPE but can be any value for custom types.
          * @param index Contains the index of the first data parameter of type 'datatype' after the function is called. Will be -1 if no matches were found. Can be null. 
          */
-        getDataParameterIndex(datatype:DSP_PARAMETER_DATA_TYPE, index:Outval<number>): RESULT;
+        getDataParameterIndex(datatype:DSP_PARAMETER_DATA_TYPE, index:Out<number>): RESULT;
         /**
          * Retrieves the idle state of a DSP. A DSP is idle when no signal is coming into it. This can be a useful method of determining if a DSP sub branch is finished processing, so it can be disconnected for example.
          * @param isIdle Address of a variable to receive the idle state for the DSP
          */
-        getIdle(isIdle:Outval<boolean>): RESULT;
+        getIdle(isIdle:Out<boolean>): RESULT;
         /**
          * Retrieves information about the current DSP unit, including name, version, default channels and width and height of configuration dialog box if it exists
          * @param name Address of a variable that receives the name of the unit. This will be a maximum of 32bytes. If the DSP unit has filled all 32 bytes with the name with no terminating \0 null character it is up to the caller to append a null character. Optional. Specify 0 or NULL to ignore.
@@ -1251,48 +1156,48 @@ export namespace IFMOD {
          * @param configwidth Address of a variable that receives the width of an optional configuration dialog box that can be displayed with DSP::showConfigDialog. 0 means the dialog is not present. Optional. Specify 0 or NULL to ignore. 
          * @param configheight Address of a variable that receives the height of an optional configuration dialog box that can be displayed with DSP::showConfigDialog. 0 means the dialog is not present. Optional. Specify 0 or NULL to ignore. 
          */
-        getInfo(name:Outval<string>, version:Outval<number>, channels:Outval<number>, configwidth:Outval<number>, configheight:Outval<number>): RESULT;
+        getInfo(name:Out<string>, version:Out<number>, channels:Out<number>, configwidth:Out<number>, configheight:Out<number>): RESULT;
         /**
          * Retrieves a pointer to a DSP unit which is acting as an input to this unit
          * @param index Index of the input unit to retrieve
          * @param input Address of a variable that receieves the pointer to the desired input unit. 
          * @param inputconnection The connection between the 2 units. Optional. Specify 0 or NULL to ignore.
          */
-        getInput(index:number, input:Outval<DSP>, inputconnection:Outval<DSPConnection>): RESULT;
+        getInput(index:number, input:Out<DSP>, inputconnection:Out<DSPConnection>): RESULT;
         /**
          * Retrieve the information about metering for a particular DSP to see if it is enabled or not.
          * @param inputEnabled Address of a variable to receive the metering enabled state for the DSP, for the intput signal (pre-processing). true = on, false = off. Optional. Specify 0 or NULL to ignore. 
          * @param outputEnabled Address of a variable to receive the metering enabled state for the DSP, for the output signal (post-processing). true = on, false = off. Optional. Specify 0 or NULL to ignore. 
          */
-        getMeteringEnabled(inputEnabled:Outval<boolean>, outputEnabled:Outval<boolean>): RESULT;
+        getMeteringEnabled(inputEnabled:Out<boolean>, outputEnabled:Out<boolean>): RESULT;
         /**
          * Retrieve the metering information for a particular DSP
          * @param inputInfo Address of a variable to receive metering information for the DSP, for the intput signal (pre-processing). true = on, false = off. Optional. Specify 0 or NULL to ignore. 
          * @param outputInfo Address of a variable to receive metering information for the DSP, for the output signal (post-processing). true = on, false = off. Optional. Specify 0 or NULL to ignore.
          */
-        getMeteringInfo(inputInfo:Outval<DSP_METERING_INFO>, outputInfo:Outval<DSP_METERING_INFO>): RESULT;
+        getMeteringInfo(inputInfo:Out<DSP_METERING_INFO>, outputInfo:Out<DSP_METERING_INFO>): RESULT;
         /**
          * Retrieves the number of inputs connected to the DSP unit.
          * @param numinputs Address of a variable that receives the number of inputs connected to this unit. 
          */
-        getNumInputs(numinputs:Outval<number>): RESULT;
+        getNumInputs(numinputs:Out<number>): RESULT;
         /**
          * Retrieves the number of outputs connected to the DSP unit.
          * @param numoutputs Address of a variable that receives the number of outputs connected to this unit. 
          */
-        getNumOutputs(numoutputs:Outval<number>): RESULT;
+        getNumOutputs(numoutputs:Out<number>): RESULT;
         /**
          * Retrieves the number of parameters a DSP unit has to control its behaviour.
          * @param numparams Address of a variable that receives the number of parameters contained within this DSP unit. 
          */
-        getNumParameters(numparams:Outval<number>): RESULT;
+        getNumParameters(numparams:Out<number>): RESULT;
         /**
          * Retrieves a pointer to a DSP unit which is acting as an output to this unit.
          * @param index Index of the output unit to retrieve. 
          * @param output Address of a variable that receieves the pointer to the desired output unit
          * @param outputconnection The connection between the 2 units. Optional. Specify 0 or NULL to ignore. 
          */
-        getOutput(index:number, output:Outval<DSP>, outputconnection:Outval<DSPConnection>): RESULT;
+        getOutput(index:number, output:Out<DSP>, outputconnection:Out<DSPConnection>): RESULT;
         /**
          * Call the DSP process function to retrieve the output signal format for a DSP based on input values.
          * @param inmask Channel bitmask representing the speakers enabled for the incoming signal. For example a 5.1 signal could have inchannels 2 that represent FMOD_CHANNELMASK_SURROUND_LEFT and FMOD_CHANNELMASK_SURROUND_RIGHT. 
@@ -1302,14 +1207,14 @@ export namespace IFMOD {
          * @param outchannels Address of a variable to receive the DSP unit's output channel count, based on the DSP units preference and settings. 
          * @param outspeakermode Address of a variable to receive the DSP unit's output speaker mode, based on the DSP units preference and settings. 
          */
-        getOutputChannelFormat(inmask: CHANNELMASK, inchannels:number, inspeakermode:SPEAKERMODE, outmask:Outval<CHANNELMASK>, outchannels:Outval<number>, outspeakermode:Outval<SPEAKERMODE>): RESULT;
+        getOutputChannelFormat(inmask: CHANNELMASK, inchannels:number, inspeakermode:SPEAKERMODE, outmask:Out<CHANNELMASK>, outchannels:Out<number>, outspeakermode:Out<SPEAKERMODE>): RESULT;
         /**
          * Retrieves a DSP unit's boolean parameter by index. To find out the parameter names and range, see the see also field.
          * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
          * @param value Address of a variable that receives the boolean parameter value for the parameter specified. 
          * @param valuestr Address of a variable that receives the string containing a formatted or more meaningful representation of the DSP parameter's value. For example if a switch parameter has on and off (0.0 or 1.0) it will display "ON" or "OFF" by using this parameter. Optional. Specify 0 or NULL to ignore. 
          */
-        getParameterBool(index:number, value:Outval<boolean>, valuestr:Outval<string>): RESULT;
+        getParameterBool(index:number, value:Out<boolean>, valuestr:Out<string>): RESULT;
         /**
          * Retrieves a DSP unit's data block parameter by index. To find out the parameter names and range, see the see also field.
          * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
@@ -1317,49 +1222,49 @@ export namespace IFMOD {
          * @param length Address of a variable that receives the length of data block in bytes. Optional. 
          * @param valuestr Address of a variable that receives the string containing a formatted or more meaningful representation of the DSP parameter's value. For example if a switch parameter has on and off (0.0 or 1.0) it will display "ON" or "OFF" by using this parameter. Optional. Specify 0 or NULL to ignore. 
          */  
-        getParameterData(index:number, data:Outval<any>, length:Outval<number>, valuestr:Outval<string>): RESULT;
+        getParameterData(index:number, data:Out<any>, length:Out<number>, valuestr:Out<string>): RESULT;
         /**
          * Retrieves a DSP unit's floating point parameter by index. To find out the parameter names and range, see the see also field.
          * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
          * @param value Address of a variable that receives the floating point parameter value for the parameter specified. 
          * @param valuestr Address of a variable that receives the string containing a formatted or more meaningful representation of the DSP parameter's value. For example if a switch parameter has on and off (0.0 or 1.0) it will display "ON" or "OFF" by using this parameter. Optional. Specify 0 or NULL to ignore. 
          */
-        getParameterFloat(index:number, value:Outval<string>, valuestr:Outval<string>): RESULT;
+        getParameterFloat(index:number, value:Out<string>, valuestr:Out<string>): RESULT;
         /**
          * Retrieve information about a specified parameter within the DSP unit.
          * @param index Parameter index for this unit. Find the number of parameters with DSP::getNumParameters. 
          * @param desc Address of a variable to receive the contents of an array of FMOD_DSP_PARAMETER_DESC structures for this DSP unit.
          */
-        getParameterInfo(index:number, desc:Outval<DSP_PARAMETER_DESC>): RESULT;
+        getParameterInfo(index:number, desc:Out<DSP_PARAMETER_DESC>): RESULT;
         /**
          * 
          * @param index Retrieves a DSP unit's integer parameter by index. To find out the parameter names and range, see the see also field.
          * @param value Address of a variable that receives the integer parameter value for the parameter specified. 
          * @param valuestr Address of a variable that receives the string containing a formatted or more meaningful representation of the DSP parameter's value. For example if a switch parameter has on and off (0.0 or 1.0) it will display "ON" or "OFF" by using this parameter. Optional. Specify 0 or NULL to ignore. 
          */
-        getParameterInt(index:number, value:Outval<number>, valuestr:Outval<string>): RESULT;
+        getParameterInt(index:number, value:Out<number>, valuestr:Out<string>): RESULT;
         /**
          * Retrieves the parent System object that was used to create this object.
          * @param system Address of a variable that receives the System object. 
          */
-        getSystemObject(system:Outval<System>): RESULT;
+        getSystemObject(system:Out<System>): RESULT;
         /**
          * Retrieves the pre-defined type of a FMOD registered DSP unit
          * @param type Address of a variable to receive the FMOD dsp type
          */
-        getType(type:Outval<DSP_TYPE>): RESULT;
+        getType(type:Out<DSP_TYPE>): RESULT;
         /**
          * Retrieves the user value that that was set by calling the DSP::setUserData function.
          * @param userdata Address of a pointer that receives the user data specified with the DSP::setUserData function. 
          */
-        getUserData(userdata:Outval<any>): RESULT;
+        getUserData(userdata:Out<any>): RESULT;
         /**
          * Retrieves the wet/dry scale of a DSP effect, through the 'wet' mix, which is the post-processed signal and the 'dry' mix which is the pre-processed signal
          * @param prewet Address of a floating point value, to receive typically 0 to 1, describing a linear scale of the 'wet' (pre-processed signal) mix of the effect. Default = 1.0. Scale can be lower than 0 (negating) and higher than 1 (amplifying).
          * @param postwet Address of a floating point value, to receive typically 0 to 1, describing a linear scale of the 'wet' (post-processed signal) mix of the effect. Default = 1.0. Scale can be lower than 0 (negating) and higher than 1 (amplifying). 
          * @param dry Address of a floating point value, to receive typically 0 to 1, describing a linear scale of the 'dry' (pre-processed signal) mix of the effect. Default = 0.0. Scale can be lower than 0 and higher than 1 (amplifying). 
          */
-        getWetDryMix(prewet:Outval<number>, postwet:Outval<number>, dry:Outval<number>): RESULT;
+        getWetDryMix(prewet:Out<number>, postwet:Out<number>, dry:Out<number>): RESULT;
         /**
          * Frees a DSP object
          */
@@ -1446,12 +1351,12 @@ Also defines the number of channels in the unit that a read callback will proces
          * Retrieves the DSP unit that is the input of this connection.
          * @param input Address of a pointer that receives the pointer to the DSP unit that is the input of this connection. 
          */
-        getInput(input:Outval<DSP>): RESULT;
+        getInput(input:Out<DSP>): RESULT;
         /**
          * Retrieves the volume of the connection - the scale level of the input before being passed to the output.
          * @param volume Address of a variable to receive the volume or mix level of the specified input. 0.0 = silent, 1.0 = full volume. 
          */
-        getMix(volume:Outval<number>): RESULT;
+        getMix(volume:Out<number>): RESULT;
         /**
          * Returns the panning matrix set by the user, for a connection.
          * @param matrix Address of a variable to recieve an array of floating point matrix data, where rows represent output speakers, and columns represent input channels.
@@ -1459,22 +1364,22 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param inchannels Address of a variable to receive the number of input channels in the set matrix. 
          * @param inchannel_hop Number of floating point values available in the destination n memory for a row, so that the destination memory can be skipped through correctly to write the right values, if the intended matrix memory to be written to is wider than the matrix stored in the DSPConnection.
          */
-        getMixMatrix(matrix:Outval<number[]>, outchannels:Outval<number>, inchannels:Outval<number>, inchannel_hop:number): RESULT;
+        getMixMatrix(matrix:Out<number[]>, outchannels:Out<number>, inchannels:Out<number>, inchannel_hop:number): RESULT;
         /**
          * Retrieves the DSP unit that is the output of this connection.
          * @param output Address of a pointer that receives the pointer to the DSP unit that is the output of this connection. 
          */
-        getOutput(output:Outval<DSP>): RESULT;
+        getOutput(output:Out<DSP>): RESULT;
         /**
          * Returns the type of the connection between 2 DSP units. This can be FMOD_DSPCONNECTION_TYPE_STANDARD, FMOD_DSPCONNECTION_TYPE_SIDECHAIN, FMOD_DSPCONNECTION_TYPE_SEND or FMOD_DSPCONNECTION_TYPE_SEND_SIDECHAIN.
          * @param type Address of the variable to receive the type of connection between 2 DSP units. See FMOD_DSPCONNECTION_TYPE.  
          */
-        getType(type:Outval<DSPCONNECTION_TYPE>): RESULT;
+        getType(type:Out<DSPCONNECTION_TYPE>): RESULT;
         /**
          * Sets a user value that the DSPConnection object will store internally. Can be retrieved with DSPConnection::getUserData.
          * @param userdata Address of user data that the user wishes stored within the DSPConnection object. 
          */
-        getUserData(userdata:Outval<any>): RESULT;
+        getUserData(userdata:Out<any>): RESULT;
         /**
          * Sets the volume of the connection so that the input is scaled by this value before being passed to the output.
          * @param volume Volume or mix level of the connection. 0.0 = silent, 1.0 = full volume.
@@ -1571,7 +1476,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param headerversion The expected FMOD Studio API version, to ensure the library matches the headers. For the C API, pass in FMOD_VERSION. For the C++ API, it defaults to FMOD_VERSION, so you don't need to pass it in explicitly. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        create(system:Outval<StudioSystem>, headerversion:number): RESULT;
+        create(system:Out<StudioSystem>, headerversion:number): RESULT;
 
         /** 
          * Waits until all pending commands have been executed.
@@ -1588,14 +1493,14 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param settings Address of a variable to receive the contents of the FMOD_STUDIO_ADVANCEDSETTINGS structure specified by the user. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getAdvancedSettings(settings:Outval<STUDIO_ADVANCEDSETTINGS>): RESULT;
+        getAdvancedSettings(settings:Out<STUDIO_ADVANCEDSETTINGS>): RESULT;
         /** 
          * Retrieves an already loaded Bank object by path, filename or ID string.
          * @param path The bank path, filename, or the ID string that identifies the bank. 
          * @param bankOut Address of a variable to receive the Bank object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBank(path:string, bankOut:Outval<Bank>): RESULT;
+        getBank(path:string, bankOut:Out<Bank>): RESULT;
 
         /** 
          * Retrieves an already loaded Bank object by ID.
@@ -1603,14 +1508,14 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param bankOut Address of a variable to receive the Bank object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBankByID(id:GUID, bankOut:Outval<Bank>): RESULT;
+        getBankByID(id:GUID, bankOut:Out<Bank>): RESULT;
 
         /** 
          * Retrieves the number of loaded banks.
          * @param countOut Address of a variable to receive the number of loaded Banks.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBankCount(countOut:Outval<number>): RESULT;
+        getBankCount(countOut:Out<number>): RESULT;
         /** 
          * Retrieves the loaded Banks.
          * @param arrayOut An array of memory allocated by the user. 
@@ -1618,7 +1523,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param countOut Address of a variable to receive the number of Banks written to the array 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBankList(arrayOut:Outval<Bank[]>, capacity:number, countOut:Outval<number>): RESULT;
+        getBankList(arrayOut:Out<Bank[]>, capacity:number, countOut:Out<number>): RESULT;
 
         /** 
          * Retrieves information about various memory buffers used by FMOD Studio.
@@ -1626,68 +1531,68 @@ Also defines the number of channels in the unit that a read callback will proces
          * Struct passed out is of FMOD_STUDIO_BUFFER_USAGE type.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBufferUsage(usageOut:Outval<STUDIO_BUFFER_USAGE>): RESULT;
+        getBufferUsage(usageOut:Out<STUDIO_BUFFER_USAGE>): RESULT;
         /** 
          * Retrieves a bus by path or ID string.
          * @param path The bus path or the ID string that identifies the bus. 
          * @param busOut Address of a variable to receive the bus object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBus(path:string, busOut:Outval<Bus>): RESULT;
+        getBus(path:string, busOut:Out<Bus>): RESULT;
         /** 
          * Retrieves a bus by ID.
          * @param id The 128-bit GUID which identifies the bus. Type FMOD_GUID
          * @param busOut Address of a variable to receive the bus object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getBusByID(id:GUID, busOut:Outval<Bus>): RESULT;
+        getBusByID(id:GUID, busOut:Out<Bus>): RESULT;
         /** 
          * Retrieves performance information for FMOD Studio and low level systems  
          * @param usageOut Address of a variable to receive the performance info. 
          * FMOD_STUDIO_CPU_USAGE. Cast .val to IFMOD.STUDIO_CPU_USAGE
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getCPUUsage(usageOut:Outval<STUDIO_CPU_USAGE>): RESULT;
+        getCPUUsage(usageOut:Out<STUDIO_CPU_USAGE>): RESULT;
         /** 
          * Retrieves an EventDescription by path or ID string.
          * @param path The path or the ID string that identifies the event or snapshot
          * @param eventOut Address of a variable to receive the EventDescription object
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getEvent(path:string, eventOut:Outval<EventDescription>): RESULT;
+        getEvent(path:string, eventOut:Out<EventDescription>): RESULT;
         /** Retrieves an EventDescription by ID.
          * @param id The 128-bit GUID which identifies the event or snapshot.
          * @param eventOut Address of a variable to receive the EventDescription object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getEventByID(id:GUID, event:Outval<EventDescription>): RESULT;
+        getEventByID(id:GUID, event:Out<EventDescription>): RESULT;
         /** 
          * Retrieves the position, velocity and orientation of the 3D sound listener.
          * @param listener Listener index. Specify 0 if there is only 1 listener. 
          * @param attributes Address of a variable to receive the 3D attributes for the listener. See FMOD_3D_ATTRIBUTES. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getListenerAttributes(listener:number, attributes:Outval<_3D_ATTRIBUTES>): RESULT;
+        getListenerAttributes(listener:number, attributes:Out<_3D_ATTRIBUTES>): RESULT;
         /** 
          * Gets the listener weighting, which allows listeners to fade in and out
          * @param listner Listener index.
          * @param weightOut Address of a variable to receive the weighting value. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getListenerWeight(listener:number, weightOut:Outval<number>): RESULT;
+        getListenerWeight(listener:number, weightOut:Out<number>): RESULT;
         /** 
          * Retrieves the Studio System's internal Low Level System object for 
          * access to the Low Level API.
          * @param systemOut Address of a variable to pass the low level System to
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getCoreSystem(systemOut:Outval<System>): RESULT;
+        getCoreSystem(systemOut:Out<System>): RESULT;
         /** 
          * Gets the number of listeners that have been set into in the 3D sound scene.
          * @param numlistenersOut Number of listeners that have been set. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getNumListeners(numlistenersOut:Outval<number>): RESULT;
+        getNumListeners(numlistenersOut:Out<number>): RESULT;
         /**
          * Retrieves a global parameter value by unique identifier.
          * The final combined value returned in finalvalue combines the user value
@@ -1697,7 +1602,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param value Parameter value as set from the public API.
          * @param finalvalue Final combined value.
          */
-        getParameterByID(id: STUDIO_PARAMETER_ID, value: Outval<number>, finalvalue: Outval<number>): RESULT;
+        getParameterByID(id: STUDIO_PARAMETER_ID, value: Out<number>, finalvalue: Out<number>): RESULT;
         /**
          * Retrieves a global parameter value by name
          * The final combined value returned in finalvalue combines the user value
@@ -1706,7 +1611,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param value Parameter value as set from the public API.(optional)
          * @param finalvalue Final combined value (optional)
          */
-        getParameterByName(name: string, value: Outval<number>, finalvalue: Outval<number>): RESULT;
+        getParameterByName(name: string, value: Out<number>, finalvalue: Out<number>): RESULT;
         /**
          * Retrieves a global parameter by name or path.
          * name can be the short name (such as 'Wind') or the full path (such as
@@ -1715,25 +1620,25 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param name Parameter name.
          * @param parameter Parameter description
          */
-        getParameterDescriptionByName(name: string, parameter: Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        getParameterDescriptionByName(name: string, parameter: Out<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
         /**
          * Retrieves a global parameter by ID.
          * @param id Parameter ID.
          * @param parameter Receives parameter description.
          */
-        getParameterDescriptionByID(id: STUDIO_PARAMETER_ID, parameter: Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        getParameterDescriptionByID(id: STUDIO_PARAMETER_ID, parameter: Out<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
         /**
          * Retrieves the number of global parameters.
          * @param count Global parameter count
          */
-        getParameterDescriptionCount(count: Outval<number>): RESULT;
+        getParameterDescriptionCount(count: Out<number>): RESULT;
         /**
          * Retrieves a list of global parameters
          * @param array Receives global parameters array.
          * @param capacity Capacity of array. Max length.
          * @param count Receives the number of parameters written to array.
          */
-        getParameterDescriptionList(array: Outval<STUDIO_PARAMETER_DESCRIPTION[]>, capacity: number, count: Outval<number>): RESULT;
+        getParameterDescriptionList(array: Out<STUDIO_PARAMETER_DESCRIPTION[]>, capacity: number, count: Out<number>): RESULT;
         /** 
          * Retrieves information for loading a sound from an audio table.
          * @param key The key that identifies the sound, listed in FMOD Studio
@@ -1743,27 +1648,27 @@ Also defines the number of channels in the unit that a read callback will proces
          * info.mode, nullSinceNoExsoundinfoInJavascriptStruct, soundOut) to receive the parent sound. You can then retrieve
          * the subsound with Sound.getSubSound( info.subsoundindex, Outval );
          */
-        getSoundInfo(key:string,infoOut:Outval<STUDIO_SOUND_INFO>): RESULT;
+        getSoundInfo(key:string,infoOut:Out<STUDIO_SOUND_INFO>): RESULT;
         /** 
          * Retrieves the user data that is set on the system.
          * @param userdataOut Address of a variable to receive the user data. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getUserData(userdataOut:Outval<any>): RESULT;
+        getUserData(userdataOut:Out<any>): RESULT;
         /** 
          * Retrieves a VCA by path or ID string.
          * @param path The VCA path or the ID string that identifies the VCA. 
          * @param vcaOut Address of a variable to receive the VCA object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getVCA(path:string, vcaOut:Outval<VCA>): RESULT;
+        getVCA(path:string, vcaOut:Out<VCA>): RESULT;
         /** 
          * Retrieves a VCA by ID
          * @param id The 128-bit GUID which identifies the VCA. 
          * @param vcaOut Address of a variable to receive the VCA object. 
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getVCAByID(id:GUID, vcaOut:Outval<VCA>): RESULT;
+        getVCAByID(id:GUID, vcaOut:Out<VCA>): RESULT;
         /** 
          * Initializes the Studio System, the Low Level System, and the sound device.
          * @param maxchannels The maximum number of channels to be used in FMOD. These are also called 'virtual channels', as you can play as many of these as you want, even if you only have a small number of real voices. 
@@ -1781,7 +1686,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param bankOut Address of a variable to receive the Bank object
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        loadBankCustom(info:STUDIO_BANK_INFO, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Outval<Bank>): RESULT;
+        loadBankCustom(info:STUDIO_BANK_INFO, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Out<Bank>): RESULT;
         /** 
          * Loads a Studio event bank from a file.
          * @param filename Name of the file on disk
@@ -1789,7 +1694,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param bankOut Address of a variable to receive the Bank object
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        loadBankFile(filename:string, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Outval<Bank>): RESULT;
+        loadBankFile(filename:string, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Out<Bank>): RESULT;
         /** 
          * Loads a Studio event bank from memory.
          * @param buffer Memory buffer to load from. This should be 32-byte aligned 
@@ -1800,7 +1705,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param bankOut Address of a variable to receive the Bank object.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        loadBankMemory(buffer:number[], length:number, mode:STUDIO_LOAD_MEMORY_MODE, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Outval<Bank>): RESULT;
+        loadBankMemory(buffer:number[], length:number, mode:STUDIO_LOAD_MEMORY_MODE, flags:STUDIO_LOAD_BANK_FLAGS, bankOut:Out<Bank>): RESULT;
         /** 
          * Playback Studio commands that have previously been recorded to file.
          * @param filename The filename to load the command replay file from. 
@@ -1808,7 +1713,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param playback Address of a variable to receive the CommandReplay object
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        loadCommandReplay(filename:string, flags:STUDIO_COMMANDREPLAY_FLAGS, playback:Outval<CommandReplay>): RESULT;
+        loadCommandReplay(filename:string, flags:STUDIO_COMMANDREPLAY_FLAGS, playback:Out<CommandReplay>): RESULT;
         /** 
          * Retrieves the ID for a bank, event, snapshot, bus or VCA
          * @param path The path to the object as shown in FMOD Studio.
@@ -1818,7 +1723,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * data for the requested object is loaded (by loading the "Master Bank.strings.bank" file).
          * e.g. "event:/UI/Cancel", "snapshot:/IngamePause", "bus:/SFX/Ambience", "vca:/Mega Strip", "bank:/Vehicles" 
          */
-        lookupID(path:string, id:Outval<GUID>): RESULT;
+        lookupID(path:string, id:Out<GUID>): RESULT;
         /** 
          * Retrieves the path for a bank, event, snapshot, bus or VCA.
          * @param id The 128-bit GUID which identifies the bank, event, snapshot, bus or VCA. 
@@ -1828,7 +1733,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * including the terminating null character. Optional. Specify 0 or NULL to ignore.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        lookupPath(id:GUID, path:string, size:number, retrieved:Outval<number>): RESULT;
+        lookupPath(id:GUID, path:string, size:number, retrieved:Out<number>): RESULT;
         /** 
          * Registers a third party plugin DSP for use by events loaded by the Studio API.
          * @param description The description of the DSP. See FMOD_DSP_DESCRIPTION
@@ -1941,17 +1846,17 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     export interface EventDescription {
-        createInstance(instance:Outval<EventInstance>): RESULT;
+        createInstance(instance:Out<EventInstance>): RESULT;
         /**
          * Retrieves the GUID
          * @param id Event description GUID
          */
-        getID(id:Outval<GUID>): RESULT;
+        getID(id:Out<GUID>): RESULT;
         /**
          * Retrieves the number of instances
          * @param count Instance count.
          */
-        getInstanceCount(count:Outval<number>): RESULT;
+        getInstanceCount(count:Out<number>): RESULT;
         /**
          * Retrieves a list of the instances.
          * This function returns a maximum of capacity instances. If more than capacity
@@ -1960,64 +1865,64 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param capacity Capacity of the array.
          * @param count Number of event instances written to array.
          */
-        getInstanceList(array:Outval<EventInstance[]>, capacity:number, count:Outval<number>): RESULT;
+        getInstanceList(array:Out<EventInstance[]>, capacity:number, count:Out<number>): RESULT;
 
         /** Retrieves the length of the event's timeline in milliseconds
          * @param length Address of a variable to receive the timeline length in milliseconds. */
-        getLength(length:Outval<number>): RESULT;
+        getLength(length:Out<number>): RESULT;
 
-        getMaximumDistance(distance:Outval<number>): RESULT;
+        getMaximumDistance(distance:Out<number>): RESULT;
 
-        getMinimumDistance(distance:Outval<number>): RESULT;
+        getMinimumDistance(distance:Out<number>): RESULT;
         /**
          * Retrieves an event parameter description by name.
          * @param name Parameter name (case-insensitive)
          * @param parameter Parameter description.
          */
-        getParameterDescriptionByName(name:string, parameter:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        getParameterDescriptionByName(name:string, parameter:Out<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
         /**
          * Retrieves an event parameter description by id.
          * @param id Parameter id
          * @param paramOut Parameter description
          */
-        getParameterDescriptionByID(id: STUDIO_PARAMETER_ID, paramOut: Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        getParameterDescriptionByID(id: STUDIO_PARAMETER_ID, paramOut: Out<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
         /**
          * Retrieves an event parameter description by index.
          * @param index Parameter index.
          * @param paramOut Parameter description.
          */
-        getParameterDescriptionByIndex(index:number, paramOut:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        getParameterDescriptionByIndex(index:number, paramOut:Out<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
         /**
          * Retrieves the number of parameters in the event
          * May be used in conjunction with EventDescription.getParameterDescriptionByIndex
          * to enumerate event parameters
          * @param count Parameter count.
          */
-        getParameterDescriptionCount(count:Outval<number>): RESULT;
+        getParameterDescriptionCount(count:Out<number>): RESULT;
 
-        getPath(path:Outval<string>, size:number, retrived:Outval<number>): RESULT;
+        getPath(path:Out<string>, size:number, retrived:Out<number>): RESULT;
         
-        getSampleLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
+        getSampleLoadingState(state:Out<STUDIO_LOADING_STATE>): RESULT;
 
-        getSoundSize(size:Outval<number>): RESULT;
+        getSoundSize(size:Out<number>): RESULT;
 
-        getUserData(userdata:Outval<any>): RESULT;
+        getUserData(userdata:Out<any>): RESULT;
 
-        getUserProperty(name:string, property:Outval<STUDIO_USER_PROPERTY>): RESULT;
+        getUserProperty(name:string, property:Out<STUDIO_USER_PROPERTY>): RESULT;
 
-        getUserPropertyByIndex(index:number, property:Outval<STUDIO_USER_PROPERTY>): RESULT;
+        getUserPropertyByIndex(index:number, property:Out<STUDIO_USER_PROPERTY>): RESULT;
 
-        getUserPropertyCount(count:Outval<number>): RESULT;
+        getUserPropertyCount(count:Out<number>): RESULT;
 
-        hasCue(hasCue:Outval<boolean>): RESULT;
+        hasCue(hasCue:Out<boolean>): RESULT;
 
-        is3D(is3D:Outval<boolean>): RESULT;
+        is3D(is3D:Out<boolean>): RESULT;
 
-        isOneshot(isOneshot:Outval<boolean>): RESULT;
+        isOneshot(isOneshot:Out<boolean>): RESULT;
 
-        isSnapshot(isSnapshot:Outval<boolean>): RESULT;
+        isSnapshot(isSnapshot:Out<boolean>): RESULT;
 
-        isStream(isStream:Outval<boolean>): RESULT;
+        isStream(isStream:Out<boolean>): RESULT;
         /** You can use this function to preload sample data ahead of time so that events can be played immediately when required. */
         loadSampleData(): RESULT;
 
@@ -2036,20 +1941,20 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param attributes writes the value to attributes.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
         */
-        get3DAttributes(attributes:Outval<_3D_ATTRIBUTES>): RESULT;
+        get3DAttributes(attributes:Out<_3D_ATTRIBUTES>): RESULT;
         /** 
          * Retrives the Low level ChannelGroup for the event instance 
          * @description Remarks: The retrieved ChannelGroup corresponds to the master track of the event instance.
          * @param group Address of a variable to receive the ChannelGroup. Writes value to group.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
         */
-        getChannelGroup(group: Outval<ChannelGroup>): RESULT;  
+        getChannelGroup(group: Out<ChannelGroup>): RESULT;  
         /** 
          * Retrieves the EventDescription for the event instance 
          * @param description Address of a variable to receive the EventDescription object. Writes value to description.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
         */
-        getDescription(description: Outval<EventDescription>): RESULT;
+        getDescription(description: Out<EventDescription>): RESULT;
         /** 
          * Get the mask of what listeners apply to this event instance 
          * @param mask Address of a variable to receive the mask. Writes value to mask.val
@@ -2066,7 +1971,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param value Parameter value as set from the public API. (null to ignore)
          * @param finalvalue Final combined parameter value. (null to ignore)
          */
-        getParameterByID(id: STUDIO_PARAMETER_ID, value: Outval<number>, finalvalue: Outval<number>): RESULT;
+        getParameterByID(id: STUDIO_PARAMETER_ID, value: Out<number>, finalvalue: Out<number>): RESULT;
         /** 
          * Gets a parameter instance value by name.
          * @param name Name of the parameter (case-insensitive)
@@ -2074,64 +1979,64 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param finalvalueOut Address of a variable to receive the final combined value. Specify 0 or NULL to ignore. Writes a number to finalvalue.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */        
-        getParameterByName(name:string, valueOut:Outval<number>, finalvalueOut:Outval<number>): RESULT;
+        getParameterByName(name:string, valueOut:Out<number>, finalvalueOut:Out<number>): RESULT;
         /** 
          * Retrieves the pause state of the event instance.
          * @param isPausedOut Address of a variable to receive the pause state. Writes a boolean to isPaused.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getPaused(isPausedOut:Outval<boolean>): RESULT;
+        getPaused(isPausedOut:Out<boolean>): RESULT;
         /** 
          * Retrieves the pitch multiplier set by the API on the event instance.
          * @param pitchOut Address of a variable to receive the pitch as set from the public API. Specify 0 or NULL to ignore. 
          * @param finalpitchOut Address of a variable to receive the final combined pitch. Specify 0 or NULL to ignore.
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getPitch(pitchOut:Outval<number>, finalpitchOut:Outval<number>): RESULT;
+        getPitch(pitchOut:Out<number>, finalpitchOut:Out<number>): RESULT;
         /** 
          * Retrieves the playback state of the event instance.
          * @param stateOut Address of a variable to receive the current playback state of the event instance. See FMOD_STUDIO_PLAYBACK_STATE. Writes value to state.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getPlaybackState(stateOut:Outval<STUDIO_PLAYBACK_STATE>): RESULT;
+        getPlaybackState(stateOut:Out<STUDIO_PLAYBACK_STATE>): RESULT;
         /** 
          * Retrieves the value of a built-in event instance property.
          * @param index The index of the property to retrieve. 
          * @param valueOut Address of a variable to receive the property value. Writes value to value.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getProperty(index:number, valueOut:Outval<number>): RESULT;
+        getProperty(index:number, valueOut:Out<number>): RESULT;
         /** 
          * Retrieves the send level to a Low Level reverb instance.
          * @param index Index of the Low Level reverb instance to target, from 0 to 3. 
          * @param levelOut Address of a variable to receive the send level for the signal to the reverb, from 0 (none) to 1 (full). Writes value to level.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getReverbLevel(index:number, levelOut:Outval<number>): RESULT;
+        getReverbLevel(index:number, levelOut:Out<number>): RESULT;
         /** 
          * Retrieves the position of the event instance's timeline playback cursor.
          * @param positionOut Address of a variable to receive the timeline position in milliseconds. Writes value to position.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getTimelinePosition(positionOut:Outval<number>): RESULT;
+        getTimelinePosition(positionOut:Out<number>): RESULT;
         /** Retrieves the user data that is set on the event instance.
          * @param userdata Address of a variable to receive the user data. Writes value to userdata.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getUserData(userdata:Outval<any>): RESULT;
+        getUserData(userdata:Out<any>): RESULT;
         /** 
          * Retrieves the volume level of the event instance.
          * @param volumeOut Address of a variable to receive the volume as set from the public API. Specify 0 or NULL to ignore. Writes to volume.val 
          * @param finalvolumeOut Address of a variable to receive the final combined volume. Specify 0 or NULL to ignore. Writes to finalvolume.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        getVolume(volumeOut:Outval<number>, finalvolumeOut:Outval<number>): RESULT;
+        getVolume(volumeOut:Out<number>, finalvolumeOut:Out<number>): RESULT;
         /** 
          * Retrieves the virtualization state of the event instance.
          * @param virtualStateOut Address of a variable to receive the virtualization state. Writes boolean to virtualState.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        isVirtual(virtualStateOut:Outval<boolean>): RESULT;
+        isVirtual(virtualStateOut:Out<boolean>): RESULT;
         /** 
          * Schedules the event instance to be destroyed when it stops.
          * @description Remarks: If the instance is already stopped when release is called, it will be destroyed after the next update.
@@ -2257,35 +2162,35 @@ Also defines the number of channels in the unit that a read callback will proces
          * Retrieves the Low Level ChannelGroup used by the bus.
          * @param channelgroup Address of a variable to receive a pointer to the Low Level ChannelGroup.
          */
-        getChannelGroup(channelgroup:Outval<ChannelGroup>): RESULT;
+        getChannelGroup(channelgroup:Out<ChannelGroup>): RESULT;
         /**
          * Retrieves the ID of the bus.
          * @param id Address of a variable to receive the 128-bit GUID. 
          */
-        getID(id:Outval<GUID>): RESULT;
+        getID(id:Out<GUID>): RESULT;
         /**
          * Retrieves the mute state of the bus.
          * @param mute Address of a variable to receive the mute state. 
          */
-        getMute(mute:Outval<boolean>): RESULT;
+        getMute(mute:Out<boolean>): RESULT;
         /**
          * Retrieves the path of the bus.
          * @param path Address of a buffer to receive the path. Specify 0 or NULL to ignore. 
          * @param size Size of the path buffer in bytes. Required if path parameter is not NULL. 
          * @param retrieved Address of a variable to receive the size of the retrieved path in bytes, including the terminating null character. Optional. Specify 0 or NULL to ignore. 
          */
-        getPath(path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
+        getPath(path:Out<string>, size:number, retrieved:Out<number>): RESULT;
         /**
          * Retrieves the pause state of the bus.
          * @param isPaused Address of a variable to receive the pause state. 
          */
-        getPaused(isPaused:Outval<boolean>): RESULT;
+        getPaused(isPaused:Out<boolean>): RESULT;
         /**
          * Retrieves the volume level of the bus.
          * @param volume Address of a variable to receive the volume as set from the public API. Specify 0 or NULL to ignore.
          * @param finalvolume Address of a variable to receive the final combined volume. Specify 0 or NULL to ignore. 
          */
-        getVolume(volume:Outval<number>, finalvolume:Outval<number>): RESULT;
+        getVolume(volume:Out<number>, finalvolume:Out<number>): RESULT;
         /**
          * Locks the Low Level ChannelGroup used by the bus.
          */
@@ -2321,12 +2226,12 @@ Also defines the number of channels in the unit that a read callback will proces
          * Retrieves the description for the parameter
          * @param description Address of a variable to receive the parameter description. 
          */
-        getDescription(description:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        getDescription(description:Out<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
         /** 
          * Retrieves the value of the parameter 
          * @param value Address of a variable to receive the parameter value. 
         */
-        getValue(value:Outval<number>): RESULT;
+        getValue(value:Out<number>): RESULT;
         /** 
          * Sets the value of the parameter 
          */
@@ -2338,7 +2243,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * Retrieves the ID of the VCA.
          * @param id Address of a variable to receive the 128-bit GUID. 
          */
-        getID (id:Outval<GUID>) : RESULT;
+        getID (id:Out<GUID>) : RESULT;
         /** 
          * Retrieves the path of the VCA.
          * @param path Address of a buffer to receive the path. Specify 0 or NULL to ignore.
@@ -2346,13 +2251,13 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param retrieved Address of a variable to receive the size of the retrieved path in bytes, 
          * including the terminating null character. Optional. Specify 0 or NULL to ignore. 
          */
-        getPath (path:Outval<string>, size:number, retrieved:Outval<number>) : RESULT;
+        getPath (path:Out<string>, size:number, retrieved:Out<number>) : RESULT;
         /** 
          * Retrieves the volume level of the VCA 
          * @param volume Address of a variable to receive the volume as set from the public API. Specify 0 or NULL to ignore. 
          * @param finalvolume Address of a variable to receive the final combined volume. Specify 0 or NULL to ignore.
         */
-        getVolume (volume:Outval<number>, finalvolume:Outval<number>) : RESULT;
+        getVolume (volume:Out<number>, finalvolume:Out<number>) : RESULT;
         /** 
          * Sets the volume level of the VCA.
          * @param volume The volume level to set as a linear gain. 0 = silent, 1 = full volume.
@@ -2365,53 +2270,53 @@ Also defines the number of channels in the unit that a read callback will proces
          * Retrieves the number of buses in the bank.
          * @param count Address of a variable to receive the number of buses.
          */
-        getBusCount(count:Outval<number>): RESULT;
+        getBusCount(count:Out<number>): RESULT;
         /**
          * Retrieves the buses in the bank.
          * @param array An array of memory allocated by the user. 
          * @param capacity The capacity of the array passed in as the first parameter 
          * @param count Address of a variable to receive the number of buses written to the array 
          */
-        getBusList(array:Outval<Bus[]>, capacity:number, count:Outval<number>): RESULT;
+        getBusList(array:Out<Bus[]>, capacity:number, count:Out<number>): RESULT;
         /**
          * Retrieves the number of EventDescriptions in the bank.
          * @param count Address of a variable to receive the number of EventDescriptions. 
          */
-        getEventCount(count:Outval<number>): RESULT;
+        getEventCount(count:Out<number>): RESULT;
         /**
          * Retrieves the EventDescriptions in the bank.
          * @param array An array of memory allocated by the user. 
          * @param capacity The capacity of the array passed in as the first parameter
          * @param count Address of a variable to receive the number of Event Descriptions written to the array 
          */
-        getEventList(array:Outval<EventDescription[]>, capacity:number, count:Outval<number>): RESULT;
+        getEventList(array:Out<EventDescription[]>, capacity:number, count:Out<number>): RESULT;
         /**
          * Retrieves the ID of the bank.
          * @param id Address of a variable to receive the ID. 
          */
-        getID(id:Outval<GUID>): RESULT;
+        getID(id:Out<GUID>): RESULT;
         /**
          * Retrieves the bank loading state.
          * @param state Address of a variable to receive the loading state. 
          */
-        getLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
+        getLoadingState(state:Out<STUDIO_LOADING_STATE>): RESULT;
         /**
          * Retrieves the path of the bank.
          * @param path Address of a buffer to receive the path. Specify 0 or NULL to ignore. 
          * @param size Size of the path buffer in bytes. Required if path parameter is not NULL. 
          * @param retrieved Address of a variable to receive the size of the retrieved path in bytes, including the terminating null character. Optional. Specify 0 or NULL to ignore. 
          */
-        getPath(path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
+        getPath(path:Out<string>, size:number, retrieved:Out<number>): RESULT;
         /**
          * Retrieves the sample data loading state of the bank.
          * @param state Address of a variable to receive the loading state. 
          */
-        getSampleLoadingState(state:Outval<STUDIO_LOADING_STATE>): RESULT;
+        getSampleLoadingState(state:Out<STUDIO_LOADING_STATE>): RESULT;
         /**
          * Retrieves the number of string table entries in the bank.
          * @param count Address of a variable to receive the number of string table entries. 
          */
-        getStringCount(count:Outval<number>): RESULT;
+        getStringCount(count:Out<number>): RESULT;
         /**
          * Retrieves the string table entry for the given index.
          * @param index Index of string table entry to retrieve. 
@@ -2420,24 +2325,24 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param size Size of the path buffer in bytes. Required if path parameter is not NULL. 
          * @param retrieved Address of a variable to receive the size of the retrieved path in bytes, including the terminating null character. Optional. Specify 0 or NULL to ignore. 
          */
-        getStringInfo(index:number, id:Outval<GUID>, path:Outval<string>, size:number, retrieved:Outval<number>): RESULT;
+        getStringInfo(index:number, id:Out<GUID>, path:Out<string>, size:number, retrieved:Out<number>): RESULT;
         /**
          * Retrieves the user data that is set on the bank.
          * @param userdata Address of a variable to receive the user data. 
          */
-        getUserData(userdata:Outval<any>): RESULT;
+        getUserData(userdata:Out<any>): RESULT;
         /**
          * Retrieves the number of VCAs in the bank.
          * @param count Address of a variable to receive the number of VCAs. 
          */
-        getVCACount(count:Outval<number>): RESULT;
+        getVCACount(count:Out<number>): RESULT;
         /**
          * Retrieves the VCAs in the bank.
          * @param array An array of memory allocated by the user.
          * @param capacity The capacity of the array passed in as the first parameter 
          * @param count Address of a variable to receive the number of VCAs written to the array 
          */
-        getVCAList(array:Outval<VCA[]>, capacity:number, count:Outval<number>): RESULT;
+        getVCAList(array:Out<VCA[]>, capacity:number, count:Out<number>): RESULT;
         /**
          * Loads all non-streaming sample data used by events in the bank.
          * @description You can use this function to preload sample data ahead of time so that events can be played immediately when required. Each time this function is called, it will increment the reference count, so the sample data will not be unloaded until Studio::Bank::unloadSampleData is called the same number of times. It is valid to mix calls to Studio::Bank::loadSampleData with calls to Studio::EventDescription::loadSampleData. If you do this, the sample data will be loaded when either reference count is non-zero, and will be unloaded when both reference counts go to zero.
@@ -2559,7 +2464,7 @@ Also defines the number of channels in the unit that a read callback will proces
         (dsp_state:DSP_STATE, index:number, value, length:number, valuestr:string): void;
     }
     export interface DSP_GETPARAM_FLOAT_CALLBACK {
-        (dsp_state:DSP_STATE, index:Outval<number>, value:Outval<number>, valuestr:Outval<string>): void;
+        (dsp_state:DSP_STATE, index:Out<number>, value:Out<number>, valuestr:Out<string>): void;
     }
     export interface DSP_GETPARAM_INT_CALLBACK {
         (callbackdata): void;
@@ -2704,7 +2609,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** These are bitfields to describe for a certain number of channels in a signal, which channels are being represented.
      * @description For example, a signal could be 1 channel, but contain the LFE channel only. */
-    export enum CHANNELMASK {
+    export const enum CHANNELMASK {
         CHANNELMASK_FRONT_LEFT = 0x00000001,
         CHANNELMASK_FRONT_RIGHT = 0x00000002,
         CHANNELMASK_FRONT_CENTER = 0x00000004,
@@ -2728,7 +2633,7 @@ Also defines the number of channels in the unit that a read callback will proces
     /** 
      * Specify the requested information to be output when using the logging version of FMOD. 
     */
-    export enum DEBUG_FLAGS {
+    export const enum DEBUG_FLAGS {
         /** Disable all messages */
         LEVEL_NONE = 0x00000000,
         /** Enable only error messages */
@@ -2763,7 +2668,7 @@ Also defines the number of channels in the unit that a read callback will proces
     export const CODEC_WAVEFORMAT_VERSION = 3;
 
     /** Flags that provide additional information about a particular driver */
-    export enum DRIVER_STATE {
+    export const enum DRIVER_STATE {
         CONNECTED = 1,
         DEFAULT = 2
     }
@@ -2772,7 +2677,7 @@ Also defines the number of channels in the unit that a read callback will proces
     export const DSP_GETPARAM_VALUESTR_LENGTH = 32;
 
     /** Initialization flags. Use them with System::init in the flags parameter to change various behavior. Use System::setAdvancedSettings to adjust settings for some of the features that are enabled by these flags. */
-    export enum INITFLAGS {
+    export const enum INITFLAGS {
         /** Initialize normally */
         NORMAL = 0,
         /** No stream thread is created internally. Streams are driven from System.update. Mainly used with non-realtime outputs. */
@@ -2813,7 +2718,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Bit fields for memory allocation type being passed into FMOD memory callbacks.
      * @description Remember this is a bitfield. You may get more than 1 bit set (ie physical + persistent) so do not simply switch on the types! You must check each bit individually or clear out the bits that you do not want within the callback. Bits can be excluded if you want during Memory_Initialize so that you never get them. */
-    export enum MEMORY_TYPE {
+    export const enum MEMORY_TYPE {
         /** Standard memory. */
         MEMORY_NORMAL = 0x00000000,
         /** Stream file buffer, size controllable with System::setStreamBufferSize. */
@@ -2840,7 +2745,7 @@ Also defines the number of channels in the unit that a read callback will proces
     /** Sound description bitfields, bitwise OR them together for loading and describing sounds.
      * @description By default a sound will open as a static sound that is decompressed fully into memory to PCM. (ie equivalent of FMOD_CREATESAMPLE) To have a sound stream instead, use FMOD_CREATESTREAM, or use the wrapper function System::createStream. Some opening modes (ie FMOD_OPENUSER, FMOD_OPENMEMORY, FMOD_OPENMEMORY_POINT, FMOD_OPENRAW) will need extra information. This can be provided using the FMOD_CREATESOUNDEXINFO structure. Specifying FMOD_OPENMEMORY_POINT will POINT to your memory rather allocating its own sound buffers and duplicating it internally. This means you cannot free the memory while FMOD is using it, until after Sound::release is called. With FMOD_OPENMEMORY_POINT, for PCM formats, only WAV, FSB, and RAW are supported. For compressed formats, only those formats supported by FMOD_CREATECOMPRESSEDSAMPLE are supported. With FMOD_OPENMEMORY_POINT and FMOD_OPENRAW or PCM, if using them together, note that you must pad the data on each side by 16 bytes. This is so fmod can modify the ends of the data for looping/interpolation/mixing purposes. If a wav file, you will need to insert silence, and then reset loop points to stop the playback from playing that silence. Xbox 360 memory On Xbox 360 Specifying FMOD_OPENMEMORY_POINT to a virtual memory address will cause FMOD_ERR_INVALID_ADDRESS to be returned. Use physical memory only for this functionality. FMOD_LOWMEM is used on a sound if you want to minimize the memory overhead, by having FMOD not allocate memory for certain features that are not likely to be used in a game environment. These are : 1. Sound::getName functionality is removed. 256 bytes per sound is saved
      */
-    export enum MODE {
+    export const enum MODE {
         /** Default for all modes listed below. FMOD_LOOP_OFF, FMOD_2D, FMOD_3D_WORLDRELATIVE, 
          * FMOD_3D_INVERSEROLLOFF  */
         DEFAULT = 0,
@@ -2946,7 +2851,7 @@ Also defines the number of channels in the unit that a read callback will proces
         VIRTUAL_PLAYFROMSTART = 2147483648
     }
 
-    export enum PORT_INDEX {
+    export const enum PORT_INDEX {
         NONE = 0xFFFFFFFFFFFFFFFF
     }
 
@@ -3279,7 +3184,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** These callback types are used with System::setCallback. */
-    export enum SYSTEM_CALLBACK_TYPE {
+    export const enum SYSTEM_CALLBACK_TYPE {
         DEVICELISTCHANGED = 0x00000001,
         DEVICELOST = 0x00000002,
         MEMORYALLOCATIONFAILED = 0x00000004,
@@ -3298,7 +3203,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** List of time types that can be returned by Sound::getLength and used with 
      * Channel::setPosition or Channel::getPosition. */
-    export enum TIMEUNIT {
+    export const enum TIMEUNIT {
         MS = 0x00000001,
         PCM = 0x00000002,
         PCMBYTES = 0x00000004,
@@ -3758,7 +3663,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     // #region LOW LEVEL SYSTEM ENUMERATIONS ///////////////////////////////////////////////////////////////////////////////////////
     /** These callback types are used with Channel::setCallback. */
-    export enum CHANNELCONTROL_CALLBACK_TYPE {
+    export const enum CHANNELCONTROL_CALLBACK_TYPE {
         END,
         VIRTUALVOICE,
         SYNCPOINT,
@@ -3768,7 +3673,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** These enums denote special types of node within a DSP chain. */
-    export enum CHANNELCONTROL_DSP_INDEX {
+    export const enum CHANNELCONTROL_DSP_INDEX {
         HEAD,
         FADER,
         TAIL,
@@ -3778,7 +3683,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Used to distinguish if a FMOD_CHANNELCONTROL parameter is actually a channel 
      * or a channelgroup. */
-    export enum CHANNELCONTROL_TYPE {
+    export const enum CHANNELCONTROL_TYPE {
         CHANNEL,
         CHANNELGROUP,
         FORCEINT
@@ -3787,7 +3692,7 @@ Also defines the number of channels in the unit that a read callback will proces
     /** When creating a multichannel sound, FMOD will pan them to their default speaker
      * locations, for example a 6 channel sound will default to one channel per 5.1 output
      * speaker. Another example is a stereo sound. It will default to left = front left, right = front right. */
-    export enum CHANNELORDER {
+    export const enum CHANNELORDER {
         DEFAULT,
         WAVEFORMAT,
         PROTOOLS,
@@ -3799,7 +3704,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Specify the destination of log output when using the logging version of FMOD. */
-    export enum DEBUG_MODE {
+    export const enum DEBUG_MODE {
         /** Default log location per platform, i.e. Visual Studio output window, stderr, LogCat, etc. */
         TTY,
         /** Write log to specified file path */
@@ -3810,7 +3715,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** List of connection types between 2 DSP nodes. */
-    export enum DSPCONNECTION_TYPE {
+    export const enum DSPCONNECTION_TYPE {
         STANDARD,
         SIDECHAIN,
         SEND,
@@ -3820,7 +3725,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_CHANNELMIX filter. */
-    export enum DSP_CHANNELMIX {
+    export const enum DSP_CHANNELMIX {
         OUTPUTGROUPING,
         GAIN_CH0,
         GAIN_CH1,
@@ -3858,7 +3763,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Parameter types for the FMOD_DSP_CHANNELMIX_OUTPUTGROUPING parameter for
      * FMOD_DSP_TYPE_CHANNELMIX effect. */
-    export enum DSP_CHANNELMIX_OUTPUT {
+    export const enum DSP_CHANNELMIX_OUTPUT {
         DEFAULT,
         ALLMONO,
         ALLSTEREO,
@@ -3869,7 +3774,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_CHORUS filter. */
-    export enum DSP_CHORUS {
+    export const enum DSP_CHORUS {
         MIX,
         RATE,
         DEPTH
@@ -3877,7 +3782,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Parameter types for the FMOD_DSP_TYPE_COMPRESSOR unit. 
      * This is a multichannel software limiter that is uniform across the whole spectrum. */
-    export enum DSP_COMPRESSOR {
+    export const enum DSP_COMPRESSOR {
         THRESHOLD,
         RATIO,
         ATTACK,
@@ -3888,7 +3793,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_CONVOLUTIONREVERB filter. */
-    export enum DSP_CONVOLUTION_REVERB {
+    export const enum DSP_CONVOLUTION_REVERB {
         PARAM_IR,
         PARAM_WET,
         PARAM_DRY,
@@ -3896,7 +3801,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_DELAY filter. */
-    export enum DSP_DELAY {
+    export const enum DSP_DELAY {
         CH0,
         CH1,
         CH2,
@@ -3917,12 +3822,12 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_DISTORTION filter. */ 
-    export enum DSP_DISTORTION {
+    export const enum DSP_DISTORTION {
         LEVEL
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_ECHO filter. */
-    export enum DSP_ECHO {
+    export const enum DSP_ECHO {
         DELAY,
         FEEDBACK,
         DRYLEVEL,
@@ -3933,7 +3838,7 @@ Also defines the number of channels in the unit that a read callback will proces
     /** Parameter types for the FMOD_DSP_TYPE_ENVELOPEFOLLOWER unit. 
      * This is a simple envelope follower for tracking the signal level.
      * @deprecated */
-    export enum DSP_EVELOPEFOLLOWER {
+    export const enum DSP_EVELOPEFOLLOWER {
         ATTACK,
         RELEASE,
         ENVELOPE,
@@ -3941,13 +3846,13 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_FADER filter. */
-    export enum DSP_FADER {
+    export const enum DSP_FADER {
         GAIN,
         OVERALL_GAIN    
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_FFT dsp effect. */
-    export enum DSP_FFT {
+    export const enum DSP_FFT {
         WINDOWSIZE,
         WINDOWTYPE,
         SPECTRUMDATA,
@@ -3961,7 +3866,7 @@ Also defines the number of channels in the unit that a read callback will proces
      * only have a small portion of the signal sample (the fft window size).
      * Windowing the signal with a curve or triangle tapers the sides of the fft window 
      * to help alleviate this problem. */
-    export enum DSP_FFT_WINDOW {
+    export const enum DSP_FFT_WINDOW {
         RECT,
         TRIANGLE,
         HAMMING,
@@ -3971,20 +3876,20 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_FLANGE filter. */
-    export enum DSP_FLANGE {
+    export const enum DSP_FLANGE {
         MIX,
         DEPTH,
         RATE
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_HIGHPASS filter. */
-    export enum DSP_HIGHPASS {
+    export const enum DSP_HIGHPASS {
         CUTOFF,
         RESONANCE
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_HIGHPASS_SIMPLE filter. */
-    export enum DSP_HIGHPASS_SIMPLE {
+    export const enum DSP_HIGHPASS_SIMPLE {
         CUTOFF
     }
 
@@ -3993,7 +3898,7 @@ Also defines the number of channels in the unit that a read callback will proces
      * emulates the DirectX DMO echo effect. Impulse tracker files can support
      *  this, and FMOD will produce the effect on ANY platform, not just those
      *  that support DirectX effects! */
-    export enum DSP_ITECHO {
+    export const enum DSP_ITECHO {
         WETDRYMIX,
         FEEDBACK,
         LEFTDELAY,
@@ -4006,13 +3911,13 @@ Also defines the number of channels in the unit that a read callback will proces
      *  filter in that it uses a different quality algorithm and is the filter
      *  used to produce the correct sounding playback in .IT files. FMOD Studio's .IT
      *  playback uses this filter. */
-    export enum DSP_ITLOWPASS {
+    export const enum DSP_ITLOWPASS {
         CUTOFF,
         RESONANCE   
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_LIMITER filter. */
-    export enum DSP_LIMITER {
+    export const enum DSP_LIMITER {
         RELEASETIME,
         CEILING,
         MAXIMIZERGAIN,
@@ -4020,18 +3925,18 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_LOWPASS filter. */
-    export enum DSP_LOWPASS {
+    export const enum DSP_LOWPASS {
         CUTOFF,
         RESONANCE     
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_LOWPASS_SIMPLE filter. */
-    export enum DSP_LOWPASS_SIMPLE {
+    export const enum DSP_LOWPASS_SIMPLE {
         CUTOFF
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_MULTIBAND_EQ filter. */
-    export enum DSP_MULTIBAND_EQ {
+    export const enum DSP_MULTIBAND_EQ {
         A_FILTER,
         A_FREQUENCY,
         A_Q,
@@ -4055,7 +3960,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Filter types for FMOD_DSP_MULTIBAND_EQ. */
-    export enum DSP_MULTIBAND_EQ_FILTER_TYPE {
+    export const enum DSP_MULTIBAND_EQ_FILTER_TYPE {
         DISABLED,
         LOWPASS_12DB,
         LOWPASS_24DB,
@@ -4072,7 +3977,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_NORMALIZE filter. */
-    export enum DSP_NORMALIZE {
+    export const enum DSP_NORMALIZE {
         FADETIME,
         THRESHHOLD,
         MAXAMP     
@@ -4083,7 +3988,7 @@ Also defines the number of channels in the unit that a read callback will proces
      *  like Dolby Atmos or Sony Morpheus. These object panners take input in,
      *  and send it to the 7.1 bed, but do not send the signal further down the
      *  DSP chain (the output of the dsp is silence). */
-    export enum DSP_OBJECTPAN {
+    export const enum DSP_OBJECTPAN {
         _3D_POSITION,
         _3D_ROLLOFF,
         _3D_MIN_DISTANCE,
@@ -4096,13 +4001,13 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_OSCILLATOR filter. */
-    export enum DSP_OSCILLATOR {
+    export const enum DSP_OSCILLATOR {
         TYPE,
         RATE  
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_PAN DSP. */
-    export enum DSP_PAN {
+    export const enum DSP_PAN {
         MODE,
         _2D_STEREO_POSITION,
         _2D_DIRECTION,
@@ -4129,14 +4034,14 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Parameter values for the FMOD_DSP_PAN_2D_STEREO_MODE parameter
      *  of the FMOD_DSP_TYPE_PAN DSP. */
-    export enum DSP_PAN_2D_STEREO_MODE_TYPE {
+    export const enum DSP_PAN_2D_STEREO_MODE_TYPE {
         DISTRIBUTED,
         DISCRETE     
     }
 
     /** Parameter values for the FMOD_DSP_PAN_3D_EXTENT_MODE parameter
      * of the FMOD_DSP_TYPE_PAN DSP */
-    export enum DSP_PAN_3D_EXTENT_MODE_TYPE {
+    export const enum DSP_PAN_3D_EXTENT_MODE_TYPE {
         AUTO,
         USER,
         OFF   
@@ -4144,7 +4049,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Parameter values for the FMOD_DSP_PAN_3D_ROLLOFF parameter of
      * the FMOD_DSP_TYPE_PAN DSP. */
-    export enum DSP_PAN_3D_ROLLOFF_TYPE {
+    export const enum DSP_PAN_3D_ROLLOFF_TYPE {
         LINEARSQUARED,
         LINEAR,
         INVERSE,
@@ -4154,20 +4059,20 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Parameter values for the FMOD_DSP_PAN_MODE parameter of the 
      * FMOD_DSP_TYPE_PAN DSP. */
-    export enum DSP_PAN_MODE_TYPE {
+    export const enum DSP_PAN_MODE_TYPE {
         MONO,
         STEREO,
         SURROUND    
     }
 
     /** Flags for the FMOD_DSP_PAN_SUMSURROUNDMATRIX_FUNC function. */
-    export enum DSP_PAN_SURROUND_FLAGS {
+    export const enum DSP_PAN_SURROUND_FLAGS {
         DEFAULT,
         ROTATION_NOT_BIASED
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_PARAMEQ filter. */
-    export enum DSP_PARAMEQ {
+    export const enum DSP_PARAMEQ {
         CENTER,
         BANDWIDTH,
         GAIN
@@ -4176,7 +4081,7 @@ Also defines the number of channels in the unit that a read callback will proces
     /** Built-in types for the 'datatype' member of FMOD_DSP_PARAMETER_DESC_DATA. 
      * Data parameters of type other than FMOD_DSP_PARAMETER_DATA_TYPE_USER will be 
      * treated specially by the system. */
-    export enum DSP_PARAMETER_DATA_TYPE {
+    export const enum DSP_PARAMETER_DATA_TYPE {
         USER,
         OVERALLGAIN,
         _3DATTRIBUTES,
@@ -4187,14 +4092,14 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** DSP float parameter mappings. These determine how values are mapped across 
      * dials and automation curves. */
-    export enum DSP_PARAMETER_FLOAT_MAPPING_TYPE {
+    export const enum DSP_PARAMETER_FLOAT_MAPPING_TYPE {
         LINEAR,
         AUTO,
         PIECEWISE_LINEAR     
     }
 
     /** DSP parameter types */
-    export enum DSP_PARAMETER_TYPE {
+    export const enum DSP_PARAMETER_TYPE {
         FLOAT,
         INT,
         BOOL,
@@ -4203,7 +4108,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_PITCHSHIFT filter */
-    export enum DSP_PITCHSHIFT {
+    export const enum DSP_PITCHSHIFT {
         PITCH,
         FFTSIZE,
         OVERLAP,
@@ -4211,13 +4116,13 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Operation type for FMOD_DSP_PROCESS_CALLBACK. */
-    export enum DSP_PROCESS_OPERATION {
+    export const enum DSP_PROCESS_OPERATION {
         PERFORM,
         QUERY 
     }
 
     /** List of interpolation types that the FMOD Studio software mixer supports. */
-    export enum DSP_RESAMPLER {
+    export const enum DSP_RESAMPLER {
         DEFAULT,
         NOINTERP,
         LINEAR,
@@ -4227,19 +4132,19 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_RETURN */
-    export enum DSP_RETURN {
+    export const enum DSP_RETURN {
         ID,
         INPUT_SPEAKER_MODE  
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_SEND DSP. */
-    export enum DSP_SEND {
+    export const enum DSP_SEND {
         RETURNID,
         LEVEL
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_SFXREVERB unit. */
-    export enum DSP_SFXREVERB {
+    export const enum DSP_SFXREVERB {
         DECAYTIME,
         EARLYDELAY,
         LATEDELAY,
@@ -4256,7 +4161,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_THREE_EQ filter. */
-    export enum DSP_THREE_EQ {
+    export const  enum DSP_THREE_EQ {
         LOWGAIN,
         MIDGAIN,
         HIGHGAIN,
@@ -4267,14 +4172,14 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Parameter values for the FMOD_DSP_THREE_EQ_CROSSOVERSLOPE parameter 
      * of the FMOD_DSP_TYPE_THREE_EQ DSP. */
-    export enum DSP_THREE_EQ_CROSSOVERSLOPE_TYPE {
+    export const enum DSP_THREE_EQ_CROSSOVERSLOPE_TYPE {
         _12DB,
         _24DB,
         _48DB
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_TRANSCEIVER filter */
-    export enum DSP_TRANSCEIVER {
+    export const enum DSP_TRANSCEIVER {
         TRANSMIT,
         GAIN,
         CHANNEL,
@@ -4283,7 +4188,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Parameter types for the FMOD_DSP_TRANSCEIVER_SPEAKERMODE parameter for 
      * FMOD_DSP_TYPE_TRANSCEIVER effect. */
-    export enum DSP_TRANSCEIVER_SPEAKERMODE {
+    export const enum DSP_TRANSCEIVER_SPEAKERMODE {
         AUTO,
         MONO,
         STEREO,
@@ -4291,7 +4196,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Parameter types for the FMOD_DSP_TYPE_TREMOLO filter. */
-    export enum DSP_TREMOLO {
+    export const enum DSP_TREMOLO {
         FREQUENCY,
         DEPTH,
         SHAPE,
@@ -4303,7 +4208,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
     /** These definitions can be used for creating FMOD defined special effects 
      * or DSP units. */
-    export enum DSP_TYPE {
+    export const enum DSP_TYPE {
         UNKNOWN,
         MIXER,
         OSCILLATOR,
@@ -4345,7 +4250,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
     
     /** Used to distinguish the instance type passed into FMOD_ERROR_CALLBACK */
-    export enum ERRORCALLBACK_INSTANCETYPE {
+    export const enum ERRORCALLBACK_INSTANCETYPE {
         NONE,
         SYSTEM,
         CHANNEL,
@@ -4369,7 +4274,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** These values describe what state a sound is in after FMOD_NONBLOCKING
      *  has been used to open it. */
-    export enum OPENSTATE {
+    export const enum OPENSTATE {
         READY,
         LOADING,
         ERROR,
@@ -4383,7 +4288,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** These output types are used with System::setOutput / System::getOutput, 
      * to choose which output method to use. */
-    export enum OUTPUTTYPE {
+    export const enum OUTPUTTYPE {
         AUTODETECT,
         UNKNOWN,
         NOSOUND,
@@ -4413,7 +4318,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** These are plugin types defined for use with the System::getNumPlugins, 
      * System::getPluginInfo and System::unloadPlugin functions. */
-    export enum PLUGINTYPE {
+    export const enum PLUGINTYPE {
         OUTPUT,
         CODEC,
         DSP,
@@ -4421,7 +4326,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
  
     /** Error codes. Returned from every function. */
-    export enum RESULT {
+    export const enum RESULT {
         OK,
         ERR_BADCOMMAND,
         ERR_CHANNEL_ALLOC,
@@ -4510,7 +4415,7 @@ Also defines the number of channels in the unit that a read callback will proces
     /** These values are used with SoundGroup::setMaxAudibleBehavior to determine
      *  what happens when more sounds are played than are specified with
      *  SoundGroup::setMaxAudible. */
-    export enum SOUNDGROUP_BEHAVIOR {
+    export const enum SOUNDGROUP_BEHAVIOR {
         FAIL,
         MUTE,
         STEALLOWEST,
@@ -4520,7 +4425,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** These definitions describe the native format of the hardware or software 
      * buffer that will be used */
-    export enum SOUND_FORMAT {
+    export const enum SOUND_FORMAT {
         NONE,
         PCM8,
         PCM16,
@@ -4533,7 +4438,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** These definitions describe the type of sound being played */
-    export enum SOUND_TYPE {
+    export const enum SOUND_TYPE {
         UNKNOWN,
         AIFF,
         ASF,
@@ -4563,7 +4468,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Assigns an enumeration for a speaker index. */
-    export enum SPEAKER {
+    export const enum SPEAKER {
         FRONT_LEFT,
         FRONT_RIGHT,
         FRONT_CENTER,
@@ -4580,7 +4485,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** These are speaker types defined for use with the System::setSoftwareFormat command */
-    export enum SPEAKERMODE {
+    export const enum SPEAKERMODE {
         DEFAULT,
         RAW,
         MONO,
@@ -4594,7 +4499,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** List of data types that can be returned by Sound::getTag  */
-    export enum TAGDATATYPE {
+    export const enum TAGDATATYPE {
         BINARY,
         INT,
         FLOAT,
@@ -4608,7 +4513,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** List of tag types that could be stored within a sound. 
      * These include id3 tags, metadata from netstreams and vorbis/asf data. */
-    export enum TAGTYPE {
+    export const enum TAGTYPE {
         UNKNOWN,
         ID3V1,
         ID3V2,
@@ -4848,14 +4753,14 @@ Also defines the number of channels in the unit that a read callback will proces
     // #region Studio Defines ////////////////////////////////////////////////////////////////////////////////
 
     /* Flags passed into Studio::System::startCommandCapture. */
-    export enum STUDIO_COMMANDCAPTURE_FLAGS {
+    export const enum STUDIO_COMMANDCAPTURE_FLAGS {
         NORMAL = 0x00000000,
         FILEFLUSH = 0x00000001,
         SKIP_INITIAL_STATE = 0x00000002
     }
 
     /** Flags passed into Studio.System.loadCommandReplay */
-    export enum STUDIO_COMMANDREPLAY_FLAGS {
+    export const enum STUDIO_COMMANDREPLAY_FLAGS {
         /** Standard behavior. */
         NORMAL = 0x00000000,
         /** Normally the playback will release any created resources when it stops, unless this flag is set. */
@@ -4866,7 +4771,7 @@ Also defines the number of channels in the unit that a read callback will proces
         SKIP_BANK_LOAD = 0x00000004
     }
    
-    export enum STUDIO_EVENT_CALLBACK_TYPE {
+    export const enum STUDIO_EVENT_CALLBACK_TYPE {
         /** Called when an instance is fully created. Parameters = unused.  */
         CREATED = 0x00000001,
         /** Called when an instance is just about to be destroyed. Parameters = unused.  */
@@ -4904,7 +4809,7 @@ Also defines the number of channels in the unit that a read callback will proces
         CALLBACK_ALL = 0xFFFFFFFF
     }
 
-    export enum STUDIO_INITFLAGS {
+    export const enum STUDIO_INITFLAGS {
         /** Initialize normally.  */
         NORMAL = 0x00000000,
         /** Enable live update */
@@ -4922,7 +4827,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     /** Flags passed into Studio loadBank commands to control bank load behaviour.
      * Normal JavaScript: FMOD.STUDIO_BANK_ + the enum value */
-    export enum STUDIO_LOAD_BANK_FLAGS {
+    export const enum STUDIO_LOAD_BANK_FLAGS {
         /** Standard behavior */
         NORMAL = 0x00000000,
         /** Loading occurs asynchronously (not in HTML5) */
@@ -4934,7 +4839,7 @@ Also defines the number of channels in the unit that a read callback will proces
     export const STUDIO_LOAD_MEMORY_ALIGNMENT = 32;
 
     /** These callback types are used with Studio::System::setCallback. */
-    export enum STUDIO_SYSTEM_CALLBACK_TYPE {
+    export const STUDIO_SYSTEM_CALLBACK_TYPE {
         /** Called at the start of the main Studio update. For async mode this will be on its own thread.  */
         PREUPDATE = 0x00000001,
         /** Called at the end of the main Studio update. For async mode this will be on its own thread.  */
@@ -4949,7 +4854,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     // #region Studio Enumerations //////////////////////////////////////////////////////
     
-    export enum STUDIO_EVENT_PROPERTY {
+    export const enum STUDIO_EVENT_PROPERTY {
         CHANNELPRIORITY,
         /** Priority to set on low-level channels created by this event instance (-1 to 256).  */
         SCHEDULE_DELAY,
@@ -4964,7 +4869,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /**  */
-    export enum STUDIO_INSTANCETYPE {
+    export const enum STUDIO_INSTANCETYPE {
         NONE,
         SYSTEM,
         EVENTDESCRIPTION,
@@ -4977,7 +4882,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** These values describe the loading status of various objects.  */
-    export enum STUDIO_LOADING_STATE{
+    export const enum STUDIO_LOADING_STATE{
         /** Currently unloading */
         UNLOADING,
         /** Not loaded */
@@ -4991,7 +4896,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Specifies how to use the memory buffer passed to Studio::System::loadBankMemory. */
-    export enum STUDIO_LOAD_MEMORY_MODE {
+    export const enum STUDIO_LOAD_MEMORY_MODE {
         /** Duplicates the memory into its own buffers, memory can be freed after Studio::System::loadBankMemory returns.  */
         MEMORY,
         /** Copies the memory pointer without duplicating the memory into its own buffers, 
@@ -5009,7 +4914,7 @@ Also defines the number of channels in the unit that a read callback will proces
     	data2: number;
     }
     /** Describes the type of a parameter. */
-    export enum STUDIO_PARAMETER_TYPE {
+    export const enum STUDIO_PARAMETER_TYPE {
         /** Controlled via the API using Studio::EventInstance::setParameterValue.  */
         GAME_CONTROLLED,
         /** Distance between the event and the listener.  */
@@ -5029,7 +4934,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** These values describe the playback state of an event instance. */
-    export enum STUDIO_PLAYBACK_STATE {
+    export const enum STUDIO_PLAYBACK_STATE {
         /** Currently playing. */
         PLAYING,
         /** The timeline cursor is paused on a sustain point. */
@@ -5043,7 +4948,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Controls how to stop playback of an event instance. */
-    export enum STUDIO_STOP_MODE {
+    export const enum STUDIO_STOP_MODE {
         /** Allows AHDSR modulators to complete their release, and DSP effect tails to play out. */
         ALLOWFADEOUT,
         /** Stops the event instance immediately.  */
@@ -5051,7 +4956,7 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** These definitions describe a user property's type. */
-    export enum STUDIO_USER_PROPERTY_TYPE {
+    export const enum STUDIO_USER_PROPERTY_TYPE {
         INTEGER,
         BOOLEAN,
         FLOAT,
