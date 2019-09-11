@@ -1688,6 +1688,52 @@ Also defines the number of channels in the unit that a read callback will proces
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
         getNumListeners(numlistenersOut:Outval<number>): RESULT;
+        /**
+         * Retrieves a global parameter value by unique identifier.
+         * The final combined value returned in finalvalue combines the user value
+         * set using the public API with the result of any automation or modulation.
+         * The final combined value is calculated asynchronously when the Studio system updates. 
+         * @param id Parameter identifier.
+         * @param value Parameter value as set from the public API.
+         * @param finalvalue Final combined value.
+         */
+        getParameterByID(id: STUDIO_PARAMETER_ID, value: Outval<number>, finalvalue: Outval<number>): RESULT;
+        /**
+         * Retrieves a global parameter value by name
+         * The final combined value returned in finalvalue combines the user value
+         * set using the public API with the result of any automation or modulation.
+         * @param name Parameter name (case-insensitive)
+         * @param value Parameter value as set from the public API.(optional)
+         * @param finalvalue Final combined value (optional)
+         */
+        getParameterByName(name: string, value: Outval<number>, finalvalue: Outval<number>): RESULT;
+        /**
+         * Retrieves a global parameter by name or path.
+         * name can be the short name (such as 'Wind') or the full path (such as
+         * 'parameter:/Ambience/Wind'). Path lookups will only succeed if the string
+         * bank has been loaded.
+         * @param name Parameter name.
+         * @param parameter Parameter description
+         */
+        getParameterDescriptionByName(name: string, parameter: Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        /**
+         * Retrieves a global parameter by ID.
+         * @param id Parameter ID.
+         * @param parameter Receives parameter description.
+         */
+        getParameterDescriptionByID(id: STUDIO_PARAMETER_ID, parameter: Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        /**
+         * Retrieves the number of global parameters.
+         * @param count Global parameter count
+         */
+        getParameterDescriptionCount(count: Outval<number>): RESULT;
+        /**
+         * Retrieves a list of global parameters
+         * @param array Receives global parameters array.
+         * @param capacity Capacity of array. Max length.
+         * @param count Receives the number of parameters written to array.
+         */
+        getParameterDescriptionList(array: Outval<STUDIO_PARAMETER_DESCRIPTION[]>, capacity: number, count: Outval<number>): RESULT;
         /** 
          * Retrieves information for loading a sound from an audio table.
          * @param key The key that identifies the sound, listed in FMOD Studio
@@ -1832,6 +1878,33 @@ Also defines the number of channels in the unit that a read callback will proces
          *  to FMOD_MAX_LISTENERS inclusive. Default = 1. 
          * @returns an integer value defined in the FMOD_RESULT enumeration */
         setNumListners(numlisteners:number): RESULT;
+        /**
+         * Sets a global parameter value by unique identifier.
+         * If any ID is set to all zeroes then the corresponding value will be ignored.
+         * @param id Parameter identifier.
+         * @param value Value for given identifier.
+         * @param ignoreseekspeed Specifies whether to ignore the parameter's seek speed
+         * and set the value immediately (default: false)
+         */
+        setParameterByID(id: STUDIO_PARAMETER_ID, value: number, ignoreseekspeed?: boolean): RESULT;
+        /**
+         * Sets a global parameter value by unique identifier.
+         * If any ID is set to all zeroes then the corresponding value will be ignored.
+         * @param ids Parameter identifier.
+         * @param values Value for given identifier.
+         * @param count Number of items in the given arrays. (range 1 to 32);
+         * @param ignoreseekspeed Specifies whether to ignore the parameter's seek speed
+         * and set the value immediately (default: false)
+         */
+        setParametersByIDs(ids: STUDIO_PARAMETER_ID[], values: number[], count: number, ignoreseekspeed): RESULT;
+        /**
+         * Sets a global parameter value by name.
+         * @param name Parameter name (case-insensitive).
+         * @param value Value for given name.
+         * @param ignoreseekspeed Specifies whether to ignore the parameter's seek speed
+         * and set the value immediately (default: false)
+         */
+        setParameterByName(name: string, value: number, ignoreseekspeed?: boolean): RESULT;
         /** 
          * Sets arbitrary user data on the system
          * @param userdata
