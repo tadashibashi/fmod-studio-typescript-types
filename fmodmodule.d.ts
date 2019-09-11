@@ -1,4 +1,3 @@
-import { FMOD } from './index';
 
 /**
  * Initializes an FMOD object.
@@ -7,4 +6,4 @@ import { FMOD } from './index';
  * It should only contain configuration data 
  * (preRun, onRuntimeInitialized, TOTAL_MEMORY)
  */
-declare function FMODModule(fmodObject: FMOD): void;
+declare function FMODModule(fmodObject: any): void;
