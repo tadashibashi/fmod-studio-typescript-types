@@ -1,5 +1,5 @@
-import { FMOD, Out } from './index.d';
-export let fmod: FMOD = {};
+import { FMOD } from './index';
+export const fmod: FMOD = {};
 /**
  * A helper function that parses an IFMOD.GUID from a hexadecimal string. 
  * It can include or omit the '{', '}', '-' characters as formatted 
@@ -29,7 +29,7 @@ export let fmod: FMOD = {};
  	return returnguid;		
  }
 
-export class Outval implements Out<any> {
+export class Outval {
  	get<T>(): T {
  		return this.val as T;
  	}
