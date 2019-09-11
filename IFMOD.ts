@@ -1869,11 +1869,24 @@ Also defines the number of channels in the unit that a read callback will proces
 
     export interface EventDescription {
         createInstance(instance:Outval<EventInstance>): RESULT;
-
+        /**
+         * Retrieves the GUID
+         * @param id Event description GUID
+         */
         getID(id:Outval<GUID>): RESULT;
-
+        /**
+         * Retrieves the number of instances
+         * @param count Instance count.
+         */
         getInstanceCount(count:Outval<number>): RESULT;
-
+        /**
+         * Retrieves a list of the instances.
+         * This function returns a maximum of capacity instances. If more than capacity
+         * instances have been created then additional instances will be silently ignored.
+         * @param array An array to receive the list.
+         * @param capacity Capacity of the array.
+         * @param count Number of event instances written to array.
+         */
         getInstanceList(array:Outval<EventInstance[]>, capacity:number, count:Outval<number>): RESULT;
 
         /** Retrieves the length of the event's timeline in milliseconds
@@ -1883,12 +1896,31 @@ Also defines the number of channels in the unit that a read callback will proces
         getMaximumDistance(distance:Outval<number>): RESULT;
 
         getMinimumDistance(distance:Outval<number>): RESULT;
-
-        getParameter(name:string, parameter:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
-
-        getParameterByIndex(index:number, parameter:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
-
-        getParameterCount(count:Outval<number>): RESULT;
+        /**
+         * Retrieves an event parameter description by name.
+         * @param name Parameter name (case-insensitive)
+         * @param parameter Parameter description.
+         */
+        getParameterDescriptionByName(name:string, parameter:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        /**
+         * Retrieves an event parameter description by id.
+         * @param id Parameter id
+         * @param paramOut Parameter description
+         */
+        getParameterDescriptionByID(id: STUDIO_PARAMETER_ID, paramOut: Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        /**
+         * Retrieves an event parameter description by index.
+         * @param index Parameter index.
+         * @param paramOut Parameter description.
+         */
+        getParameterDescriptionByIndex(index:number, paramOut:Outval<STUDIO_PARAMETER_DESCRIPTION>): RESULT;
+        /**
+         * Retrieves the number of parameters in the event
+         * May be used in conjunction with EventDescription.getParameterDescriptionByIndex
+         * to enumerate event parameters
+         * @param count Parameter count.
+         */
+        getParameterDescriptionCount(count:Outval<number>): RESULT;
 
         getPath(path:Outval<string>, size:number, retrived:Outval<number>): RESULT;
         
@@ -1938,40 +1970,30 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param group Address of a variable to receive the ChannelGroup. Writes value to group.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
         */
-        getChannelGroup(group): RESULT;  
+        getChannelGroup(group: Outval<ChannelGroup>): RESULT;  
         /** 
          * Retrieves the EventDescription for the event instance 
          * @param description Address of a variable to receive the EventDescription object. Writes value to description.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
         */
-        getDescription(description): RESULT;
+        getDescription(description: Outval<EventDescription>): RESULT;
         /** 
          * Get the mask of what listeners apply to this event instance 
          * @param mask Address of a variable to receive the mask. Writes value to mask.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
         */
-        getListenerMask(mask:number): RESULT;
-        /** 
-         * Retrieves a parameter instance by name 
-         * @param name Name of the parameter (case-insensitive).
-         * @param parameter Address of a variable to receive the ParameterInstance object. Writes value to parameter.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-        */
-        getParameter(name:string, parameter): RESULT;
-        /** 
-         * Retrieves a parameter instance by name 
-         * @deprecated Please get and set parameter values using Studio.EventInstance.getParameterValue, setParameterValue, getParameterValueByIndex, setParameterValueByIndex
-         * @param index Index the parameter (case-insensitive).
-         * @param parameter Address of a variable to receive the ParameterInstance object. Writes value to parameter.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-        */
-        getParameterByIndex(index:number, parameter): RESULT;
-        /** 
-         * Retrieves the number of parameters in the event instance.
-         * @param count Address of a variable to receive the parameter count. Writes value to count.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
+        getListenerMask(mask:number): RESULT; 
+        /**
+         * Retrieves a parameter value by unique identifier.
+         * Automatic parameters always return value as 0 since they can never have their value set from the public API
+         * The final combined value returned in finalvalue combines the user value set using the public API with the
+         * result of any automation or modulation. The final combined value is calculated asynchronously
+         * when the Studio system updates.
+         * @param id Parameter identifier
+         * @param value Parameter value as set from the public API. (null to ignore)
+         * @param finalvalue Final combined parameter value. (null to ignore)
          */
-        getParameterCount(count:Outval<number>): RESULT;
+        getParameterByID(id: STUDIO_PARAMETER_ID, value: Outval<number>, finalvalue: Outval<number>): RESULT;
         /** 
          * Gets a parameter instance value by name.
          * @param name Name of the parameter (case-insensitive)
@@ -1979,15 +2001,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param finalvalueOut Address of a variable to receive the final combined value. Specify 0 or NULL to ignore. Writes a number to finalvalue.val
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */        
-        getParameterValue(name:string, valueOut:Outval<number>, finalvalueOut:Outval<number>): RESULT;
-        /** 
-         * Gets a parameter instance value by index.
-         * @param index Index of the parameter. 
-         * @param valueOut Address of a variable to receive the value as set from the public API. Specify 0 or NULL to ignore. Writes a number to value.val
-         * @param finalvalueOut Address of a variable to receive the final combined value. Specify 0 or NULL to ignore. Writes a number to finalvalue.val
-         * @returns an integer value defined in the FMOD_RESULT enumeration
-         */
-        getParameterValueByIndex(index:number, valueOut:Outval<number>, finalvalueOut:Outval<number>): RESULT;
+        getParameterByName(name:string, valueOut:Outval<number>, finalvalueOut:Outval<number>): RESULT;
         /** 
          * Retrieves the pause state of the event instance.
          * @param isPausedOut Address of a variable to receive the pause state. Writes a boolean to isPaused.val
@@ -2076,23 +2090,30 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param value Value to set
          * @returns an integer value defined in the FMOD_RESULT enumeration
          */
-        setParameterValue(name:string, value:number): RESULT;
-        /** 
-         * Sets a parameter instance value by index.
-         * @param index Index of the parameter
-         * @param value Value to set
-         * @returns an integer value defined in the FMOD_RESULT enumeration
+        /**
+         * Sets a parameter value by unique identifier.
+         * @param id Parameter identifier
+         * @param value Value for given identifier
+         * @param ignoreseekspeed Specifies whether to ignore the parameter's seek speed
+         * and set the value immediately. (default: false)
          */
-        setParameterValueByIndex(index:number, value:number): RESULT;
-        /** 
-         * Sets multiple parameter instance values by index.
-         * @description Remarks: If any index is an automatic parameter an error will return without setting the values of any parameters. If an index is set to -1, then its index and corresponding value will be ignored. Use getParameter to see indices.
-         * @param indices Indices of the parameters. 
-         * @param values Values to set. 
-         * @param count Number of indices and values.
-         * @returns an integer value defined in the FMOD_RESULT enumeration
+        setParameterByID(id: STUDIO_PARAMETER_ID, value: number, ignoreseekspeed?: boolean);/**
+         * Sets multiple parameter values by unique identifiers.
+         * @param ids Array of parameter identifiers
+         * @param values Array of values for each given identifier
+         * @param count Number of items in the given arrays. (Range 1-32)
+         * @param ignoreseekspeed Specifies whether to ignore the parameter's seek speed
+         * and set the value immediately. (default: false)
          */
-        setParameterValuesByIndices(indices:number[], values:number[], count:number): RESULT;
+        setParametersByIDs(ids: STUDIO_PARAMETER_ID[], values: number[], count: number, ignoreseekspeed?: boolean);
+        /**
+         * Sets a parameter by name.
+         * @param name Parameter name (case-insensitive).
+         * @param value Value for given identifier
+         * @param ignoreseekspeed Specifies whether to ignore the parameter's seek speed
+         * and set the value immediately. (default: false)
+         */
+        setParameterByName(name:string, value:number, ignoreseekspeed?:boolean): RESULT;
         /** 
          * Sets the pause state of the event instance.
          * @param paused The desired pause state. true = pause, false = unpause. 
@@ -4681,7 +4702,7 @@ Also defines the number of channels in the unit that a read callback will proces
 
     export interface STUDIO_PARAMETER_DESCRIPTION {
         name:string;
-        index:number;
+        id:number;
         minimum:number;
         maximum:number;
         defaultvalue:number;
@@ -4903,6 +4924,16 @@ Also defines the number of channels in the unit that a read callback will proces
         /** Copies the memory pointer without duplicating the memory into its own buffers, 
          * memory can be freed after receiving a FMOD_STUDIO_SYSTEM_CALLBACK_BANK_UNLOAD callback.  */
         MEMORY_POINT,
+    }
+    export interface STUDIO_PARAMETER_ID {
+    	/**
+    	 * First half of the ID.
+    	 */
+    	data1: number;
+    	/**
+    	 * Second half of the ID.
+    	 */
+    	data2: number;
     }
     /** Describes the type of a parameter. */
     export enum STUDIO_PARAMETER_TYPE {
