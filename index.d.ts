@@ -2,8 +2,6 @@ interface Out<T> {
 	val?: T;
 }
 
-export declare function FMODModule (fmodObject: FMOD): void;
-
 /**
  * FMOD Object Interface. Make sure to only call functions at and after onRuntimeInitialized.
  */
@@ -171,6 +169,207 @@ export interface FMOD {
     ParseID? (idString:string, id:Out<FMOD.GUID>): FMOD.RESULT;
     //#endregion Studio System Functions
     // #endregion Namespace Functions
+
+    // ======== Low Level Structures ============
+    /**
+     * Creates a default structure
+     */
+    _3D_ATTRIBUTES?(): FMOD._3D_ATTRIBUTES;
+    /**
+     * Creates a default structure
+     */
+    ADVANCEDSETTINGS?(): FMOD.ADVANCEDSETTINGS;
+    /**
+     * Creates a default structure
+     */
+    ASYNCREADINFO?(): FMOD.ASYNCREADINFO;
+    /**
+     * Creates a default structure
+     */
+    CODEC_DESCRIPTION?(): FMOD.CODEC_DESCRIPTION;
+    /**
+     * Creates a default structure
+     */
+    CODEC_STATE?(): FMOD.CODEC_STATE;
+    /**
+     * Creates a default structure
+     */
+    CODEC_WAVEFORMAT?(): FMOD.CODEC_WAVEFORMAT;
+    /**
+     * Creates a default structure
+     */
+    COMPLEX?(): FMOD.COMPLEX;
+    /**
+     * Creates a default structure
+     */
+    CREATESOUNDEXINFO?(): FMOD.CREATESOUNDEXINFO;
+    /**
+     * Creates a default structure
+     */
+    DSP_BUFFER_ARRAY?(): FMOD.DSP_BUFFER_ARRAY;
+    /**
+     * Creates a default structure
+     */
+    DSP_DESCRIPTION?(): FMOD.DSP_DESCRIPTION;
+    /**
+     * Creates a default structure
+     */
+    DSP_METERING_INFO?(): FMOD.DSP_METERING_INFO;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_3DATTRIBUTES?(): FMOD.DSP_PARAMETER_3DATTRIBUTES;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_3DATTRIBUTES_MULTI?(): FMOD.DSP_PARAMETER_3DATTRIBUTES_MULTI;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_DESC?(): FMOD.DSP_PARAMETER_DESC;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_DESC_BOOL?(): FMOD.DSP_PARAMETER_DESC_BOOL;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_DESC_DATA?(): FMOD.DSP_PARAMETER_DESC_DATA;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_DESC_FLOAT?(): FMOD.DSP_PARAMETER_DESC_FLOAT;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_DESC_INT?(): FMOD.DSP_PARAMETER_DESC_INT;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_FFT?(): FMOD.DSP_PARAMETER_FFT;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_FLOAT_MAPPING?(): FMOD.DSP_PARAMETER_FLOAT_MAPPING;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_FLOAT_MAPPING_PIECEWISE_LINEAR?(): FMOD.DSP_PARAMETER_FLOAT_MAPPING_PIECEWISE_LINEAR;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_OVERALLGAIN?(): FMOD.DSP_PARAMETER_OVERALLGAIN;
+    /**
+     * Creates a default structure
+     */
+    DSP_PARAMETER_SIDECHAIN?(): FMOD.DSP_PARAMETER_SIDECHAIN;
+    /**
+     * Creates a default structure
+     */
+    DSP_STATE?(): FMOD.DSP_STATE;
+    /**
+     * Creates a default structure
+     */
+    DSP_STATE_DFT_FUNCTIONS?(): FMOD.DSP_STATE_DFT_FUNCTIONS;
+    /**
+     * Creates a default structure
+     */
+    DSP_STATE_FUNCTIONS?(): FMOD.DSP_STATE_FUNCTIONS;
+    /**
+     * Creates a default structure
+     */
+    DSP_STATE_PAN_FUNCTIONS?(): FMOD.DSP_STATE_PAN_FUNCTIONS;
+    /**
+     * Creates a default structure
+     */
+    ERRORCALLBACK_INFO?(): FMOD.ERRORCALLBACK_INFO;
+    /**
+     * Creates a default structure
+     */
+    GUID?(): FMOD.GUID;
+    /**
+     * Creates a default structure
+     */
+    OUTPUT_DESCRIPTION?(): FMOD.OUTPUT_DESCRIPTION;
+    /**
+     * Creates a default structure
+     */
+    OUTPUT_OBJECT3DINFO?(): FMOD.OUTPUT_OBJECT3DINFO;
+    /**
+     * Creates a default structure
+     */
+    OUTPUT_STATE?(): FMOD.OUTPUT_STATE;
+    /**
+     * Creates a default structure
+     */
+    PLUGINLIST?(): FMOD.PLUGINLIST;
+    /**
+     * Creates a default structure
+     */
+    REVERB_PROPERTIES?(): FMOD.REVERB_PROPERTIES;
+    /**
+     * Creates a default structure
+     */
+    TAG?(): FMOD.TAG;
+    /**
+     * Creates a default structure
+     */
+    VECTOR?(): FMOD.VECTOR;
+
+    // ======= Studio Structures =============
+    /**
+     * Creates a default structure
+     */
+    STUDIO_ADVANCEDSETTINGS?(): FMOD.STUDIO_ADVANCEDSETTINGS;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_BANK_INFO?(): FMOD.STUDIO_BANK_INFO;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_BUFFER_INFO?(): FMOD.STUDIO_BUFFER_INFO;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_BUFFER_USAGE?(): FMOD.STUDIO_BUFFER_USAGE;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_COMMAND_INFO?(): FMOD.STUDIO_COMMAND_INFO;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_CPU_USAGE?(): FMOD.STUDIO_CPU_USAGE;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_PARAMETER_DESCRIPTION?(): FMOD.STUDIO_PARAMETER_DESCRIPTION;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_PLUGIN_INSTANCE_PROPERTIES?(): FMOD.STUDIO_PLUGIN_INSTANCE_PROPERTIES;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_PROGRAMMER_SOUND_PROPERTIES?(): FMOD.STUDIO_PROGRAMMER_SOUND_PROPERTIES;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_SOUND_INFO?(): FMOD.STUDIO_SOUND_INFO;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_TIMELINE_BEAT_PROPERTIES?() : FMOD.STUDIO_TIMELINE_BEAT_PROPERTIES;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_TIMELINE_MARKER_PROPERTIES?(): FMOD.STUDIO_TIMELINE_MARKER_PROPERTIES;
+    /**
+     * Creates a default structure
+     */
+    STUDIO_USER_PROPERTY?(): FMOD.STUDIO_USER_PROPERTY;
+
 }
 
 export namespace FMOD { 
@@ -2857,331 +3056,332 @@ Also defines the number of channels in the unit that a read callback will proces
 
     export const REVERB_MAXINSTANCES = 4;
 
-    /** Sets of predefined reverb properties, create your own or redefine these examples */
-    export namespace REVERB_PRESETS {
-        export const OFF: REVERB_PROPERTIES = { 
-            DecayTime: 1000, 
-            EarlyDelay: 7, 
-            LateDelay: 11, 
-            HFReference: 5000, 
-            HFDecayRatio: 100, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 20, 
-            EarlyLateMix: 96, 
-            WetLevel: -80.0 
-        };
-        export const GENERIC: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 7, 
-            LateDelay: 11, 
-            HFReference: 5000, 
-            HFDecayRatio: 83, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 14500, 
-            EarlyLateMix: 96, 
-            WetLevel: -8.0 
-        };
-        export const PADDEDCALL: REVERB_PROPERTIES = { 
-            DecayTime: 170, 
-            EarlyDelay: 1, 
-            LateDelay: 2, 
-            HFReference: 5000, 
-            HFDecayRatio: 10, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 160, 
-            EarlyLateMix: 84, 
-            WetLevel: -7.8 
-        };
-        export const ROOM: REVERB_PROPERTIES = { 
-            DecayTime: 400, 
-            EarlyDelay: 2, 
-            LateDelay: 3, 
-            HFReference: 5000, 
-            HFDecayRatio: 83, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 6050, 
-            EarlyLateMix: 88, 
-            WetLevel: -9.4 
-        };
-        export const BATHROOM: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 7, 
-            LateDelay: 11, 
-            HFReference: 5000, 
-            HFDecayRatio: 54, 
-            Diffusion: 100, 
-            Density: 60, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 2900, 
-            EarlyLateMix: 83, 
-            WetLevel: 0.5
-        };
-        export const LIVINGROOM: REVERB_PROPERTIES = { 
-            DecayTime: 500, 
-            EarlyDelay: 3, 
-            LateDelay: 4, 
-            HFReference: 5000, 
-            HFDecayRatio: 10, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 160, 
-            EarlyLateMix: 58, 
-            WetLevel: -19.0 
-        };
-        export const STONEROOM: REVERB_PROPERTIES = { 
-            DecayTime: 2300, 
-            EarlyDelay: 12, 
-            LateDelay: 17, 
-            HFReference: 5000, 
-            HFDecayRatio: 64, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 7800, 
-            EarlyLateMix: 71, 
-            WetLevel: -8.5 
-        };
-        export const AUDITORIUM: REVERB_PROPERTIES = { 
-            DecayTime: 4300, 
-            EarlyDelay:20, 
-            LateDelay: 30, 
-            HFReference: 5000, 
-            HFDecayRatio: 59, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 5850, 
-            EarlyLateMix: 64, 
-            WetLevel: -11.7 
-        };
-        export const CONCERTHALL: REVERB_PROPERTIES = { 
-            DecayTime: 3900, 
-            EarlyDelay: 20, 
-            LateDelay: 29, 
-            HFReference: 5000, 
-            HFDecayRatio: 70, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 5650, 
-            EarlyLateMix: 80, 
-            WetLevel: -9.8 
-        };
-        export const CAVE: REVERB_PROPERTIES = { 
-            DecayTime: 2900, 
-            EarlyDelay: 15, 
-            LateDelay: 22, 
-            HFReference: 5000, 
-            HFDecayRatio: 100, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 20000, 
-            EarlyLateMix: 59, 
-            WetLevel: -11.3 
-        };
-        export const HANGAR: REVERB_PROPERTIES = { 
-            DecayTime: 10000, 
-            EarlyDelay: 20, 
-            LateDelay: 30, 
-            HFReference: 5000, 
-            HFDecayRatio: 23, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 3400, 
-            EarlyLateMix: 72, 
-            WetLevel: -7.4 
-        };
-        export const CARPETTEDHALLWAY: REVERB_PROPERTIES = { 
-            DecayTime: 300, 
-            EarlyDelay: 2, 
-            LateDelay: 30, 
-            HFReference: 5000, 
-            HFDecayRatio: 10, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 500, 
-            EarlyLateMix: 56, 
-            WetLevel: -24.0 
-        };
-        export const HALLWAY: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 7, 
-            LateDelay: 11, 
-            HFReference: 5000, 
-            HFDecayRatio: 59, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 7800, 
-            EarlyLateMix: 87, 
-            WetLevel: -5.5 
-        };
-        export const STONECORRIDOR: REVERB_PROPERTIES = { 
-            DecayTime: 270, 
-            EarlyDelay: 13, 
-            LateDelay: 20, 
-            HFReference: 5000, 
-            HFDecayRatio: 79, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 9000, 
-            EarlyLateMix: 86, 
-            WetLevel: -6.0 
-        };
-        export const ALLEY: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 7, 
-            LateDelay: 11, 
-            HFReference: 5000, 
-            HFDecayRatio: 86, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 8300, 
-            EarlyLateMix: 80, 
-            WetLevel: -9.8 
-        };
-        export const FOREST: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 162, 
-            LateDelay: 88, 
-            HFReference: 5000, 
-            HFDecayRatio: 54, 
-            Diffusion: 79, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 760, 
-            EarlyLateMix: 94, 
-            WetLevel: -12.3 
-        };
-        export const CITY: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 7, 
-            LateDelay: 11, 
-            HFReference: 5000, 
-            HFDecayRatio: 67, 
-            Diffusion: 50, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 4050, 
-            EarlyLateMix: 66, 
-            WetLevel: -26.0 
-        };
-        export const MOUNTAINS: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 300, 
-            LateDelay: 100, 
-            HFReference: 5000, 
-            HFDecayRatio: 21, 
-            Diffusion: 27, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 1220, 
-            EarlyLateMix: 82, 
-            WetLevel: -24.0 
-        };
-        export const QUARRY: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 61, 
-            LateDelay: 25, 
-            HFReference: 5000, 
-            HFDecayRatio: 83, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 3400, 
-            EarlyLateMix: 100, 
-            WetLevel: -5.0 
-        };
-        export const PLAIN: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 179, 
-            LateDelay: 100, 
-            HFReference: 5000, 
-            HFDecayRatio: 50, 
-            Diffusion: 21, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 1670, 
-            EarlyLateMix: 65, 
-            WetLevel: -28.0 
-        };
-        export const PARKINGLOT: REVERB_PROPERTIES = { 
-            DecayTime: 1700, 
-            EarlyDelay: 8, 
-            LateDelay: 12, 
-            HFReference: 5000, 
-            HFDecayRatio: 100, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 20000, 
-            EarlyLateMix: 56, 
-            WetLevel: -19.5 
-        };
-        export const SEWERPIPE: REVERB_PROPERTIES = { 
-            DecayTime: 2800, 
-            EarlyDelay: 14, 
-            LateDelay: 21, 
-            HFReference: 5000, 
-            HFDecayRatio: 14, 
-            Diffusion: 80, 
-            Density: 60, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 3400, 
-            EarlyLateMix: 66, 
-            WetLevel: 1.2 
-        };
-        export const UNDERWATER: REVERB_PROPERTIES = { 
-            DecayTime: 1500, 
-            EarlyDelay: 7, 
-            LateDelay: 11, 
-            HFReference: 5000, 
-            HFDecayRatio: 10, 
-            Diffusion: 100, 
-            Density: 100, 
-            LowShelfFrequency: 250, 
-            LowShelfGain: 0, 
-            HighCut: 500, 
-            EarlyLateMix: 92, 
-            WetLevel: 7.0
-        };
-    }
+    // NOT SUPPORTED IN JAVASCRIPT
+    // /** Sets of predefined reverb properties, create your own or redefine these examples */
+    // export namespace REVERB_PRESETS {
+    //     export const OFF = { 
+    //         DecayTime: 1000, 
+    //         EarlyDelay: 7, 
+    //         LateDelay: 11, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 100, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 20, 
+    //         EarlyLateMix: 96, 
+    //         WetLevel: -80.0 
+    //     };
+    //     export const GENERIC: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 7, 
+    //         LateDelay: 11, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 83, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 14500, 
+    //         EarlyLateMix: 96, 
+    //         WetLevel: -8.0 
+    //     };
+    //     export const PADDEDCALL: REVERB_PROPERTIES = { 
+    //         DecayTime: 170, 
+    //         EarlyDelay: 1, 
+    //         LateDelay: 2, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 10, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 160, 
+    //         EarlyLateMix: 84, 
+    //         WetLevel: -7.8 
+    //     };
+    //     export const ROOM: REVERB_PROPERTIES = { 
+    //         DecayTime: 400, 
+    //         EarlyDelay: 2, 
+    //         LateDelay: 3, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 83, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 6050, 
+    //         EarlyLateMix: 88, 
+    //         WetLevel: -9.4 
+    //     };
+    //     export const BATHROOM: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 7, 
+    //         LateDelay: 11, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 54, 
+    //         Diffusion: 100, 
+    //         Density: 60, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 2900, 
+    //         EarlyLateMix: 83, 
+    //         WetLevel: 0.5
+    //     };
+    //     export const LIVINGROOM: REVERB_PROPERTIES = { 
+    //         DecayTime: 500, 
+    //         EarlyDelay: 3, 
+    //         LateDelay: 4, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 10, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 160, 
+    //         EarlyLateMix: 58, 
+    //         WetLevel: -19.0 
+    //     };
+    //     export const STONEROOM: REVERB_PROPERTIES = { 
+    //         DecayTime: 2300, 
+    //         EarlyDelay: 12, 
+    //         LateDelay: 17, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 64, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 7800, 
+    //         EarlyLateMix: 71, 
+    //         WetLevel: -8.5 
+    //     };
+    //     export const AUDITORIUM: REVERB_PROPERTIES = { 
+    //         DecayTime: 4300, 
+    //         EarlyDelay:20, 
+    //         LateDelay: 30, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 59, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 5850, 
+    //         EarlyLateMix: 64, 
+    //         WetLevel: -11.7 
+    //     };
+    //     export const CONCERTHALL: REVERB_PROPERTIES = { 
+    //         DecayTime: 3900, 
+    //         EarlyDelay: 20, 
+    //         LateDelay: 29, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 70, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 5650, 
+    //         EarlyLateMix: 80, 
+    //         WetLevel: -9.8 
+    //     };
+    //     export const CAVE: REVERB_PROPERTIES = { 
+    //         DecayTime: 2900, 
+    //         EarlyDelay: 15, 
+    //         LateDelay: 22, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 100, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 20000, 
+    //         EarlyLateMix: 59, 
+    //         WetLevel: -11.3 
+    //     };
+    //     export const HANGAR: REVERB_PROPERTIES = { 
+    //         DecayTime: 10000, 
+    //         EarlyDelay: 20, 
+    //         LateDelay: 30, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 23, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 3400, 
+    //         EarlyLateMix: 72, 
+    //         WetLevel: -7.4 
+    //     };
+    //     export const CARPETTEDHALLWAY: REVERB_PROPERTIES = { 
+    //         DecayTime: 300, 
+    //         EarlyDelay: 2, 
+    //         LateDelay: 30, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 10, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 500, 
+    //         EarlyLateMix: 56, 
+    //         WetLevel: -24.0 
+    //     };
+    //     export const HALLWAY: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 7, 
+    //         LateDelay: 11, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 59, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 7800, 
+    //         EarlyLateMix: 87, 
+    //         WetLevel: -5.5 
+    //     };
+    //     export const STONECORRIDOR: REVERB_PROPERTIES = { 
+    //         DecayTime: 270, 
+    //         EarlyDelay: 13, 
+    //         LateDelay: 20, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 79, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 9000, 
+    //         EarlyLateMix: 86, 
+    //         WetLevel: -6.0 
+    //     };
+    //     export const ALLEY: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 7, 
+    //         LateDelay: 11, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 86, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 8300, 
+    //         EarlyLateMix: 80, 
+    //         WetLevel: -9.8 
+    //     };
+    //     export const FOREST: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 162, 
+    //         LateDelay: 88, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 54, 
+    //         Diffusion: 79, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 760, 
+    //         EarlyLateMix: 94, 
+    //         WetLevel: -12.3 
+    //     };
+    //     export const CITY: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 7, 
+    //         LateDelay: 11, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 67, 
+    //         Diffusion: 50, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 4050, 
+    //         EarlyLateMix: 66, 
+    //         WetLevel: -26.0 
+    //     };
+    //     export const MOUNTAINS: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 300, 
+    //         LateDelay: 100, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 21, 
+    //         Diffusion: 27, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 1220, 
+    //         EarlyLateMix: 82, 
+    //         WetLevel: -24.0 
+    //     };
+    //     export const QUARRY: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 61, 
+    //         LateDelay: 25, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 83, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 3400, 
+    //         EarlyLateMix: 100, 
+    //         WetLevel: -5.0 
+    //     };
+    //     export const PLAIN: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 179, 
+    //         LateDelay: 100, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 50, 
+    //         Diffusion: 21, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 1670, 
+    //         EarlyLateMix: 65, 
+    //         WetLevel: -28.0 
+    //     };
+    //     export const PARKINGLOT: REVERB_PROPERTIES = { 
+    //         DecayTime: 1700, 
+    //         EarlyDelay: 8, 
+    //         LateDelay: 12, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 100, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 20000, 
+    //         EarlyLateMix: 56, 
+    //         WetLevel: -19.5 
+    //     };
+    //     export const SEWERPIPE: REVERB_PROPERTIES = { 
+    //         DecayTime: 2800, 
+    //         EarlyDelay: 14, 
+    //         LateDelay: 21, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 14, 
+    //         Diffusion: 80, 
+    //         Density: 60, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 3400, 
+    //         EarlyLateMix: 66, 
+    //         WetLevel: 1.2 
+    //     };
+    //     export const UNDERWATER: REVERB_PROPERTIES = { 
+    //         DecayTime: 1500, 
+    //         EarlyDelay: 7, 
+    //         LateDelay: 11, 
+    //         HFReference: 5000, 
+    //         HFDecayRatio: 10, 
+    //         Diffusion: 100, 
+    //         Density: 100, 
+    //         LowShelfFrequency: 250, 
+    //         LowShelfGain: 0, 
+    //         HighCut: 500, 
+    //         EarlyLateMix: 92, 
+    //         WetLevel: 7.0
+    //     };
+    // }
 
     /** These callback types are used with System::setCallback. */
     export const enum SYSTEM_CALLBACK_TYPE {
@@ -3217,6 +3417,7 @@ Also defines the number of channels in the unit that a read callback will proces
     // #endregion LOW LEVEL SYSTEM DEFINES
 
     // #region LOW LEVEL SYSTEM STRUCTURES //Needs to be Typed//////////////////////////////////////////////////////////////////////////
+    
 
     export interface _3D_ATTRIBUTES {
         position:VECTOR,
@@ -3225,6 +3426,8 @@ Also defines the number of channels in the unit that a read callback will proces
         up: VECTOR
     }
 
+
+    
     /** Settings for advanced features like configuring memory and cpu usage for the 
      * FMOD_CREATECOMPRESSEDSAMPLE feature. */
     export interface ADVANCEDSETTINGS {
@@ -3335,7 +3538,7 @@ Also defines the number of channels in the unit that a read callback will proces
      * when you initialize your code. If you wrote an MP3 codec that decoded to stereo 16bit integer PCM for a 
      * 44khz sound, you would specify FMOD_SOUND_FORMAT_PCM16, and channels would be equal to 2, and frequency 
      * would be 44100. */
-    export interface CODEC_WAVEFORAT {
+    export interface CODEC_WAVEFORMAT {
         /** [w] Name of sound. Optional. If used, the codec must own the lifetime of the string memory until the codec is destroyed.  */
         name:string,
         /** [w] Format for (decompressed) codec output, ie FMOD_SOUND_FORMAT_PCM8, FMOD_SOUND_FORMAT_PCM16. Mandantory - Must be supplied.  */
@@ -3542,6 +3745,7 @@ Also defines the number of channels in the unit that a read callback will proces
         getuserdata;
     }
 
+
     export interface DSP_STATE_PAN_FUNCTIONS {
         summonomatrix;
         sumstereomatrix;
@@ -3561,16 +3765,15 @@ Also defines the number of channels in the unit that a read callback will proces
 
     export interface GUID {
         /** Specifies the first 8 hexadecimal digits of the GUID  */
-        Data1:number,
+        Data1:number;
         /** Specifies the first group of 4 hexadecimal digits.  */
-        Data2:number,
+        Data2:number;
         /** Specifies the second group of 4 hexadecimal digits. */
-        Data3:number,
+        Data3:number;
         /** Array of 8 bytes. The first 2 bytes contain the third group of 4 hexadecimal digits. 
          * The remaining 6 bytes contain the final 12 hexadecimal digits.  */
-        Data4:number[]
+        Data4:number[];
     }
-
 
     export interface OUTPUT_DESCRIPTION {
         apiversion;
@@ -4609,6 +4812,7 @@ Also defines the number of channels in the unit that a read callback will proces
         idlesampledatapoolsize:number; 
     }
 
+
     export interface STUDIO_BANK_INFO {
         userdata:any;
         userdatalength:number;
@@ -4617,6 +4821,7 @@ Also defines the number of channels in the unit that a read callback will proces
         readcallback; //FMOD_FILE_READ_CALLBACK
         seekcallback; //FMOD_FILE_SEEK_CALLBACK
     }
+
 
     /**  Information for a single buffer in FMOD Studio. */
     export interface STUDIO_BUFFER_INFO {
@@ -4632,6 +4837,7 @@ Also defines the number of channels in the unit that a read callback will proces
         stalltime:number;
     }
 
+
     /** Information for FMOD Studio buffer usage. */
     export interface STUDIO_BUFFER_USAGE {
         /** Information for the Studio Async Command buffer, controlled by 
@@ -4641,6 +4847,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * FMOD_STUDIO_ADVANCEDSETTINGS handleInitialSize.  */
         studiohandle: STUDIO_BUFFER_INFO;
     }
+
 
     export interface STUDIO_COMMAND_INFO {
         /** The full name of the API function for this command. */
@@ -4663,6 +4870,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * This will no longer correspond to any actual object in playback.  */
         outputhandle:number;
     }
+
 
     export interface STUDIO_CPU_USAGE {
         /** Returns the % CPU time taken by DSP processing on the low level mixer thread.  */
@@ -4687,6 +4895,7 @@ Also defines the number of channels in the unit that a read callback will proces
         type;
     }
 
+
     export interface STUDIO_PLUGIN_INSTANCE_PROPERTIES {
         name:string;
     }
@@ -4710,12 +4919,11 @@ Also defines the number of channels in the unit that a read callback will proces
         mode: MODE,
         subsoundindex:number
     }
-
     /** The struct used to receive timeline beat data upon receiving a Timeline Beat Event Callback 
      * @description Not all fields are currently supported or may not work as expected at 
      * this time. To initialize an new instance in javascript use 
      * "FMOD.STUDIO_TIMELINE_BEAT_PROPERTIES()", no 'new' keyword is required.  */
-   export interface STUDIO_TIMELINE_BEAT_PROPERTIES {
+    export interface STUDIO_TIMELINE_BEAT_PROPERTIES {
         /** The bar number (starting from 1). */
         bar:number;
         /** The beat number within the bar (starting from 1) */
@@ -4729,7 +4937,6 @@ Also defines the number of channels in the unit that a read callback will proces
         /** The current time signature lower number (beat unit). */
         timesignaturelower:number;
     }
-
 
     export interface STUDIO_TIMELINE_MARKER_PROPERTIES {
         /** The narker name */
@@ -4839,7 +5046,7 @@ Also defines the number of channels in the unit that a read callback will proces
     export const STUDIO_LOAD_MEMORY_ALIGNMENT = 32;
 
     /** These callback types are used with Studio::System::setCallback. */
-    export const STUDIO_SYSTEM_CALLBACK_TYPE {
+    export const enum STUDIO_SYSTEM_CALLBACK_TYPE {
         /** Called at the start of the main Studio update. For async mode this will be on its own thread.  */
         PREUPDATE = 0x00000001,
         /** Called at the end of the main Studio update. For async mode this will be on its own thread.  */
@@ -4848,7 +5055,6 @@ Also defines the number of channels in the unit that a read callback will proces
         BANK_UNLOAD = 0x00000004,
         /** Pass this mask to Studio::System::setCallback to receive all callback types. */
         ALL = 0xFFFFFFFF
-
     }
     // #endregion Studio Defines //////////////////////////////////////////////////////
 
