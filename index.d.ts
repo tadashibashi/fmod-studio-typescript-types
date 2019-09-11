@@ -1,5 +1,5 @@
 interface Out<T> {
-	val?: T;
+	val: T;
 }
 
 /**
@@ -835,6 +835,7 @@ export namespace FMOD {
     }
 
     export interface ChannelControl {
+    	
         addDSP(index:number, dsp:DSP): RESULT;
 
         addFadePoint(dspclock:number, volume:number): RESULT;
