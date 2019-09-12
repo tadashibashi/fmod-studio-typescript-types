@@ -1,3 +1,13 @@
+/**
+ * Initializes an FMOD object.
+ * All function calls should wait until onRuntimeInitialized is fired
+ * @param fmodObject The FMOD object to initialize.
+ * It should only contain configuration data 
+ * (preRun, onRuntimeInitialized, TOTAL_MEMORY)
+ */
+declare function FMODModule(fmodObject: FMOD): void;
+
+
 interface Out<T> {
 	val: T;
 }
@@ -5,7 +15,7 @@ interface Out<T> {
 /**
  * FMOD Object Interface. Make sure to only call functions at and after onRuntimeInitialized.
  */
-export interface FMOD {
+declare interface FMOD {
 		TOTAL_MEMORY?: number;
 		preRun?: ()=>void;
 		onRuntimeInitialized?: ()=>void;
@@ -166,7 +176,10 @@ export interface FMOD {
     Studio_System_Create?(studioSystem: Out<FMOD.StudioSystem>): FMOD.RESULT
     // #endregion Low Level System Functions
     // #region Studio System Functions ////////////////////////////////
-    ParseID? (idString:string, id:Out<FMOD.GUID>): FMOD.RESULT;
+
+    // NOT SUPPORTED in JS
+    // parseID? (idString:string, id:Out<FMOD.GUID>): FMOD.RESULT;
+
     //#endregion Studio System Functions
     // #endregion Namespace Functions
 
@@ -372,7 +385,7 @@ export interface FMOD {
 
 }
 
-export namespace FMOD { 
+declare namespace FMOD { 
     // #region System Objects /////////////////////////////////////////////////////////////////////////////////////////////////
     export interface System {
         attachChannelGroupToPort(portType, portIndex, channelgroup:Out<ChannelGroup>): RESULT;
@@ -4612,8 +4625,7 @@ Also defines the number of channels in the unit that a read callback will proces
         ERR_ALREADY_LOCKED,
         ERR_NOT_LOCKED,
         ERR_RECORD_DISCONNECTED,
-        ERR_TOOMANYSAMPLES
-      
+        ERR_TOOMANYSAMPLES 
     }
 
     /** These values are used with SoundGroup::setMaxAudibleBehavior to determine
