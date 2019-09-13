@@ -1,105 +1,31 @@
-IFMOD
+FMOD Studio TypeScript Definitions
 =====================
+This is a TypeScript definition file for the HTML5 version of FMOD Studio (version 2.00.04), which allows the benefits of static type checking and autocompletion for work in fmodstudio.js and TypeScript. 
 
-IFMOD is a TypeScript interface for the HTML5 fmodstudio.js library version 2.00.03. This brings the benefits of type-safety and covenient documentation when using the FMOD Studio / Low Level APIs.
+For anyone new to the FMOD Studio API in HTML5 or TypeScript, here is a [starter tutorial](./StarterTutorial.md).
 
+Usage
+----------------------
 
-Setup
----------------------
+Download the index.d.ts from this repository and drop it where fmodstudio.js is located in your project. Double-check that it is included in your tsconfig.json file.
 
-- [Download FMOD Studio API](https://www.fmod.com/download) version 2.00.04 HTML5
-
-- You will need a local web server like WAMP or Node.js running in order to use module imports.
-
-- fmodstudio.js will need to be loaded in the HTML file before our script.
-
-- IFMOD contains its own blank FMOD object which you will need to import and initialize using the boilerplate code found in the [*HTML5 Specific Starter Guide*](https://www.fmod.com/resources/documentation-api?version=2.0&page=platforms-html5.html#start-up-code) of the documentation.
-
+Annotate the type of the FMOD object instance
 ```typescript
-import { FMOD } from 'path/to/IFMOD.ts'
+const fmod: FMOD = {};
+```
+Note: Do not name your FMOD object 'FMOD' since it will clash with the FMOD namespace type definitions.
 
-FMOD.preRun = yourPrerunFunction;
-FMOD.onRuntimeInitialized = yourMainFunction;
-FMOD.TOTAL_MEMORY = 64*1024*1024; // 64 mb
-FMODModule(FMOD); 
+Assert out-values to their corresponding types.
+```typescript
+let outval: any = {};
+fmod.Studio_System_Create(outval);
+const studioSystem = outval.val as FMOD.StudioSystem;
 ```
 
-- Once we pass the FMOD object into the FMODModule constructor, its namespace-level functions are now wrapped inside IFMOD. For example, we can call FMOD.Studio_System_Create with *IFMOD.Studio_System_Create*, the difference being we now have type-safety and pop-up documentation if you are running a TypeScript plugin in your text editor. 
+Feel great that you have type-checking and quick access to the entire FMOD API :)
 
-Here is an example of creating and initializing the Studio System.
-```typescript
-import { FMOD, IFMOD } from 'path/to/IFMOD';
+![alt text](./pictures/FMOD-Autocompletion_2.png "Autocompletion in action")
 
-FMOD.preRun = yourPrerunFunction;
-FMOD.onRuntimeInitialized = main;
-FMOD.TOTAL_MEMORY = 64*1024*1024; // 64 mb
-FMODModule(FMOD);
+![alt text](./pictures/FMOD-Autocompletion.png "Autocompletion in action")
 
 
-function main() {
-	let outval: any = {};
-	IFMOD.Studio_System_Create(outval); // namespace-level function
-	let studioSystem = outval.val as IFMOD.StudioSystem;
-	studioSystem.initialize(128, IFMOD.STUDIO_INITFLAGS.NORMAL, IFMOD.INITFLAGS.NORMAL, null);
-}
-```
-- Most references to the FMOD namespace can now be 'typed' to the corresponding interface from the IFMOD namespace. If you find the outval object strange, it's a workaround due to the differences of language features between C/C++ and JavaScript. fmodstudio.js cannot pass 'out' handles as it does in C/C++/C# so instead it passes handles to the parameter by injecting a property named 'val' into the passed object.
-
-- IFMOD also contains a helper function, CHECK_RESULT, that makes use of FMOD's verbose error checking. The first parameter is the executed function, and a second is a string you pass describing what FMOD is doing. This is made possible because every function in FMOD returns an FMOD.RESULT value. The string is just to help you locate the context of your error. This function will currently send an alert should FMOD encounter a problem with a specific task.
-
-```typescript
-import { CHECK_RESULT } from 'path/to/IFMOD';
-
-CHECK_RESULT( studioSystem.initialize(128, IFMOD.STUDIO_INITFLAGS.NORMAL, IFMOD.INITFLAGS.NORMAL, null), 
-	'initializing studio system');
-```
-
-
-Here is a full example of sound playing. This example assumes we have the files 'Master Bank.bank' and 'Master Bank.strings.bank' containing an event called 'Music' [preloaded into FMOD's file system during FMOD.preRun](https://www.fmod.com/resources/documentation-api?version=2.0&page=platforms-html5.html#file-access), and also that we have the [Chrome/Safari audio context workaround](https://www.fmod.com/resources/documentation-api?version=2.0&page=platforms-html5.html#safari-and-chrome-browser-user-interaction-requirement-use-for-all-browsers) in place should we be using either of those browsers. Please check the documentation for more info.
-
-```typescript
-import { FMOD, IFMOD, CHECK_RESULT } from 'path/to/IFMOD';
-
-FMOD.preRun = preRun;
-FMOD.onRuntimeInitialized = main;
-FMOD.TOTAL_MEMORY = 64*1024*1024; // 64 mb
-FMODModule(FMOD);
-
-
-function main() {
-	let outval: any = {};
-	IFMOD.Studio_System_Create(outval);
-	let studioSystem = outval.val as IFMOD.StudioSystem;
-	
-	CHECK_RESULT( studioSystem.initialize(128, IFMOD.STUDIO_INITFLAGS.NORMAL, IFMOD.INITFLAGS.NORMAL, null),
-		'creating studio system');
-
-	CHECK_RESULT( studioSystem.loadBankFile('Master Bank.bank', outval),
-		'loading Master Bank.bank');
-	CHECK_RESULT( studioSystem.loadBankFile('Master Bank.strings.bank', outval),
-		'loading Master Bank.strings.bank');
-
-	CHECK_RESULT( studioSystem.getEvent('event:/Music', outval),
-		'getting Music event from studio system');
-	let eventDescription = outval.val as IFMOD.EventDescription;
-	
-	CHECK_RESULT( eventDescription.createInstance(outval),
-		'creating event instance');
-
-	let instance = outval.val as IFMOD.EventInstance;
-
-	CHECK_RESULT( instance.start(), 'starting event instance');
-
-	// Update the system every 1/60th of a second.
-	setInterval(() => { 
-		CHECK_RESULT( studioSystem.update(), 'updating studio system');
-	}, 16.67);
-}
-
-function preRun() {
-	// PreRun fileloading here
-}
-
-```
-
-Note: This is still a work in progress, currently upgrading from version 1.12. Most basic functionality should be working.
