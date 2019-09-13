@@ -404,7 +404,8 @@ declare namespace FMOD {
 
         createDSPByType(type:DSP_TYPE, dsp:Out<DSP>): RESULT;
 
-        createGeometry(maxpolygons:number, maxvertices:number, geometry:Geometry): RESULT;
+        // No Support in HTML5
+        //createGeometry(maxpolygons:number, maxvertices:number, geometry:Geometry): RESULT;
 
         createReverb3D(reverb:Out<Reverb3D>): RESULT;
 
@@ -447,9 +448,10 @@ declare namespace FMOD {
 
         getFileUsage(sampleBytesRead: Out<number>, streamBytesRead: Out<number>, otherBytesRead: Out<number>): RESULT;
 
-        getGeometryOcclusion(listener: VECTOR, source: VECTOR, direct: Out<number>, reverb: Out<number>): RESULT;
-
-        getGeometrySettings(maxworldsize: Out<number>): RESULT;
+        // No Support in HTML5 version
+        //getGeometryOcclusion(listener: VECTOR, source: VECTOR, direct: Out<number>, reverb: Out<number>): RESULT;
+        // No Support in HTML5 version
+        //getGeometrySettings(maxworldsize: Out<number>): RESULT;
 
         getMasterChannelGroup(channelgroup: Out<ChannelGroup>): RESULT;
 
@@ -515,12 +517,12 @@ declare namespace FMOD {
          */
         isRecording(id:number, recording:Out<boolean>): RESULT;
         /**
-         * 
+         * No support in HTML5 version
          * @param data 
          * @param datasize 
          * @param geometry 
          */
-        loadGeometry(data, datasize:number, geometry:Out<Geometry>): RESULT;
+        //loadGeometry(data, datasize:number, geometry:Out<Geometry>): RESULT;
         /**
          * Currently not supported in JavaScript
          */
@@ -532,9 +534,9 @@ declare namespace FMOD {
 
         mixerSuspend(): RESULT;
 
-        playDSP(dsp:DSP, channelgroup:ChannelGroup, paused:boolean, channel:Out<any>): RESULT;
-
-        playSound(sound, channelgroup, paused:boolean, channel:Out<any>): RESULT;
+        playDSP(dsp:DSP, channelgroup: ChannelGroup, paused:boolean, channel:Out<any>): RESULT;
+        
+        playSound(sound: Sound, channelgroup: ChannelGroup, paused:boolean, channel:Out<any>): RESULT;
 
         recordStart(id:number, sound:Sound, loop:boolean): RESULT;
 
@@ -566,7 +568,8 @@ declare namespace FMOD {
 
         setFileSystem(useropen: FILE_OPEN_CALLBACK, userclose: FILE_CLOSE_CALLBACK, userread: FILE_READ_CALLBACK, userseek: FILE_SEEK_CALLBACK, userasyncread: FILE_ASYNCREAD_CALLBACK, userasynccancel: FILE_ASYNCCANCEL_CALLBACK, blockalign: number): RESULT;
 
-        setGeometrySettings(maxworldsize: number): RESULT;
+        // No support in HTML5 version
+        //setGeometrySettings(maxworldsize: number): RESULT;
 
         setNetworkProxy(proxy: string): RESULT;
 
@@ -1615,48 +1618,48 @@ Also defines the number of channels in the unit that a read callback will proces
     }
 
     /** Currently not supported in JavaScript */
-    export interface Geometry {
-        addPolygon(): RESULT;
+    // export interface Geometry {
+    //     addPolygon(): RESULT;
 
-        getActive(): RESULT;
+    //     getActive(): RESULT;
 
-        getMaxPolygons(): RESULT;
+    //     getMaxPolygons(): RESULT;
 
-        getNumPolygons(): RESULT;
+    //     getNumPolygons(): RESULT;
 
-        getPolygonAttributes(): RESULT;
+    //     getPolygonAttributes(): RESULT;
 
-        getPolygonNumVertices(): RESULT;
+    //     getPolygonNumVertices(): RESULT;
 
-        getPolygonVertex(): RESULT;
+    //     getPolygonVertex(): RESULT;
 
-        getPosition(): RESULT;
+    //     getPosition(): RESULT;
 
-        getRotation(): RESULT;
+    //     getRotation(): RESULT;
 
-        getScale(): RESULT;
+    //     getScale(): RESULT;
 
-        getUserData(): RESULT;
+    //     getUserData(): RESULT;
 
-        release(): RESULT;
+    //     release(): RESULT;
 
-        save(): RESULT;
+    //     save(): RESULT;
 
-        setActive(): RESULT;
+    //     setActive(): RESULT;
 
-        setPolygonAttributes(): RESULT;
+    //     setPolygonAttributes(): RESULT;
 
-        setPolygonVertex(): RESULT;
+    //     setPolygonVertex(): RESULT;
 
-        setPosition(): RESULT;
+    //     setPosition(): RESULT;
 
-        setRotation(): RESULT;
+    //     setRotation(): RESULT;
 
-        setScale(): RESULT;
+    //     setScale(): RESULT;
 
-        setUserData(): RESULT;
+    //     setUserData(): RESULT;
 
-    }
+    // }
     
     export interface Reverb3D {
         get3DAttributes(): RESULT;
@@ -5056,7 +5059,8 @@ Also defines the number of channels in the unit that a read callback will proces
         DECOMPRESS_SAMPLES = 0x00000002
     }
 
-    export const STUDIO_LOAD_MEMORY_ALIGNMENT = 32;
+    // No support for JS
+    //export const STUDIO_LOAD_MEMORY_ALIGNMENT = 32;
 
     /** These callback types are used with Studio::System::setCallback. */
     export const enum STUDIO_SYSTEM_CALLBACK_TYPE {
