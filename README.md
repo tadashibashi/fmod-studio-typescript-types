@@ -7,7 +7,7 @@ For anyone new to the FMOD Studio API in HTML5 or TypeScript, here is a [starter
 Usage
 ----------------------
 
-Download the index.d.ts from this repository and drop it where fmodstudio.js is located in your project. Double-check that it is included in your tsconfig.json file.
+Download the index.d.ts from this repository and drop it where fmodstudio.js is located in your project. Double-check that it is included in your tsconfig.json file. Once it is, the FMOD types should be recognized globally.
 
 Annotate the type of the FMOD object instance
 ```typescript
@@ -22,10 +22,16 @@ fmod.Studio_System_Create(outval);
 const studioSystem = outval.val as FMOD.StudioSystem;
 ```
 
-Feel great that you have type-checking and quick access to the entire FMOD API :)
+FMOD constant bit flags have been converted to TypeScript constant enums, so what would normally be:
+```typescript
+let flag = fmod.STUDIO_EVENT_CALLBACK_TYPE_TIMELINE_BEAT;
+```
+...is now
+```typescript
+let flag = FMOD.STUDIO_EVENT_CALLBACK_TYPE.TIMELINE_BEAT;
+```
+This allows using these enums as static types in TypeScript, while the compiler will convert them to the appropriate number in JavaScript.
 
-![alt text](./pictures/FMOD-Autocompletion_2.png "Autocompletion in action")
-
-![alt text](./pictures/FMOD-Autocompletion.png "Autocompletion in action")
+Feel great that you have type-checking and quick access to (almost) the entire FMOD API :)
 
 
