@@ -5,7 +5,6 @@ This is a TypeScript definition file for the HTML5 version of FMOD Studio (versi
 For anyone new to the FMOD Studio API in HTML5 or TypeScript, here is a [starter tutorial](./StarterTutorial.md).
 
 ##Usage
-----------------------
 
 Download the index.d.ts from this repository and drop it where fmodstudio.js is located in your project. Double-check that it is included in your tsconfig.json file. Once it is, the FMOD types should be recognized globally.
 
