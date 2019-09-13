@@ -2291,7 +2291,8 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param ignoreseekspeed Specifies whether to ignore the parameter's seek speed
          * and set the value immediately. (default: false)
          */
-        setParameterByID(id: STUDIO_PARAMETER_ID, value: number, ignoreseekspeed?: boolean);/**
+        setParameterByID(id: STUDIO_PARAMETER_ID, value: number, ignoreseekspeed?: boolean): RESULT;
+        /**
          * Sets multiple parameter values by unique identifiers.
          * @param ids Array of parameter identifiers
          * @param values Array of values for each given identifier
@@ -2299,7 +2300,7 @@ Also defines the number of channels in the unit that a read callback will proces
          * @param ignoreseekspeed Specifies whether to ignore the parameter's seek speed
          * and set the value immediately. (default: false)
          */
-        setParametersByIDs(ids: STUDIO_PARAMETER_ID[], values: number[], count: number, ignoreseekspeed?: boolean);
+        setParametersByIDs(ids: STUDIO_PARAMETER_ID[], values: number[], count: number, ignoreseekspeed?: boolean): RESULT;
         /**
          * Sets a parameter by name.
          * @param name Parameter name (case-insensitive).
@@ -4923,7 +4924,7 @@ Also defines the number of channels in the unit that a read callback will proces
         /** The programmer-created sound. This should be filled in by 
          * the create callback, and cleaned up by the destroy callback. The provided sound 
          * should be created with the FMOD_LOOP_NORMAL mode bit set.This can be cast to/from FMOD::Sound* type.  */
-        sound; //FMOD Sound type
+        sound: Sound; //FMOD Sound type
         /** The index of the subsound to use. This should be 
          * filled in by the create callback, or set to -1 if the provided sound should 
          * be used directly. Defaults to -1.  */
@@ -5029,7 +5030,7 @@ Also defines the number of channels in the unit that a read callback will proces
         SOUND_STOPPED = 0x00004000,
         /** Pass this mask to Studio::EventDescription::setCallback or Studio::EventInstance::setCallback to 
          * receive all callback types. */
-        CALLBACK_ALL = 0xFFFFFFFF
+        ALL = 0xFFFFFFFF
     }
 
     export const enum STUDIO_INITFLAGS {
