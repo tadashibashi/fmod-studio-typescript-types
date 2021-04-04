@@ -1,6 +1,6 @@
 # FMOD Studio TypeScript Definitions
 
-This is a TypeScript definition file for the HTML5 version of FMOD Studio (version 2.00.04), which allows the benefits of static type checking and autocompletion for work in fmodstudio.js and TypeScript. 
+This is a TypeScript definition file for the HTML5 version of FMOD Studio (version 2.01.07), which allows the benefits of static type checking and autocompletion for work in fmodstudio.js and TypeScript. 
 
 For anyone new to the FMOD Studio API in HTML5 or TypeScript, here is a [starter tutorial](./StarterTutorial.md).
 
